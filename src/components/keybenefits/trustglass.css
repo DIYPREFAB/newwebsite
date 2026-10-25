@@ -1,0 +1,109 @@
+/* =====================================================================
+   BuildGlass: glass tower crane + prefab modules (pure CSS 3D).
+   1u = 1% of the scene width (--u, set from JS). JS drives --rx --rz --sc --rise --ja --tr --cx --cy
+   --cl --hz and per-module --m{k}x/y/z/o, --f{k} (landing flash) every frame from load + scroll.
+   ===================================================================== */
+
+.kb-hero-art .tg {
+  position: absolute;
+  inset: -10%;
+  perspective: 1600px;
+  perspective-origin: 50% 40%;
+  --u: 4.4px;
+  --rx: 60; --rz: -12; --sc: 1; --ee: 1; --rise: 1;
+  --ja: 110; --tr: 60; --cx: 25; --cy: 70; --cl: 12; --hz: 44;
+  --m0x: 10; --m0y: 60; --m0z: 0; --m0o: 1; --f0: 0;
+  --m1x: 48; --m1y: 60; --m1z: 0; --m1o: 1; --f1: 0;
+  --m2x: 10; --m2y: 60; --m2z: 14; --m2o: 1; --f2: 0;
+  --glass: linear-gradient(145deg, rgba(255, 255, 255, .26) 0%, rgba(255, 255, 255, .06) 42%, rgba(143, 224, 212, .12) 100%);
+  --edge: rgba(190, 245, 240, .45);
+}
+.tg-glow {
+  position: absolute; inset: 6%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(47, 212, 192, .26), rgba(47, 212, 192, .07) 55%, transparent 75%);
+  filter: blur(14px);
+}
+.tg-scene {
+  position: absolute; left: 12%; top: 25%; width: 72%; height: 72%;
+  transform-style: preserve-3d;
+  transform: scale(var(--sc)) rotateX(calc(var(--rx) * 1deg)) rotateZ(calc(var(--rz) * 1deg));
+  will-change: transform;
+}
+.tg-scene i, .tg-scene span { display: block; }
+
+/* ---------------------------------------------------------------- blueprint plate */
+.tg-shadow { position: absolute; inset: -6%; border-radius: 12%; background: radial-gradient(closest-side, rgba(0, 6, 14, .75), transparent 85%); filter: blur(16px); transform: translateZ(calc(var(--u) * -10)); }
+.tg-plate.a {
+  position: absolute; inset: 0; border-radius: 6%; overflow: hidden; border: 1px solid var(--edge);
+  background:
+    linear-gradient(rgba(168, 218, 220, .20) 1px, transparent 1px) 0 0 / 10% 10%,
+    linear-gradient(90deg, rgba(168, 218, 220, .20) 1px, transparent 1px) 0 0 / 10% 10%,
+    radial-gradient(90% 90% at 25% 15%, rgba(255, 255, 255, .22), transparent 60%),
+    linear-gradient(145deg, rgba(40, 120, 140, .42), rgba(8, 40, 64, .55));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), inset 0 0 40px rgba(47, 212, 192, .18), 0 0 46px rgba(47, 212, 192, .22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.tg-plate.a::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .26) 50%, transparent 62%) 0 0 / 260% 100%; animation: tgSheen 7s ease-in-out infinite; }
+@keyframes tgSheen { 0% { background-position: 130% 0; } 55%, 100% { background-position: -80% 0; } }
+.tg-plate svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tg-plate .dim path { fill: none; stroke: rgba(190, 245, 240, .75); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.tg-plate .dim .dash { stroke-dasharray: 3 4; stroke: rgba(190, 245, 240, .35); }
+.tg-plate text { font: 800 3px Lato, Arial, sans-serif; letter-spacing: .1em; fill: rgba(200, 250, 245, .85); }
+.tg-slot { position: absolute; border: 1.5px dashed rgba(var(--t), .85); border-radius: 3px; background: rgba(var(--t), calc(.05 + var(--fl) * .35)); box-shadow: inset 0 0 18px rgba(var(--t), calc(.15 + var(--fl) * .6)); opacity: calc(.55 + var(--fl) * .45); }
+
+/* ---------------------------------------------------------------- shared 3D pieces */
+.tg-up, .tg-jib, .tg-pt { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
+.tg-jib .tg-up { transform: rotateX(-90deg); }
+.tg-face { position: absolute; background: linear-gradient(180deg, rgba(143, 224, 212, .10), rgba(47, 212, 192, .03)); }
+.tg-face.stay { background: none; }
+.tg-face svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tg-face path { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.tg-face path.g { stroke: rgba(47, 212, 192, .28); stroke-width: 4px; }
+.tg-face path.l { stroke: #c6fbf4; stroke-width: 1.1px; }
+
+.tg-cable { position: absolute; left: calc(var(--u) * -.2); top: 0; width: calc(var(--u) * .4); background: linear-gradient(180deg, #c6fbf4, rgba(143, 224, 212, .6)); }
+.tg-bb { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateZ(calc(var(--rz) * -1deg)) rotateX(calc(var(--rx) * -1deg)); }
+.tg-hook { position: absolute; left: calc(var(--u) * -1.5); top: calc(var(--u) * -1.5); width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #8fe0d4 40%, #12a596 100%); }
+
+/* glass boxes: top / front / back / left / right faces (all outward-extruded from the footprint) */
+.tg-box { position: absolute; width: calc(var(--w) * var(--u)); height: calc(var(--d) * var(--u)); transform-style: preserve-3d; --H: calc(var(--h) * var(--u)); --t: 47, 212, 192; --o: 1; }
+.tg-box i { position: absolute; border: 1px solid rgba(220, 255, 250, .6); opacity: var(--o); }
+.tg-box .t { inset: 0; transform: translateZ(var(--H)); background: linear-gradient(135deg, rgba(240, 255, 253, .8), rgba(var(--t), .55)); }
+.tg-box .f { left: 0; top: 100%; width: 100%; height: var(--H); transform-origin: 50% 0; transform: rotateX(90deg); background: linear-gradient(180deg, rgba(var(--t), .55), rgba(var(--t), .22)); }
+.tg-box .k { left: 0; bottom: 100%; width: 100%; height: var(--H); transform-origin: 50% 100%; transform: rotateX(-90deg); background: linear-gradient(180deg, rgba(var(--t), .35), rgba(var(--t), .15)); }
+.tg-box .l { right: 100%; top: 0; width: var(--H); height: 100%; transform-origin: 100% 50%; transform: rotateY(90deg); background: linear-gradient(90deg, rgba(var(--t), .22), rgba(var(--t), .5)); }
+.tg-box .r { left: 100%; top: 0; width: var(--H); height: 100%; transform-origin: 0 50%; transform: rotateY(-90deg); background: linear-gradient(90deg, rgba(var(--t), .5), rgba(var(--t), .22)); }
+
+/* prefab module: container-style frame with a row of windows and a roof panel */
+.tg-box.mod i { border: 1.5px solid rgba(225, 255, 251, .85); }
+.tg-box.mod .f, .tg-box.mod .k { background: linear-gradient(180deg, rgba(var(--t), .5), rgba(var(--t), .2)); }
+.tg-box.mod .f::before, .tg-box.mod .k::before {
+  content: ""; position: absolute; left: 7%; right: 7%; top: 30%; bottom: 30%;
+  background: repeating-linear-gradient(90deg, rgba(235, 255, 252, .72) 0 13%, transparent 13% 20%);
+  box-shadow: 0 0 10px rgba(var(--t), .5);
+}
+.tg-box.mod .l::before, .tg-box.mod .r::before { content: ""; position: absolute; left: 36%; right: 36%; top: 22%; bottom: 0; background: rgba(235, 255, 252, .55); }
+.tg-box.mod .t::before { content: ""; position: absolute; inset: 18%; border: 1px solid rgba(255, 255, 255, .5); background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .22) 0 1px, transparent 1px 25%); }
+
+.tg-box.slew i, .tg-box.trolley i { border-color: rgba(220, 255, 250, .8); }
+.tg-box.cw .t, .tg-box.cw .f, .tg-box.cw .k, .tg-box.cw .l, .tg-box.cw .r { background: linear-gradient(145deg, rgba(190, 240, 235, .55), rgba(20, 100, 120, .75)); }
+
+/* ---------------------------------------------------------------- orbit + tokens */
+.tg-lift { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-style: preserve-3d; pointer-events: none; transform: translateZ(calc(var(--u) * 24)); }
+.tg-flat { position: absolute; left: -10%; top: -10%; width: 120%; height: 120%; border-radius: 50%; border: 1px solid rgba(143, 224, 212, .35); }
+.tg-flat.dash { left: -16%; top: -16%; width: 132%; height: 132%; border: 1px dashed rgba(168, 218, 220, .4); animation: tgSpin 40s linear infinite reverse; }
+@keyframes tgSpin { to { transform: rotateZ(360deg); } }
+.tg-spin { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; animation: tgSpin 20s linear infinite; }
+.tg-arm { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; transform: translateX(calc(var(--u) * 60)); }
+.tg-counter { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; animation: tgSpin 20s linear infinite reverse; }
+.tg-token {
+  position: absolute; left: calc(var(--u) * -7); top: calc(var(--u) * -7); width: calc(var(--u) * 14); height: calc(var(--u) * 14);
+  display: grid !important; place-items: center; border-radius: 28%; color: #e8fffc; font-size: calc(var(--u) * 6);
+  background: linear-gradient(150deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, .08) 55%, rgba(47, 212, 192, .22));
+  border: 1px solid rgba(220, 255, 250, .6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 0 14px rgba(47, 212, 192, .35);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+
+.tg.is-paused *, .tg.is-paused *::after { animation-play-state: paused !important; }
+body.kb-reduce .tg *, body.kb-reduce .tg *::after { animation: none !important; }

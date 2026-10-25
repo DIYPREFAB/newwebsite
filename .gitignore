@@ -1,0 +1,48 @@
+
+node_modules/
+# dist/video/videoplayback-*.webm
+.DS_Store
+*.log
+.env
+vendor/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Workspace data directories (generated data, not source)
+memory/seo_data/
+memory/pagespeed_results/
+memory/email_monitor_state.json
+memory/*.db
+memory/*.py
+
+# Actual website code (separate repo)
+diyprefab-website/

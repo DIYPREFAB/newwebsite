@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /linkedin/
+Disallow: /card-details
+
+Sitemap: https://diyprefab.com/sitemap.xml

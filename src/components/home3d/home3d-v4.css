@@ -1,0 +1,89 @@
+/* =====================================================================
+   v4 — restrained premium pass: calmer prism, hairline depth lines,
+   pinned "how we work" reveal, zoom-out + glass industries
+   ===================================================================== */
+
+/* ---------- Background depth lines (replace the playful hardware shapes) ---------- */
+/* (bit styling now lives in home3d-v5.css) */
+
+/* ---------- Why choose us: smaller, monochrome glass prism ---------- */
+.sh-root .sh-prism { --w: min(330px, 74vw); background: radial-gradient(80% 70% at 50% 48%, #0e2b44 0%, #07182a 52%, #001524 100%); }
+.sh-root .sh-prism-head { top: 15vh; }
+.sh-root .sh-prism-tilt,
+.sh-root .sh-prism-body { height: min(400px, 54vh); }
+.sh-root .sh-prism-floor { bottom: 14vh; width: min(460px, 70vw); height: 46px; margin-left: calc(min(460px, 70vw) / -2); background: radial-gradient(ellipse at center, rgba(168, 218, 220, 0.22), transparent 70%); filter: blur(16px); }
+.sh-root .sh-face { --a: #8fe0d4; border-radius: 20px; background: linear-gradient(165deg, rgba(22, 50, 76, 0.94), rgba(6, 22, 37, 0.97)); box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(168, 218, 220, 0.14); }
+.sh-root .sh-face::before { padding: 1px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 38%); animation: none; }
+.sh-root .sh-face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 60% at 100% 0%, rgba(168, 218, 220, 0.1), transparent 60%); }
+.sh-root .sh-face-body { padding: 30px 26px 26px; gap: 12px; }
+.sh-root .sh-face-no { right: 22px; top: 16px; font-size: 62px; -webkit-text-stroke: 1px rgba(168, 218, 220, 0.16); }
+.sh-root .sh-face-icon { width: 46px; height: 46px; clip-path: none; border-radius: 12px; background: rgba(168, 218, 220, 0.08); border: 1px solid rgba(168, 218, 220, 0.28); }
+.sh-root .sh-face-icon svg,
+.sh-root .sh-face-icon .we-do-icons { font-size: 22px !important; color: #bfe7e3 !important; }
+.sh-root .sh-chip { display: flex; align-items: center; gap: 10px; padding: 0; border: 0; border-radius: 0; color: rgba(168, 218, 220, 0.75); font-size: 10.5px; letter-spacing: 0.22em; }
+.sh-root .sh-chip::before { content: ""; width: 22px; height: 1px; background: currentColor; }
+.sh-root .sh-face h3 { font-size: clamp(20px, 1.9vw, 24px); margin-top: 4px; }
+.sh-root .sh-face p { font-size: 14.5px; line-height: 1.65; color: #a9c3cb; }
+.sh-root .sh-pill { gap: 12px; padding: 0 0 6px; border: 0; border-bottom: 1px solid rgba(168, 218, 220, 0.4); border-radius: 0; background: none; font-size: 13px; letter-spacing: 0.06em; }
+.sh-root .sh-pill i { width: auto; height: auto; background: none; color: var(--a); }
+.sh-root .sh-pill:hover { background: none; color: #fff; border-color: var(--a); }
+.sh-root .sh-pill:hover i { transform: translateX(5px); background: none; color: var(--a); }
+
+/* ---------- How we work: pinned reveal ---------- */
+.sh-rv { position: relative; height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 6vh, 64px); padding: 12vh 6vw 6vh; background: radial-gradient(80% 90% at 15% 20%, #0b2740 0%, #031729 50%, #001524 100%); color: #fff; }
+.sh-rv > * { position: relative; z-index: 2; }
+.sh-rv > .sh-dots { position: absolute; z-index: 0; }
+.sh-rv > .sh-rv-ring { position: absolute; z-index: 0; }
+.sh-rv > .sh-rv-ghost { position: absolute; z-index: 0; }
+.sh-rv-ring { display: block; border-radius: 50%; border: 1px solid rgba(168, 218, 220, 0.14); }
+.sh-rv-ring::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; border: 1px dashed rgba(168, 218, 220, 0.12); }
+.sh-rv-ghost { left: 0; top: 0; bottom: 0; display: flex; align-items: center; white-space: nowrap; font-size: clamp(120px, 26vw, 440px); font-weight: 900; letter-spacing: -0.05em; line-height: 1; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(168, 218, 220, 0.1); pointer-events: none; }
+.sh-rv-text { max-width: 1150px; font-size: clamp(28px, 4.3vw, 66px); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; }
+.sh-rv-word { display: inline-block; margin-right: 0.26em; opacity: 0.14; }
+.sh-rv-word.hl { color: #8fe0d4; }
+.sh-rv-line { height: 1px; background: rgba(168, 218, 220, 0.18); }
+.sh-rv-line i { position: absolute; inset: 0; background: linear-gradient(90deg, #2fd4c0, #a8dadc); transform-origin: left; transform: scaleX(0); }
+.sh-rv-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.sh-rv-card { position: relative; padding: 26px 26px 28px; border-radius: 20px; background: linear-gradient(150deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)); border: 1px solid rgba(168, 218, 220, 0.2); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 24px 60px rgba(0, 0, 0, 0.3); opacity: 0; }
+.sh-rv-card em { display: block; margin-bottom: 14px; font-style: normal; font-size: 12px; font-weight: 800; letter-spacing: 0.2em; color: #8fe0d4; }
+.sh-rv-card h3 { font-size: clamp(18px, 1.7vw, 23px); font-weight: 800; margin-bottom: 8px; }
+.sh-rv-card p { font-size: 14.5px; line-height: 1.6; color: #a9c3cb; }
+@media (max-width: 760px) {
+  .sh-rv { padding-top: 14vh; gap: 20px; }
+  .sh-rv-cards { grid-template-columns: 1fr; gap: 10px; }
+  .sh-rv-card { padding: 16px 18px; }
+  .sh-rv-card p { display: none; }
+  .sh-rv-card em { margin-bottom: 6px; }
+}
+
+/* ---------- Industries: dark navy, zoom-out headline, glass lens ---------- */
+.sh-root .sh-split { background: radial-gradient(90% 80% at 50% 45%, #0f3050 0%, #07213a 45%, #001524 100%); color: #fff; }
+.sh-split-blob { position: absolute; display: block; border-radius: 50%; filter: blur(70px); pointer-events: none; z-index: 0; }
+.sh-split-blob.a { width: 38vmax; height: 38vmax; left: -8vmax; bottom: -14vmax; background: radial-gradient(circle, rgba(47, 212, 192, 0.35), transparent 65%); }
+.sh-split-blob.b { width: 34vmax; height: 34vmax; right: -8vmax; top: -12vmax; background: radial-gradient(circle, rgba(108, 182, 255, 0.28), transparent 65%); }
+.sh-split-halo { position: absolute; left: 50%; top: 50%; width: min(78vmin, 760px); height: min(78vmin, 760px); margin: calc(min(78vmin, 760px) / -2) 0 0 calc(min(78vmin, 760px) / -2); border-radius: 50%; border: 1px solid rgba(168, 218, 220, 0.14); pointer-events: none; z-index: 1; }
+.sh-split-halo::after { content: ""; position: absolute; inset: 11%; border-radius: 50%; border: 1px dashed rgba(168, 218, 220, 0.12); }
+.sh-root .sh-split-tag { color: #8fe0d4; top: 14vh; }
+.sh-root .sh-split-lines { font-size: clamp(1.8rem, 4vw, 4.4rem); line-height: 1.2; letter-spacing: -0.02em; color: #fff; will-change: transform, filter; }
+.sh-root .sh-split-line { display: block; width: fit-content; }
+.sh-split-line sup { margin-right: 0.7em; vertical-align: super; font-size: 0.2em; font-weight: 800; letter-spacing: 0.2em; color: #8fe0d4; }
+
+.sh-root .sh-split-glass { --g: min(28vmin, 280px); width: var(--g); height: var(--g); margin: calc(var(--g) / -2) 0 0 calc(var(--g) / -2); perspective: none; z-index: 3; }
+.sh-split-glass > span { position: absolute; display: block; border-radius: 50%; }
+.sh-split-orb { inset: 0; background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03) 60%); -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -34px 60px rgba(47, 212, 192, 0.12), 0 40px 80px rgba(0, 0, 0, 0.45); }
+.sh-split-orb::after { content: ""; position: absolute; left: 14%; top: 8%; width: 46%; height: 28%; border-radius: 50%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent); filter: blur(3px); }
+.sh-split-spin { inset: -7%; padding: 1px; background: conic-gradient(from 0deg, transparent 0 50%, rgba(143, 224, 212, 0.9) 78%, transparent 94%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.sh-split-orbit { inset: -20%; border: 1px solid rgba(168, 218, 220, 0.2); }
+.sh-split-orbit u { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px; border-radius: 50%; background: #8fe0d4; box-shadow: 0 0 12px rgba(143, 224, 212, 0.8); transform: rotate(var(--r)) translateY(calc(var(--g) * -0.7)); }
+.sh-split-core { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+.sh-split-core b { font-size: calc(var(--g) * 0.34); font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+.sh-split-core small { margin-top: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #bfe7e3; }
+
+.sh-root .sh-split-cta { display: inline-flex; align-items: center; gap: 14px; bottom: 8vh; padding: 8px 8px 8px 26px; border-radius: 40px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.24); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); color: #fff; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; transition: background 0.3s, color 0.3s; }
+.sh-root .sh-split-cta i { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #8fe0d4; color: #001524; font-style: normal; transition: transform 0.3s; }
+.sh-root .sh-split-cta:hover { background: #8fe0d4; color: #001524; transform: none; }
+.sh-root .sh-split-cta:hover i { background: #001524; color: #8fe0d4; transform: translateX(4px); }
+@media (max-width: 700px) {
+  .sh-root .sh-split-lines { font-size: clamp(1.5rem, 7vw, 2.6rem); }
+  .sh-root .sh-split-glass { --g: 36vmin; margin: calc(var(--g) / -2) 0 0 calc(var(--g) / -2); }
+}

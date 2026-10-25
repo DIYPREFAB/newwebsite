@@ -1,0 +1,226 @@
+
+
+
+
+// Image paths as string constants (not imports)
+const ImagePath = {
+  Logo: "/logo.png",
+  Performance: "https://diyprefab.com/images/performance-banner.jpg",
+  WRB: "https://diyprefab.com/images/we-are-back.jpeg",
+  WeOffer: "https://diyprefab.com/images/we-offer.jpg",
+  TakeAction: "https://diyprefab.com/images/take-action.jpg",
+  Map: "https://diyprefab.com/images/map.png",
+  BannerPattern: "https://diyprefab.com/images/pattern-4.jpg",
+  ChooseUsVideo: "https://diyprefab.com/images/choose-us-video.jpg",
+  ChooseUsImg: "https://diyprefab.com/images/choose-us-img.jpg",
+  Bg: "https://diyprefab.com/images/background-of-the-geometric-pattern.jpg",
+  VideoBg: "https://diyprefab.com/images/robotic-arms-along-assembly-line-in-modern-factory.jpg",
+  PlayButton: "https://diyprefab.com/images/play-button.png",
+  Slider1: "https://diyprefab.com/images/choose-us-img.jpg",
+  Slider2: "https://diyprefab.com/images/slider-2.webp",
+  Slider3: "https://diyprefab.com/images/slider-6.webp",
+  Slider4: "https://diyprefab.com/images/slider-5.webp",
+  Slider5: "https://diyprefab.com/images/we-are-back.jpeg",
+  MainSlider1: "https://diyprefab.com/images/main-slider-1.jpg",
+  featureProject: "https://diyprefab.com/images/feature-project.jpg",
+  downSlider1: "https://diyprefab.com/images/1.png",
+  downSlider2: "https://diyprefab.com/images/2.png",
+  downSlider3: "https://diyprefab.com/images/3.png",
+  downSlider4: "https://diyprefab.com/images/4.png",
+  downSlider5: "https://diyprefab.com/images/5.png",
+  waveBg: "https://diyprefab.com/images/wave-bg.jpg",
+  ourService: "https://diyprefab.com/images/ourService-img.jpg",
+  sucessImg1: "/images/sucess-img1.jpg",
+  sucessImg2: "/images/sucess-img2.jpg",
+  sucessImg3: "https://diyprefab.com/images/sucess-img3.jpg",
+  sucessImg4: "https://diyprefab.com/images/sucess-img4.jpg",
+  sucessBg: "https://diyprefab.com/images/sucess-bg.jpg",
+  projectBnrBg: "https://diyprefab.com/images/project-banner-img.jpg",
+  featureproject: "https://diyprefab.com/images/feature-project.jpg",
+  projectgGalleryMainImg: "https://diyprefab.com/images/project-gallery-mainImg.jpg",
+  projectsmallimg: "https://diyprefab.com/images/project-small-img.jpg",
+
+  // Production Plant Process Photos (placeholders — update with real photos)
+  plantStep1: "/images/plant-step-1.jpg",
+  plantStep2: "/images/plant-step-2.jpg",
+  plantStep3: "/images/plant-step-3.jpg",
+  plantStep4: "/images/plant-step-4.jpg",
+  plantStep5: "/images/plant-step-5.jpg",
+  plantStep6: "/images/plant-step-6.jpg",
+  plantStep7: "/images/plant-step-7.jpg",
+  plantOverview: "/images/plant-overview.jpg",
+};
+
+export default ImagePath;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Opt IMges
+
+
+
+
+// // Image paths as string constants (not imports)
+// const ImagePath = {
+//   // Original images (fallbacks)
+//   Logo: "/images/logo.webp",
+//   Performance: "/images/performance-banner.webp",
+//   WRB: "/images/we-are-back.webp",
+//   WeOffer: "/images/we-offer.webp",
+//   TakeAction: "/images/take-action.webp",
+//   Map: "/images/map.png",
+//   BannerPattern: "/images/pattern-4.webp",
+//   ChooseUsVideo: "/images/choose-us-video.webp",
+//   ChooseUsImg: "/images/choose-us-img.webp",
+//   Bg: "/images/background-of-the-geometric-pattern.webp",
+//   VideoBg: "/images/robotic-arms-along-assembly-line-in-modern-factory.webp",
+//   PlayButton: "/images/play-button.png",
+//   Slider1: "/images/choose-us-img.webp",
+//   Slider2: "/images/slider-2.webp",
+//   Slider3: "/images/slider-6.webp",
+//   Slider4: "/images/slider-5.webp",
+//   Slider5: "/images/we-are-back.webp",
+//   MainSlider1: "/images/main-slider-1.webp",
+//   featureProject: "/images/feature-project.webp",
+//   downSlider1: "/images/1.png",
+//   downSlider2: "/images/2.png",
+//   downSlider3: "/images/3.png",
+//   downSlider4: "/images/4.png",
+//   downSlider5: "/images/5.png",
+//   waveBg: "/images/wave-bg.webp",
+//   ourService: "/images/ourService-img.webp",
+//   sucessImg1: "/images/sucess-img1.webp",
+//   sucessImg2: "/images/sucess-img2.webp",
+//   sucessImg3: "/images/sucess-img3.webp",
+//   sucessImg4: "/images/sucess-img4.webp",
+//   sucessBg: "/images/sucess-bg.webp",
+//   projectBnrBg: "/images/project-banner-img.webp",
+//   featureproject: "/images/feature-project.webp",
+//   projectgGalleryMainImg: "/images/project-gallery-mainImg.webp",
+//   projectsmallimg: "/images/project-small-img.webp",
+  
+//   // Optimized mobile images (768px max width)
+//   LogoMobile: "/images/optimized/mobile/logo-mobile.webp",
+//   PerformanceMobile: "/images/optimized/mobile/performance-banner-mobile.webp",
+//   WRBMobile: "/images/optimized/mobile/we-are-back-mobile.webp",
+//   WeOfferMobile: "/images/optimized/mobile/we-offer-mobile.webp",
+//   TakeActionMobile: "/images/optimized/mobile/take-action-mobile.webp",
+//   MapMobile: "/images/optimized/mobile/map-mobile.webp",
+//   BannerPatternMobile: "/images/optimized/mobile/pattern-4-mobile.webp",
+//   ChooseUsVideoMobile: "/images/optimized/mobile/choose-us-video-mobile.webp",
+//   ChooseUsImgMobile: "/images/optimized/mobile/choose-us-img-mobile.webp",
+//   BgMobile: "/images/optimized/mobile/background-of-the-geometric-pattern-mobile.webp",
+//   VideoBgMobile: "/images/optimized/mobile/robotic-arms-along-assembly-line-in-modern-factory-mobile.webp",
+//   PlayButtonMobile: "/images/optimized/mobile/play-button-mobile.webp",
+//   Slider1Mobile: "/images/optimized/mobile/choose-us-img-mobile.webp",
+//   Slider2Mobile: "/images/optimized/mobile/slider-2-mobile.webp",
+//   Slider3Mobile: "/images/optimized/mobile/slider-6-mobile.webp",
+//   Slider4Mobile: "/images/optimized/mobile/slider-5-mobile.webp",
+//   Slider5Mobile: "/images/optimized/mobile/we-are-back-mobile.webp",
+//   MainSlider1Mobile: "/images/optimized/mobile/main-slider-1-mobile.webp",
+//   featureProjectMobile: "/images/optimized/mobile/feature-project-mobile.webp",
+//   downSlider1Mobile: "/images/optimized/mobile/1-mobile.webp",
+//   downSlider2Mobile: "/images/optimized/mobile/2-mobile.webp",
+//   downSlider3Mobile: "/images/optimized/mobile/3-mobile.webp",
+//   downSlider4Mobile: "/images/optimized/mobile/4-mobile.webp",
+//   downSlider5Mobile: "/images/optimized/mobile/5-mobile.webp",
+//   waveBgMobile: "/images/optimized/mobile/wave-bg-mobile.webp",
+//   ourServiceMobile: "/images/optimized/mobile/ourService-img-mobile.webp",
+//   sucessImg1Mobile: "/images/optimized/mobile/sucess-img1-mobile.webp",
+//   sucessImg2Mobile: "/images/optimized/mobile/sucess-img2-mobile.webp",
+//   sucessImg3Mobile: "/images/optimized/mobile/sucess-img3-mobile.webp",
+//   sucessImg4Mobile: "/images/optimized/mobile/sucess-img4-mobile.webp",
+//   sucessBgMobile: "/images/optimized/mobile/sucess-bg-mobile.webp",
+//   projectBnrBgMobile: "/images/optimized/mobile/project-banner-img-mobile.webp",
+//   featureprojectMobile: "/images/optimized/mobile/feature-project-mobile.webp",
+//   projectgGalleryMainImgMobile: "/images/optimized/mobile/project-gallery-mainImg-mobile.webp",
+//   projectsmallimgMobile: "/images/optimized/mobile/project-small-img-mobile.webp",
+  
+//   // Optimized desktop images (1920px max width)
+//   LogoDesktop: "/images/optimized/desktop/logo-desktop.webp",
+//   PerformanceDesktop: "/images/optimized/desktop/performance-banner-desktop.webp",
+//   WRBDesktop: "/images/optimized/desktop/we-are-back-desktop.webp",
+//   WeOfferDesktop: "/images/optimized/desktop/we-offer-desktop.webp",
+//   TakeActionDesktop: "/images/optimized/desktop/take-action-desktop.webp",
+//   MapDesktop: "/images/optimized/desktop/map-desktop.webp",
+//   BannerPatternDesktop: "/images/optimized/desktop/pattern-4-desktop.webp",
+//   ChooseUsVideoDesktop: "/images/optimized/desktop/choose-us-video-desktop.webp",
+//   ChooseUsImgDesktop: "/images/optimized/desktop/choose-us-img-desktop.webp",
+//   BgDesktop: "/images/optimized/desktop/background-of-the-geometric-pattern-desktop.webp",
+//   VideoBgDesktop: "/images/optimized/desktop/robotic-arms-along-assembly-line-in-modern-factory-desktop.webp",
+//   PlayButtonDesktop: "/images/optimized/desktop/play-button-desktop.webp",
+//   Slider1Desktop: "/images/optimized/desktop/choose-us-img-desktop.webp",
+//   Slider2Desktop: "/images/optimized/desktop/slider-2-desktop.webp",
+//   Slider3Desktop: "/images/optimized/desktop/slider-6-desktop.webp",
+//   Slider4Desktop: "/images/optimized/desktop/slider-5-desktop.webp",
+//   Slider5Desktop: "/images/optimized/desktop/we-are-back-desktop.webp",
+//   MainSlider1Desktop: "/images/optimized/desktop/main-slider-1-desktop.webp",
+//   featureProjectDesktop: "/images/optimized/desktop/feature-project-desktop.webp",
+//   downSlider1Desktop: "/images/optimized/desktop/1-desktop.webp",
+//   downSlider2Desktop: "/images/optimized/desktop/2-desktop.webp",
+//   downSlider3Desktop: "/images/optimized/desktop/3-desktop.webp",
+//   downSlider4Desktop: "/images/optimized/desktop/4-desktop.webp",
+//   downSlider5Desktop: "/images/optimized/desktop/5-desktop.webp",
+//   waveBgDesktop: "/images/optimized/desktop/wave-bg-desktop.webp",
+//   ourServiceDesktop: "/images/optimized/desktop/ourService-img-desktop.webp",
+//   sucessImg1Desktop: "/images/optimized/desktop/sucess-img1-desktop.webp",
+//   sucessImg2Desktop: "/images/optimized/desktop/sucess-img2-desktop.webp",
+//   sucessImg3Desktop: "/images/optimized/desktop/sucess-img3-desktop.webp",
+//   sucessImg4Desktop: "/images/optimized/desktop/sucess-img4-desktop.webp",
+//   sucessBgDesktop: "/images/optimized/desktop/sucess-bg-desktop.webp",
+//   projectBnrBgDesktop: "/images/optimized/desktop/project-banner-img-desktop.webp",
+//   featureprojectDesktop: "/images/optimized/desktop/feature-project-desktop.webp",
+//   projectgGalleryMainImgDesktop: "/images/optimized/desktop/project-gallery-mainImg-desktop.webp",
+//   projectsmallimgDesktop: "/images/optimized/desktop/project-small-img-desktop.webp",
+  
+//   // Thumbnail images (300x300px)
+//   LogoThumb: "/images/optimized/thumbnails/logo-thumb.webp",
+//   PerformanceThumb: "/images/optimized/thumbnails/performance-banner-thumb.webp",
+//   WRBThumb: "/images/optimized/thumbnails/we-are-back-thumb.webp",
+//   WeOfferThumb: "/images/optimized/thumbnails/we-offer-thumb.webp",
+//   TakeActionThumb: "/images/optimized/thumbnails/take-action-thumb.webp",
+//   MapThumb: "/images/optimized/thumbnails/map-thumb.webp",
+//   BannerPatternThumb: "/images/optimized/thumbnails/pattern-4-thumb.webp",
+//   ChooseUsVideoThumb: "/images/optimized/thumbnails/choose-us-video-thumb.webp",
+//   ChooseUsImgThumb: "/images/optimized/thumbnails/choose-us-img-thumb.webp",
+//   BgThumb: "/images/optimized/thumbnails/background-of-the-geometric-pattern-thumb.webp",
+//   VideoBgThumb: "/images/optimized/thumbnails/robotic-arms-along-assembly-line-in-modern-factory-thumb.webp",
+//   PlayButtonThumb: "/images/optimized/thumbnails/play-button-thumb.webp",
+//   Slider1Thumb: "/images/optimized/thumbnails/choose-us-img-thumb.webp",
+//   Slider2Thumb: "/images/optimized/thumbnails/slider-2-thumb.webp",
+//   Slider3Thumb: "/images/optimized/thumbnails/slider-6-thumb.webp",
+//   Slider4Thumb: "/images/optimized/thumbnails/slider-5-thumb.webp",
+//   Slider5Thumb: "/images/optimized/thumbnails/we-are-back-thumb.webp",
+//   MainSlider1Thumb: "/images/optimized/thumbnails/main-slider-1-thumb.webp",
+//   featureProjectThumb: "/images/optimized/thumbnails/feature-project-thumb.webp",
+//   downSlider1Thumb: "/images/optimized/thumbnails/1-thumb.webp",
+//   downSlider2Thumb: "/images/optimized/thumbnails/2-thumb.webp",
+//   downSlider3Thumb: "/images/optimized/thumbnails/3-thumb.webp",
+//   downSlider4Thumb: "/images/optimized/thumbnails/4-thumb.webp",
+//   downSlider5Thumb: "/images/optimized/thumbnails/5-thumb.webp",
+//   waveBgThumb: "/images/optimized/thumbnails/wave-bg-thumb.webp",
+//   ourServiceThumb: "/images/optimized/thumbnails/ourService-img-thumb.webp",
+//   sucessImg1Thumb: "/images/optimized/thumbnails/sucess-img1-thumb.webp",
+//   sucessImg2Thumb: "/images/optimized/thumbnails/sucess-img2-thumb.webp",
+//   sucessImg3Thumb: "/images/optimized/thumbnails/sucess-img3-thumb.webp",
+//   sucessImg4Thumb: "/images/optimized/thumbnails/sucess-img4-thumb.webp",
+//   sucessBgThumb: "/images/optimized/thumbnails/sucess-bg-thumb.webp",
+//   projectBnrBgThumb: "/images/optimized/thumbnails/project-banner-img-thumb.webp",
+//   featureprojectThumb: "/images/optimized/thumbnails/feature-project-thumb.webp",
+//   projectgGalleryMainImgThumb: "/images/optimized/thumbnails/project-gallery-mainImg-thumb.webp",
+//   projectsmallimgThumb: "/images/optimized/thumbnails/project-small-img-thumb.webp"
+// };
+
+// export default ImagePath;

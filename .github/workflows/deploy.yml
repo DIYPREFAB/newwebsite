@@ -1,0 +1,170 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linter
+      run: npm run lint
+      continue-on-error: true
+      
+    - name: Build project
+      run: npm run build
+      env:
+        VITE_HUBSPOT_ACCESS_TOKEN: ${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}
+        VITE_HUBSPOT_PORTAL_ID: ${{ secrets.VITE_HUBSPOT_PORTAL_ID }}
+        VITE_LINKEDIN_PARTNER_ID: ${{ secrets.VITE_LINKEDIN_PARTNER_ID }}
+        VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: dist/
+        
+  # ============================================
+  # OPTION 1: Deploy to Vercel (Recommended)
+  # ============================================
+  deploy-vercel:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to Vercel
+      uses: vercel/action-deploy@v1
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+      env:
+        VITE_HUBSPOT_ACCESS_TOKEN: ${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}
+        VITE_HUBSPOT_PORTAL_ID: ${{ secrets.VITE_HUBSPOT_PORTAL_ID }}
+
+  # ============================================
+  # OPTION 2: Deploy to Netlify
+  # ============================================
+  # deploy-netlify:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   
+  #   steps:
+  #   - name: Download build artifacts
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: build-files
+  #       path: dist/
+  #       
+  #   - name: Deploy to Netlify
+  #     uses: nwtgck/actions-netlify@v3.0
+  #     with:
+  #       publish-dir: './dist'
+  #       production-branch: main
+  #       github-token: ${{ secrets.GITHUB_TOKEN }}
+  #       deploy-message: "Deploy from GitHub Actions"
+  #     env:
+  #       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  # ============================================
+  # OPTION 3: Deploy to own server via SSH
+  # ============================================
+  # deploy-server:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   
+  #   steps:
+  #   - name: Download build artifacts
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: build-files
+  #       path: dist/
+  #       
+  #   - name: Deploy to server
+  #     uses: easingthemes/ssh-deploy@v5.0.0
+  #     with:
+  #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  #       REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+  #       REMOTE_USER: ${{ secrets.REMOTE_USER }}
+  #       REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+  #       SOURCE: "dist/"
+  #       TARGET: "/var/www/diyprefab.com/"
+  #       ARGS: "-avz --delete"
+  #       EXCLUDE: "dist/node_modules/, dist/.git/"
+
+  # ============================================
+  # OPTION 5: Deploy to own VPS with PM2 (YOUR SETUP)
+  # ============================================
+  deploy-pm2:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to VPS via SSH + PM2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT || '22' }}
+        script: |
+          echo "=== Starting deployment ==="
+          
+          # Navigate to project directory
+          cd ${{ secrets.VPS_PROJECT_PATH || '/var/www/diyprefab-website' }}
+          
+          # Pull latest code
+          echo "Pulling latest code..."
+          git pull origin main
+          
+          # Install dependencies
+          echo "Installing dependencies..."
+          npm ci
+          
+          # Build project with environment variables
+          echo "Building project..."
+          export VITE_HUBSPOT_ACCESS_TOKEN=${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}
+          export VITE_HUBSPOT_PORTAL_ID=${{ secrets.VITE_HUBSPOT_PORTAL_ID }}
+          export VITE_LINKEDIN_PARTNER_ID=${{ secrets.VITE_LINKEDIN_PARTNER_ID }}
+          export VITE_GA_MEASUREMENT_ID=${{ secrets.VITE_GA_MEASUREMENT_ID }}
+          export VITE_CAL_NAMESPACE=${{ secrets.VITE_CAL_NAMESPACE || '45min' }}
+          npm run build
+          
+          # Restart PM2 process
+          echo "Restarting PM2 process..."
+          pm2 restart diy-frontend-react --update-env
+          
+          # Save PM2 config
+          pm2 save
+          
+          echo "=== Deployment complete ==="
+          
+    - name: Notify deployment status
+      if: always()
+      run: |
+        echo "Deployment status: ${{ job.status }}"
