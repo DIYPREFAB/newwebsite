@@ -1,0 +1,298 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/about",
+      "destination": "/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/services",
+      "destination": "/product-services",
+      "permanent": true
+    },
+    {
+      "source": "/projects",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact-us",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/introduction-to-diy-prefab-solutions",
+      "destination": "/key-benefits-of-prefab-construction",
+      "permanent": true
+    },
+    {
+      "source": "/featured-projects",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/generate-sitemap",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/key-benefits-of-prefab-construction",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about-us",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about-us/company-overview",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about-us/our-vision-mission",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about-us/sustainability-eco-friendly-initiatives",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about-us/manufacturing-process",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/production-plant",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/diy-prefab-kits",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/diy-prefab-kits/home-kit",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/diy-prefab-kits/office-workspaces",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/diy-prefab-kits/storage-warehousing",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/diy-prefab-kits/farmhouses-cottages",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/wall-roofing-solutions",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/wall-roofing-solutions/fiber-cement-boards",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/wall-roofing-solutions/sandwich-panels",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/wall-roofing-solutions/steel-metal-roofing",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/portable-structures",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/portable-structures/site-office",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/portable-structures/security-cabins",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/portable-structures/mobile-homes",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/accessories-customization",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/accessories-customization/doors-windows",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/accessories-customization/insulation-materials",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product-services/accessories-customization/electrical-plumbing-add-ons",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications/residential",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications/commercial",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications/industrial",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications/educational-institutions",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/applications/healthcare-facilities",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project-case-studies",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project-case-studies/success-stories",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project-case-studies/client-testimonials",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project-case-studies/project-gallery",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/project-case-studies/hall-of-fame",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog-news",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog-news/industry-trends",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog-news/construction-tips-tricks",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog-news/sustainability-in-prefab",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/careers",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/careers/job-openings",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/careers/work-culture",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contact-us/inquiry-form",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/card-details",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/linkedin/free-assessment",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/linkedin/case-studies",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/linkedin/consultation",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/details/:name",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}
