@@ -11,13 +11,16 @@ gsap.registerPlugin(ScrollTrigger);
 
 const HEAD = [["Certified", "by", "standards."], ["Trusted", "by", "industry."]];
 
-// Same five logos the old TrustSlider used.
+// Same five logos the old TrustSlider used, plus Wonder Cement, RBL and Associated Golcha Minerals.
 const LOGOS = [
   { img: ImagePath.downSlider1, alt: "ROHAN Limited - Trusted Engineering Partner" },
   { img: ImagePath.downSlider2, alt: "TTIPL - Industrial Innovation Leader" },
   { img: ImagePath.downSlider3, alt: "Alpha Natural Resources - Sustainable Solutions" },
   { img: ImagePath.downSlider4, alt: "BAS Engineering - Quality Structures" },
   { img: ImagePath.downSlider5, alt: "Industry Partner - Reliable Solutions" },
+  { img: "/images/clients/wonder-cement.png", alt: "Wonder Cement - Cement Industry Partner" },
+  { img: "/images/clients/rbl.png", alt: "RBL - Rajasthan Barytes Limited" },
+  { img: "/images/clients/associated-golcha-minerals.png", alt: "Associated Golcha Minerals" },
 ];
 
 // Logo tile: image, or a clean text label (name before " - ") if the image fails to load.
@@ -36,7 +39,7 @@ function Tile({ logo }) {
 }
 
 function Marquee() {
-  const base = [...LOGOS, ...LOGOS]; // 10 per half so the loop is always wider than the viewport
+  const base = [...LOGOS, ...LOGOS]; // 15 per half so the loop is always wider than the viewport
   return (
     <div className="sh-mq" role="region" aria-label="Partner logos">
       <ul className="sh-mq-track">

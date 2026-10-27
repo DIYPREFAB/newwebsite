@@ -25,6 +25,8 @@ export default function HomeNav({ onCta }) {
     if (n.title?.trim().toLowerCase() === "about us") return { title: n.title, link: n.link, submenu: [] };
     // Products & Services also opens its page directly (no dropdown); the product pages are reached from inside it
     if (/^products?\s*(&|and)/i.test(n.title?.trim() || "")) return { title: n.title, link: n.link, submenu: [] };
+    // Blog & News also opens its page directly (no dropdown); the articles are reached from inside it
+    if (/^blog/i.test(n.title?.trim() || "")) return { title: n.title, link: n.link, submenu: [] };
     // Applications also opens its page directly; the sector pages are reached from inside it
     if (n.title?.trim().toLowerCase() === "applications") return { title: n.title, link: n.link, submenu: [] };
     const submenu = (n.submenu || []).filter((s) => s.title?.trim().toLowerCase() !== "inquiry form");

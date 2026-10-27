@@ -1,239 +1,198 @@
-import React, { Suspense, lazy, useMemo } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Col, Container, Row } from 'reactstrap';
-import Banner from "../common/Banner";
+import React, { useEffect, useMemo, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { Link, useParams } from "react-router-dom";
+import { motion, useScroll, useSpring } from "framer-motion";
 import NavBar from "../common/NavBar";
-import SeoHelmet from '../common/SeoHelmet';
-import BlogServices from '../services/BlogServices';
-import { useCustomQuery } from '../utils/QueryHooks';
-import Swal from 'sweetalert2';
-import Loader from '../utils/Loader/Loader';
-import moment from 'moment';
-import parse from 'html-react-parser';
-import { buildQueryString } from '../utils/BuildQuery';
-import ImagePath from '../assets/ImagePath';
-import Footer from '../common/Footer';
+import Footer from "../common/Footer";
 import ScrollToTop from "../common/ScrollToTop";
-import FAQComponent from '../components/FAQComponent';
-import { generateJSONLDSchema, generateFallbackJSONLDSchema } from '../utils/JSONLDSchemaGenerator';
+import { ThreadProvider, useThread } from "../components/blogthread/ThreadContext";
+import ArticleBody, { Inline } from "../components/blogthread/ArticleBody";
+import { sharePost, queryHref, openQuery } from "../components/blogthread/PostCard";
+import { FontLinks, useBlogBody } from "../components/blogthread/PageShell";
+import { getPost, getPosts, KINDS, absoluteUrl } from "../components/blogthread/blogData";
+import { IconArrow, IconBack, IconClock, IconQuery, IconShare } from "../components/blogthread/icons";
+import { formatDate, formatDay } from "../components/blogthread/utils";
+import "../components/blogthread/blogthread.css";
 
-// Lazy-loaded components with error handling
-const WaveWrapper = lazy(() =>
-  import("../common/WaveWrapper").catch(() => ({ default: () => <div>Failed to load WaveWrapper</div> }))
-);
+const ease = [0.2, 0.7, 0.2, 1];
 
+const ArticlePage = ({ post }) => {
+  useBlogBody();
+  const { toast } = useThread();
+  const [active, setActive] = useState("");
+  const { scrollYProgress } = useScroll();
+  const bar = useSpring(scrollYProgress, { stiffness: 160, damping: 30, restDelta: 0.001 });
+  const heads = post.blocks.filter((b) => b.t === "h2");
+  const kind = KINDS[post.kind];
+  const more = getPosts().filter((p) => p.id !== post.id);
+  const next = more.find((p) => p.slug === post.next) || more[0];
+  const others = more.filter((p) => p.id !== next?.id).slice(0, 2);
 
+  useEffect(() => {
+    const els = [...document.querySelectorAll(".bt-prose h2[id]")];
+    if (!els.length) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-18% 0px -70% 0px" }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [post.id]);
 
-// Loading component
-const LoadingSpinner = ({ message = "Loading..." }) => (
-  <div className="flex items-center justify-center py-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
-    <span className="text-gray-600">{message}</span>
-  </div>
-);
-
-const BlogDetails = () => {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-
-  // Memoized query parameters for blog details
-  const blogDetailsParams = useMemo(() => ({ slug }), [slug]);
-
-  // Fetch blog details
-  const {
-    data: blogDetails,
-    isLoading: isBlogDetailsLoading,
-  } = useCustomQuery({
-    queryKey: ['blog-details', slug],
-    service: BlogServices.blogBySlug,
-    params: blogDetailsParams,
-    enabled: !!slug,
-    staleTime: 0,
-    select: (data) => {
-      if (!data?.data?.status) {
-        Swal.fire({
-          title: "Error",
-          text: data?.data?.message,
-          icon: "error",
-        });
-        navigate(-1);
-        return;
-      }
-      return data?.data?.data;
-    },
-    onSuccess: () => {
-      // Optional: Analytics or other side effects
-    }
-  });
-
-  // Memoized query parameters for related blogs
-  const relatedBlogParams = useMemo(() => buildQueryString([
-    { key: "page", value: 1 },
-    { key: "limit", value: 5 },
-    { key: "category_slug", value: blogDetails?.category?.slug },
-    { key: "is_published", value: true },
-  ]), [blogDetails?.category?.slug]);
-
-  // Fetch related blogs
-  const {
-    data: relatedBlog,
-    isLoading: isRelatedBlogLoad,
-  } = useCustomQuery({
-    queryKey: ['related-blog-details', slug, isBlogDetailsLoading],
-    service: BlogServices.blogList,
-    params: relatedBlogParams,
-    enabled: !isBlogDetailsLoading && !!blogDetails?.category?.id,
-    staleTime: 0,
-    select: (data) => {
-      if (!data?.data?.status) {
-        Swal.fire({
-          title: "Error",
-          text: data?.data?.message,
-          icon: "error",
-        });
-        navigate(-1);
-        return;
-      }
-      return data?.data?.data?.filter((blog) => blog.slug !== blogDetails?.slug);
-    },
-  });
-
-  // Memoized SEO data with GEO support
-  const seo = useMemo(() => {
-    if (!blogDetails) return { title: "Blog Post" };
-    
-    const currentUrl = window.location.href;
-    
-    // Generate JSON-LD schema based on GEO fields or fallback to basic schema
-    let jsonLd;
-    if (blogDetails.ai_summary || blogDetails.faq_section || blogDetails.schema_type || blogDetails.entities_keywords) {
-      jsonLd = generateJSONLDSchema(blogDetails, currentUrl);
-    } else {
-      jsonLd = generateFallbackJSONLDSchema(blogDetails, currentUrl);
-    }
-    
-    return {
-      title: blogDetails.title,
-      meta_description: blogDetails.ai_summary || blogDetails.content?.substring(0, 160),
-      meta_keywords: blogDetails.entities_keywords?.join(', '),
-      json_ld: JSON.stringify(jsonLd),
-      og_title: blogDetails.title,
-      og_description: blogDetails.ai_summary || blogDetails.content?.substring(0, 160),
-      og_image: blogDetails.cover_image,
-      og_type: "article"
-    };
-  }, [blogDetails]);
+  const jsonLd = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: post.title,
+      description: post.seoDescription,
+      datePublished: post.publishedAt,
+      dateModified: post.publishedAt,
+      image: absoluteUrl(`/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`),
+      author: { "@type": "Organization", name: "DIYPREFAB Editorial" },
+      publisher: { "@type": "Organization", name: "DIY PreFab", url: absoluteUrl("/") },
+      mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
+    }),
+    [post]
+  );
+  const og = absoluteUrl(`/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`);
 
   return (
-    <div>
-      <SeoHelmet seo={seo} />
+    <div className="bt-root bt-page bt-article-page">
+      <FontLinks />
+      <Helmet>
+        <title>{`${post.seoTitle} | DIY PreFab`}</title>
+        <meta name="description" content={post.seoDescription} />
+        <link rel="canonical" href={absoluteUrl(`/blog/${post.slug}`)} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.seoTitle} />
+        <meta property="og:description" content={post.seoDescription} />
+        <meta property="og:image" content={og} />
+        <meta name="twitter:image" content={og} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
       <NavBar />
-      {isBlogDetailsLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <Banner title={blogDetails?.title || "Blog Post Title"} />
-          <section className="common-section blog-details">
-            <Container>
-              <Row>
-                <Col md="6" lg="9" className="mb-4">
-                  <div className="blog-details-content">
-                    <h1 className="blog-title">{blogDetails?.title || "Blog Post Title"}</h1>
-                    <p className="blog-date">
-                      Published on: {blogDetails.published_at && moment(blogDetails.published_at).format("lll")}
-                    </p>
-                    <div className="blog-details-img">
-                      <img src={ImagePath.MainSlider1} alt="Blog Post" className="img-fluid mb-4" />
-                    </div>
-                    <div className="blog-details-meta">
-                      <Link to={"/blog-news/" + blogDetails?.category?.slug}>
-                        <p className="blog-category">Category: {blogDetails?.category?.name}</p>
-                      </Link>
-                    </div>
-                    <div>
-                      <p className="blog-text">
-                        {blogDetails.content && parse(blogDetails.content)}
-                      </p>
-                    </div>
-                    
-                    {/* AI Summary Display */}
-                    {blogDetails.ai_summary && (
-                      <div className="ai-summary-section mt-4">
-                        <div className="card">
-                          <div className="card-body">
-                            <h5 className="card-title">
-                              <i className="fas fa-robot me-2"></i>
-                              AI Summary
-                            </h5>
-                            <p className="card-text">{blogDetails.ai_summary}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* FAQ Section Display */}
-                    {blogDetails.faq_section && blogDetails.faq_section.length > 0 && (
-                      <div className="faq-section mt-4">
-                        <FAQComponent 
-                          faqs={blogDetails.faq_section} 
-                          title="Frequently Asked Questions"
-                        />
-                      </div>
-                    )}
-                    
-                    {/* Entities & Keywords Display */}
-                    {blogDetails.entities_keywords && blogDetails.entities_keywords.length > 0 && (
-                      <div className="entities-section mt-4">
-                        <div className="card">
-                          <div className="card-body">
-                            <h5 className="card-title">
-                              <i className="fas fa-tags me-2"></i>
-                              Key Concepts
-                            </h5>
-                            <div className="d-flex flex-wrap gap-2">
-                              {blogDetails.entities_keywords.map((keyword, index) => (
-                                <span key={index} className="badge bg-primary">
-                                  {keyword}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </Col>
-                {!isRelatedBlogLoad && relatedBlog?.length > 0 && (
-                  <Col md="6" lg="3" className="mb-4">
-                    <div className="blog-details-sidebar">
-                      <h2 className="sidebar-title">Related Posts</h2>
-                      <ul className="related-posts-list">
-                        {relatedBlog?.map((blog) => (
-                          <li key={blog.id}>
-                            <Link to={"/blog/" + blog.slug}>{blog.title}</Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Col>
-                )}
-              </Row>
-            </Container>
+      <motion.div className="bt-progress" style={{ scaleX: bar }} aria-hidden="true" />
+
+      <header className="bt-art-head">
+        <div className="bt-wrap bt-art-head-in">
+          <motion.nav className="bt-crumb" aria-label="Breadcrumb" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }}>
+            <Link to="/blog-news"><IconBack width={16} height={16} /> Blog and news</Link>
+            <span className={`bt-kind bt-kind--${post.kind}`}>{kind.label}</span>
+          </motion.nav>
+          <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.06, ease }}>{post.title}</motion.h1>
+          <motion.p className="bt-art-dek" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.14, ease }}>{post.dek}</motion.p>
+          <motion.div className="bt-art-meta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.24 }}>
+            <div className="bt-author">
+              <span className="bt-mono" aria-hidden="true">D</span>
+              <div>
+                <strong>DIYPREFAB Editorial</strong>
+                <span className="bt-post-meta">
+                  <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                  <span className="bt-read"><IconClock /> {post.readMin} min read</span>
+                </span>
+              </div>
+            </div>
+            <div className="bt-art-meta-actions">
+              <a href={queryHref(post)} onClick={(e) => openQuery(e, post)} className="bt-act"><IconQuery width={18} height={18} /> Query?</a>
+              <button type="button" className="bt-act" onClick={() => sharePost(post, toast)}><IconShare width={18} height={18} /> Share</button>
+            </div>
+          </motion.div>
+        </div>
+      </header>
+
+      <div className="bt-wrap">
+        <motion.figure className="bt-art-cover" initial={{ opacity: 0, scale: 0.985 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.2, ease }}>
+          <img src={post.cover} alt={post.coverAlt} width="1200" height="630" />
+        </motion.figure>
+      </div>
+
+      <div className="bt-wrap bt-art-grid">
+        <article className="bt-art">
+          <ArticleBody blocks={post.blocks} />
+
+          <section className="bt-sources" id="sources" aria-labelledby="sources-h">
+            <h2 id="sources-h">Sources</h2>
+            <ol>
+              {post.sources.map((s) => (
+                <li key={s.n} id={`source-${s.n}`}>
+                  <strong>{s.title}</strong>
+                  <span>{s.meta}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="bt-source-note"><Inline text={post.sourceNote} /></p>
           </section>
-        </>
-      )}
 
-      <Suspense fallback={<LoadingSpinner message="Loading WaveWrapper..." />}>
-        <WaveWrapper />
-      </Suspense>
+          <aside className="bt-art-cta">
+            <div>
+              <strong>Need this applied to a live project?</strong>
+              <span>Our team can walk through scope, interfaces and delivery with you.</span>
+            </div>
+            <Link to={post.cta.to} className="bt-btn bt-btn--solid">{post.cta.label} <IconArrow width={16} height={16} /></Link>
+          </aside>
+        </article>
 
-      <Suspense fallback={<LoadingSpinner message="Loading footer..." />}>
-        <Footer />
-      </Suspense>
-      {/* Scroll to Top Button */}
+        <aside className="bt-art-side" aria-label="On this page">
+          <nav className="bt-toc">
+            <h3>On this page</h3>
+            <ol>
+              {heads.map((h) => (
+                <li key={h.id}>
+                  <a href={`#${h.id}`} className={active === h.id ? "is-on" : ""} onClick={(e) => { e.preventDefault(); document.getElementById(h.id)?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+              <li><a href="#sources" onClick={(e) => { e.preventDefault(); document.getElementById("sources")?.scrollIntoView({ behavior: "smooth" }); }}>Sources</a></li>
+            </ol>
+          </nav>
+        </aside>
+      </div>
+
+      <section className="bt-more">
+        <div className="bt-wrap">
+          <h2>Continue the thread</h2>
+          <div className="bt-more-grid">
+            {[next, ...others].filter(Boolean).map((p, i) => (
+              <motion.div key={p.id} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-60px" }} transition={{ duration: 0.45, delay: i * 0.08, ease }}>
+                <Link to={`/blog/${p.slug}`} className={`bt-more-card${i === 0 ? " is-next" : ""}`}>
+                  <img src={p.cover} alt="" loading="lazy" width="1200" height="630" />
+                  <span className={`bt-kind bt-kind--${p.kind}`}>{KINDS[p.kind].label}</span>
+                  <strong>{p.title}</strong>
+                  <span className="bt-more-meta">{formatDay(p.publishedAt)} · {p.readMin} min read</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Footer />
       <ScrollToTop />
     </div>
   );
+};
+
+const NotFound = () => {
+  useBlogBody();
+  return (
+    <div className="bt-root bt-page">
+      <FontLinks />
+      <NavBar />
+      <div className="bt-wrap bt-404">
+        <h1>We could not find that post</h1>
+        <p>It may have moved, or the link may be incomplete.</p>
+        <Link to="/blog-news" className="bt-btn bt-btn--solid">Back to blog and news</Link>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+const BlogDetails = () => {
+  const { slug } = useParams();
+  const post = getPost(slug);
+  return <ThreadProvider>{post ? <ArticlePage key={post.id} post={post} /> : <NotFound />}</ThreadProvider>;
 };
 
 export default BlogDetails;
