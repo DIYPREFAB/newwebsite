@@ -73,6 +73,21 @@ export const DrainageMap = () => (
   </figure>
 );
 
+export const RetrofitRegister = () => (
+  <figure className="bt-fig">
+    <Flow
+      numbered
+      label="Example retrofit evidence register separating archived drawings, current observations and an unresolved equipment support question."
+      steps={[
+        { title: "Record information", text: "Archived drawing: no suspended services listed in this bay." },
+        { title: "Current observation", text: "Dated site note: existing service supports recorded." },
+        { title: "Unresolved question", text: "How do the existing alterations affect review of the new proposal?" },
+      ]}
+    />
+    <figcaption>Illustrative evidence register for a hypothetical retrofit. These entries organise a review question; they do not establish structural capacity or permission to install.</figcaption>
+  </figure>
+);
+
 export const StatusPanel = () => {
   const [ref, inView] = useReveal();
   const rows = [
@@ -126,5 +141,6 @@ export const FIGURES = {
   "evidence-flow": EvidenceFlow,
   "drainage-map": DrainageMap,
   "status-panel": StatusPanel,
+  "retrofit-register": RetrofitRegister,
   "forecast-table": ForecastTable,
 };

@@ -13,6 +13,194 @@ export const KINDS = {
 };
 
 const posts = [
+  /* ------------------------------------------------------------------ 27 Oct: NHAI design checks ------------ */
+  {
+    "id": "nhai-design-checks",
+    "slug": "nhai-independent-design-checking-december-2026",
+    "kind": "briefing",
+    "title": "NHAI sets December start for independent design checks",
+    "seoTitle": "NHAI Design Checks Start December 2026",
+    "seoDescription": "NHAI announces independent design checks for critical National Highway structures from 1 December 2026. Read the scope and consultant takeaway.",
+    "dek": "The ministry’s 15 October release gives 1 December 2026 as the effective date for independent checking of designs for major bridges and critical National Highway structures. What it covers, and a process lesson for consultants.",
+    "publishedAt": "2026-10-27T09:30:00+05:30",
+    "sourceLine": "Ministry of Road Transport & Highways / PIB, 15 October 2026",
+    "tags": [
+      "NHAI",
+      "Design review",
+      "National Highways",
+      "PIB"
+    ],
+    "cover": "/images/blog/nhai-independent-design-checking.svg",
+    "coverAlt": "Editorial diagram showing design submission, independent review, designer response and revised submission.",
+    "blocks": [
+      {
+        "t": "p",
+        "text": "NHAI has announced a system for independent checking of designs for major bridges and other critical structures on its National Highway projects. The Ministry of Road Transport and Highways’ release is dated 15 October 2026 and gives 1 December 2026 as the effective date. This is an October briefing on a forthcoming change, not a report that the system is already operating. [Read the ministry’s announcement](https://www.pib.gov.in/PressReleseDetailm.aspx?PRID=2323906&lang=1&reg=3)."
+      },
+      {
+        "t": "h2",
+        "id": "what-it-covers",
+        "text": "What the announcement covers"
+      },
+      {
+        "t": "p",
+        "text": "The release says checks will be conducted by empanelled IITs, government technical institutions or experienced technical firms. The work includes design calculations, analysis and drawings, plus hydrological and hydraulic studies where applicable."
+      },
+      {
+        "t": "p",
+        "text": "For the identified structures, the policy applies to new EPC, HAM and BOT National Highway projects and projects where design verification or proof checking has not begun. Completed checks are generally outside the policy, although additional verification may be undertaken for major bridges and complex or critical special structures."
+      },
+      {
+        "t": "h2",
+        "id": "process-lesson",
+        "text": "A process lesson for consultants"
+      },
+      {
+        "t": "p",
+        "text": "For industrial-building consultants, the editorial takeaway is to make an appointed review’s scope and response process explicit. Identify the documents being reviewed, assign each observation to a responsible designer and preserve the response with the revised submission. A review appointment should state what it covers and which decisions remain with other parties."
+      },
+      {
+        "t": "p",
+        "text": "The announcement concerns identified National Highway structures. It does not establish a new blanket requirement for PEB projects, and it supplies no measured evidence of faster approvals or fewer defects. Project teams should check the operative instructions and their contractual requirements before acting."
+      },
+      {
+        "t": "p",
+        "text": "Related reading: [Before a PEB retrofit, reconcile the building records](/blog/existing-peb-retrofit-records-observations-evidence)."
+      }
+    ],
+    "sources": [
+      {
+        "n": 1,
+        "title": "Ministry of Road Transport and Highways / PIB: NHAI Introduces Independent Checking of Designs of Major Bridges and Critical National Highway Structures",
+        "meta": "15 October 2026, 5:02 PM. Stated policy effective date: 1 December 2026. Accessed 27 October 2026."
+      }
+    ],
+    "sourceNote": "Source announcement 15 October 2026; editorial briefing prepared 27 October 2026. The takeaway above is our own editorial view, not a government statement or a new obligation. Specific thresholds are deliberately omitted; check the release for applicability.",
+    "cta": {
+      "label": "Discuss your project",
+      "to": "/contact-us"
+    },
+    "next": "existing-peb-retrofit-records-observations-evidence"
+  },
+
+  /* ------------------------------------------------------------------ 27 Oct: existing PEB records ------------ */
+  {
+    "id": "existing-peb-retrofit-records",
+    "slug": "existing-peb-retrofit-records-observations-evidence",
+    "kind": "guide",
+    "title": "Before a PEB retrofit, reconcile the building records",
+    "seoTitle": "Existing PEB Retrofit Evidence Checklist",
+    "seoDescription": "Prepare an existing PEB for retrofit assessment with a clear register of building records, site observations, proposed changes and unresolved questions.",
+    "dek": "A new production line in an existing PEB raises a practical question: does the available information describe the building that stands today? A three-column evidence register helps keep records, observations and open questions apart.",
+    "publishedAt": "2026-10-27T09:00:00+05:30",
+    "sourceLine": "MBMA retrofit guide (April 2020); IStructE overview (13 November 2025)",
+    "tags": [
+      "Existing buildings",
+      "Retrofit",
+      "PEB",
+      "Evidence register"
+    ],
+    "cover": "/images/blog/existing-peb-retrofit-records.svg",
+    "coverAlt": "Example retrofit evidence register separating archived drawings, current observations and an unresolved equipment support question.",
+    "blocks": [
+      {
+        "t": "p",
+        "text": "A new production line in an existing pre-engineered building (PEB) raises a practical question: does the available information describe the building that stands today? Before equipment layouts become installation commitments, a consultant can help the owner assemble a record of the existing building, past alterations and proposed changes. The useful starting point is a clear account of what is documented, what has been observed and what still needs investigation. If you are planning an [industrial building](/applications/industrial) change, start there."
+      },
+      {
+        "t": "h2",
+        "id": "records-vs-observations",
+        "text": "Separate records from observations"
+      },
+      {
+        "t": "p",
+        "text": "Create a simple evidence register with three columns: record information, current observations and unresolved questions. Give every entry a location and source. An original drawing belongs in the first column; a dated site observation belongs in the second. Neither should silently replace the other."
+      },
+      {
+        "t": "p",
+        "text": "Start with available drawings, specifications, calculations and previous alteration records. MBMA’s April 2020 retrofit guide identifies original manufacturer and contractor records as possible sources of building information and stresses professional review of structural modifications. Its metal-building guidance is useful background, not a project-specific assessment or an Indian approval requirement. [Read MBMA’s retrofit guidance](https://www.cfsei.org/assets/docs/faq-monthly/MBMA_2020_Retrofitting.pdf)."
+      },
+      {
+        "t": "h2",
+        "id": "describe-the-change",
+        "text": "Describe the proposed change precisely"
+      },
+      {
+        "t": "p",
+        "text": "Keep the proposal separate from the building history. For each new machine, service or operational change, identify its location, the supplier document and revision, and the information still awaited. Ask the responsible designers which equipment and support information they need. Do not infer an available capacity from unused floor area or from an adjacent building."
+      },
+      {
+        "t": "p",
+        "text": "Use clear status labels such as proposed, confirmed by the responsible party, and awaiting assessment. A supplier layout can describe an intended arrangement without establishing that the existing building can accommodate it. The register should make that distinction easy to see."
+      },
+      {
+        "t": "h2",
+        "id": "work-through-a-discrepancy",
+        "text": "Work through a discrepancy before it reaches site"
+      },
+      {
+        "t": "p",
+        "text": "Consider this hypothetical example. An archived drawing lists no suspended services in a particular bay. A dated site note records existing service supports there. A new supplier layout proposes another installation in that bay, but the file contains no assessment connecting the existing alterations with the new proposal."
+      },
+      {
+        "t": "figure",
+        "id": "retrofit-register"
+      },
+      {
+        "t": "p",
+        "text": "Enter the drawing and observation references, mark the support question as unresolved and route the question to the appointed structural engineer and services designer. Record the information they request and the decision that follows. Do not translate an unanswered query into an installation detail. This example illustrates how to organise a discrepancy; it does not establish whether either arrangement is suitable."
+      },
+      {
+        "t": "h2",
+        "id": "agree-the-assessment",
+        "text": "Agree what the assessment will deliver"
+      },
+      {
+        "t": "p",
+        "text": "Ask the appointed engineer to define the assessment scope, the information needed and the limitations of each output. A records review, site inspection and structural assessment are different activities. The Institution of Structural Engineers’ November 2025 publication overview describes a process spanning desk study, inspection, investigation, assessment and reporting. It supports a staged discussion rather than an assumption that one visual visit answers every question. [See the existing-building verification overview](https://www.istructe.org/resources/guidance/verification-of-existing-building-structures/)."
+      },
+      {
+        "t": "p",
+        "text": "For an Indian project, the responsible professionals must establish the applicable requirements and necessary approvals. This article does not prescribe a code, testing method or structural acceptance criterion."
+      },
+      {
+        "t": "h2",
+        "id": "close-the-loop",
+        "text": "Close the loop for the next alteration"
+      },
+      {
+        "t": "p",
+        "text": "Give the evidence register an owner. Keep the final assessed proposal, any conditions, the relevant design documents and the completed-work records connected by reference. If the equipment arrangement changes again, identify which decisions need to return to the designers."
+      },
+      {
+        "t": "p",
+        "text": "A useful handover question is: could a future consultant distinguish the original building from each later alteration without reconstructing the history from emails? Preserve the unresolved items as well as the completed decisions, with the responsible person and next action visible."
+      },
+      {
+        "t": "p",
+        "text": "Use this workflow to prepare for a competent, project-specific assessment. It is not permission to modify a PEB, a statement of spare capacity or a substitute for engineering advice."
+      }
+    ],
+    "sources": [
+      {
+        "n": 1,
+        "title": "MBMA: Retrofitting/Reinforcing Metal Building Systems",
+        "meta": "April 2020; author publication hosted by the Cold-Formed Steel Engineers Institute. Accessed 27 October 2026."
+      },
+      {
+        "n": 2,
+        "title": "Institution of Structural Engineers: Verification of existing building structures",
+        "meta": "Public publisher overview dated 13 November 2025. The full book was not accessed. Accessed 27 October 2026."
+      }
+    ],
+    "sourceNote": "Overseas guidance is used as general background only, not as Indian law or a project acceptance criterion. The evidence-register workflow and the hypothetical example are our own editorial material, not reported project experience or an engineering verdict. Sources are paraphrased.",
+    "cta": {
+      "label": "Discuss your project",
+      "to": "/contact-us"
+    },
+    "next": "nhai-independent-design-checking-december-2026"
+  },
+
   /* ------------------------------------------------------------------ 26 Oct: roof drainage ------------ */
   {
     id: "peb-roof-drainage",
