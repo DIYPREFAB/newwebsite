@@ -22,7 +22,10 @@ export default function Cursor() {
     const sparks = [], trail = [];
     let mx = W / 2, my = H / 2, x = mx, y = my, rot = 0, tsc = 1, hot = false, mag = null, magC = null, label = "", raf;
 
+    let running = true, cleared = false;
+    const wake = () => { if (!running) { running = true; cleared = false; raf = requestAnimationFrame(loop); } };
     const burst = (bx, by, n, sp) => {
+      wake();
       for (let i = 0; i < n; i++) {
         const a = Math.random() * 6.283, v = (0.4 + Math.random()) * sp;
         sparks.push({ x: bx, y: by, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, l: 1, d: 0.016 + Math.random() * 0.02, c: COL[(Math.random() * COL.length) | 0], s: 1 + Math.random() * 1.8 });
@@ -50,6 +53,12 @@ export default function Cursor() {
 
     const loop = () => {
       if (!dot.current || !ret.current || !lab.current) return; // unmounted mid-frame
+      // touch screens have nothing to draw between taps: clear once, then stop the loop until the next tap
+      if (!fine && !sparks.length) {
+        if (!cleared) { g.clearRect(0, 0, W, H); cleared = true; }
+        running = false;
+        return;
+      }
       raf = requestAnimationFrame(loop);
       const px = x, py = y;
       x += (mx - x) * 0.2; y += (my - y) * 0.2;

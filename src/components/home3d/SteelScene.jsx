@@ -35,9 +35,13 @@ export default function SteelScene({ progress, onStats }) {
     const feed = () => {
       raf = requestAnimationFrame(feed);
       engine.setProgress(progress.current);
-      const r = el.getBoundingClientRect();
-      if (r.width > 0 && r.bottom > 0 && r.top < innerHeight) engine.start();
-      else engine.stop();
+      // Visibility from the cached pin range + scrollY: no layout read per frame (getBoundingClientRect forced a
+      // synchronous layout every frame on a heavy page, which is what made phones stutter). Falls back to the rect.
+      let on;
+      const range = progress.range;
+      if (range) on = window.scrollY >= range[0] - innerHeight && window.scrollY <= range[1] + innerHeight;
+      else { const r = el.getBoundingClientRect(); on = r.width > 0 && r.bottom > 0 && r.top < innerHeight; }
+      if (on && !document.hidden) engine.start(); else engine.stop();
     };
     feed();
 

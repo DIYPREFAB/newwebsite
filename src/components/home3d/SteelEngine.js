@@ -149,7 +149,7 @@ export default class SteelScene {
       renderer ||
       new THREE.WebGLRenderer({
         canvas,
-        antialias: !lowPower,
+        antialias: true, // phones keep antialiasing too: thin steel edges stay clean instead of crawling
         alpha: false,
         powerPreference: "high-performance",
       });
@@ -170,7 +170,7 @@ export default class SteelScene {
     }
     this.scene.environmentIntensity = 0.55;
 
-    this.camera = new THREE.PerspectiveCamera(36, 1, 0.5, 400);
+    this.camera = new THREE.PerspectiveCamera(36, 1, 2, 320);
 
     this.hemi = new THREE.HemisphereLight(0xbfd8e6, 0x04101a, 0.55);
     this.sun = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -599,8 +599,14 @@ export default class SteelScene {
     const parent = this.canvas.parentElement;
     const w = parent ? parent.clientWidth : window.innerWidth;
     const h = parent ? parent.clientHeight : window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, this.lowPower ? 1.25 : 2);
-    this.renderer.setPixelRatio(dpr);
+    // Full device sharpness on every device (phones included). If a frame budget is badly missed for a while the
+    // resolution eases down a little (never below dprMin) and is restored as soon as there is headroom again.
+    this.dprMax = Math.min(window.devicePixelRatio || 1, 2);
+    this.dprMin = Math.min(this.dprMax, 1.5);
+    if (!this.dpr || this.dpr > this.dprMax) this.dpr = this.dprMax;
+    if (w === this._w && h === this._h && this.dpr === this._d) return; // nothing changed: skip the costly canvas re-allocation
+    this._w = w; this._h = h; this._d = this.dpr;
+    this.renderer.setPixelRatio(this.dpr);
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     // narrow screens: pull the camera back a touch via fov
@@ -627,10 +633,12 @@ export default class SteelScene {
     const loop = (now) => {
       if (!this.running) return;
       this.raf = requestAnimationFrame(loop);
-      const dt = Math.min(0.05, (now - this.last) / 1000);
+      const raw = now - this.last;
+      const dt = Math.min(0.05, raw / 1000);
       this.last = now;
       this.update(dt, now / 1000);
       this.draw();
+      this.adapt(raw);
     };
     this.raf = requestAnimationFrame(loop);
   }
@@ -642,6 +650,23 @@ export default class SteelScene {
 
   draw() {
     this.renderer.render(this.scene, this.camera);
+  }
+
+  // Adaptive resolution safety net: average frame time over ~40 frames; only acts on sustained slowness / lots of headroom.
+  adapt(ms) {
+    if (ms > 250) { this._n = 0; this._sum = 0; return; } // tab was hidden / first frame: ignore
+    this._sum = (this._sum || 0) + ms;
+    this._n = (this._n || 0) + 1;
+    if (this._n < 40) return;
+    const avg = this._sum / this._n;
+    this._n = 0; this._sum = 0;
+    if (avg > 26 && this.dpr > this.dprMin) {
+      this.dpr = Math.max(this.dprMin, +(this.dpr - 0.25).toFixed(2));
+      this.resize();
+    } else if (avg < 15 && this.dpr < this.dprMax) {
+      this.dpr = Math.min(this.dprMax, +(this.dpr + 0.25).toFixed(2));
+      this.resize();
+    }
   }
 
   update(dt, time) {
@@ -728,7 +753,7 @@ export default class SteelScene {
 
     // ---- environment mood: blueprint navy -> lifted steel dusk
     const mood = seg(p, 0.55, 0.95);
-    this.bg.setHex(COLORS.navy).lerp(new THREE.Color(0x0a2f47), mood * 0.85);
+    this.bg.setHex(COLORS.navy).lerp(this._dusk || (this._dusk = new THREE.Color(0x0a2f47)), mood * 0.85);
     this.scene.fog.color.copy(this.bg);
     this.sun.intensity = lerp(0.35, 1.9, seg(p, 0.3, 0.7));
     this.rim.intensity = lerp(0.9, 2.2, seg(p, 0.7, 1));

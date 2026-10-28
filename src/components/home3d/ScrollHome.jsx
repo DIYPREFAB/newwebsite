@@ -65,6 +65,7 @@ export default function ScrollHome({ onCta }) {
         end: "+=580%",
         pin: true,
         onUpdate: (self) => { progress.current = self.progress; },
+        onRefresh: (self) => { progress.range = [self.start, self.end]; },
       });
 
       // Pinned horizontal tracks, with depth: floating parts drift slower, photos pan inside their frames
@@ -178,7 +179,7 @@ export default function ScrollHome({ onCta }) {
           </div>
           {PLANT.map(([label, file], i) => (
             <figure className="sh-photo" key={file} data-cursor="View">
-              <img src={`/images/${file}`} alt={label} loading="lazy" />
+              <img src={`/images/${file}`} alt={label} loading="lazy" decoding="async" />
               <figcaption><b>{String(i + 1).padStart(2, "0")}</b> {label}</figcaption>
             </figure>
           ))}
