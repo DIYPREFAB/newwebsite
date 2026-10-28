@@ -6,7 +6,7 @@ import { FaArrowRight, FaMapMarkerAlt, FaBriefcase } from "react-icons/fa";
 import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import ROUTE_PATHS from "../../routes/RoutePath";
-import useScrollStage, { scrollToEl, isReduced } from "./useScrollStage";
+import useScrollStage, { useHeroFallback, scrollToEl, isReduced } from "./useScrollStage";
 import { JOB_TITLE, JOB_HL, JOB_TEXT, CATEGORIES, LOCATIONS, JOBS, APPLY_EMAIL } from "./careersData";
 import "../home3d/home3d.css";
 import "../home3d/home3d-v4.css";
@@ -37,6 +37,7 @@ export default function JobSections() {
   const filtered = q || cat || loc;
   const reset = () => { setQ(""); setCat(""); setLoc(""); };
 
+  useHeroFallback(root);
   const lenisRef = useScrollStage(root, ({ reduce, ctx, mm }) => {
     if (reduce) return;
     const $ = gsap.utils.toArray;
@@ -51,7 +52,7 @@ export default function JobSections() {
           yPercent: 118, rotationX: -70, opacity: 0, stagger: 0.07, duration: 0.95, transformOrigin: "50% 100%",
           onComplete: () => gsap.set(".ct-h1-m", { overflow: "visible" }),
         }, 0.1)
-        .from(".ct-hero-p, .ct-hero-cta > *", { y: 30, opacity: 0, stagger: 0.1, duration: 0.8 }, 0.7)
+        .from(".ct-hero-p, .ct-hero-cta > *", { y: 30, opacity: 0, stagger: 0.1, duration: 0.8, clearProps: "opacity,transform" }, 0.7)
         .from(".cr-o", { scale: 0.3, opacity: 0, stagger: 0.12, duration: 1.3 }, 0.2)
         .from(".cr-count", { scale: 0.6, opacity: 0, duration: 1, ease: "back.out(1.6)" }, 0.5);
       ScrollTrigger.create({ trigger: ".ct-hero", start: "top top", end: "bottom 30%", onEnterBack: () => intro.restart() });

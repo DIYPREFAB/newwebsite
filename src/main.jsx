@@ -13,6 +13,13 @@ import { HelmetProvider } from "react-helmet-async";
 // Remove them before the first render so <RouteMeta/> / <SeoHelmet/> are the only source of per-route tags (no duplicates).
 document.querySelectorAll("[data-seo-static]").forEach((el) => el.remove());
 
+// A refresh must always open on the hero: the browser never restores an old scroll position, and the position
+// saved for this page is reset to the top as the page unloads (covers reload, close and bfcache).
+if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+const resetScroll = () => { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; };
+window.addEventListener("beforeunload", resetScroll);
+window.addEventListener("pagehide", resetScroll);
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(

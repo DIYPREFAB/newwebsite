@@ -35,6 +35,16 @@ const useScrollToTop = () => {
     return () => { cancelAnimationFrame(r1); if (r2) cancelAnimationFrame(r2); };
   }, [pathname]);
 
+  // refresh / late restoration: once everything has loaded (and when a page returns from the back-forward cache), start at the top
+  useEffect(() => {
+    if (window.location.hash) return undefined;
+    const onLoad = () => jumpToTop();
+    const onShow = (e) => { if (e.persisted) jumpToTop(); };
+    if (document.readyState === "complete") onLoad(); else window.addEventListener("load", onLoad, { once: true });
+    window.addEventListener("pageshow", onShow);
+    return () => { window.removeEventListener("load", onLoad); window.removeEventListener("pageshow", onShow); };
+  }, []);
+
   // lazy pages can mount a moment after the route changes; make sure they also open at the top
   useEffect(() => {
     if (window.scrollY > 0 && !hash) jumpToTop();

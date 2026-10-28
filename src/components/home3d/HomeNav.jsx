@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaChevronDown, FaLinkedinIn } from "react-icons/fa";
 import { navItems } from "../../Constants";
 import ImagePath from "../../assets/ImagePath";
@@ -34,6 +34,7 @@ export default function HomeNav({ onCta }) {
   });
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const burgerRef = useRef(null);
   const closeRef = useRef(null);
   const menuRef = useRef(null);
@@ -120,6 +121,22 @@ export default function HomeNav({ onCta }) {
   }, [open]);
 
   const close = () => setOpen(false);
+  // The logo always lands on the top of the 3D home: from another page the route change opens it at the top,
+  // and when already on "/" the link would do nothing, so jump to the top (instantly) ourselves.
+  const logoClick = (e) => {
+    close();
+    setDrop(null);
+    if (location.pathname !== "/") return;
+    e.preventDefault();
+    const root = document.documentElement;
+    const prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    root.scrollTop = 0;
+    document.body.scrollTop = 0;
+    root.style.scrollBehavior = prev;
+    if (location.hash || location.search) navigate("/", { replace: true });
+  };
   const contactLink = navItems.find((n) => n.title === "Contact Us")?.link || "/contact-us";
   const talk = (e) => {
     // the buttons are real links to the Contact Us page, so they still work if scripts or the Cal popup are unavailable
@@ -140,7 +157,7 @@ export default function HomeNav({ onCta }) {
       <i className="hnm-grid" aria-hidden="true" />
       <i className="hnm-glow" aria-hidden="true" />
       <div className="hnm-top">
-        <NavLink to="/" className="hnm-logo" onClick={close} tabIndex={tab} aria-label="DIY Prefab home">
+        <NavLink to="/" className="hnm-logo" onClick={logoClick} tabIndex={tab} aria-label="DIY Prefab home">
           <img src={ImagePath.Logo} alt="" />
         </NavLink>
         <button ref={closeRef} className="hnm-close" onClick={close} tabIndex={tab} aria-label="Close menu"><i /><i /></button>
@@ -183,7 +200,7 @@ export default function HomeNav({ onCta }) {
     <>
     <header className={`hn${open ? " open" : ""}`}>
       <div className="hn-bar">
-        <NavLink to="/" className="hn-logo" onClick={close} aria-label="DIY Prefab home">
+        <NavLink to="/" className="hn-logo" onClick={logoClick} aria-label="DIY Prefab home">
           <img src={ImagePath.Logo} alt="DIY Prefab" />
         </NavLink>
         <nav className={`hn-links${hushed ? " hushed" : ""}`} aria-label="Main" ref={navRef} onPointerMove={() => hushed && setHushed(false)}>

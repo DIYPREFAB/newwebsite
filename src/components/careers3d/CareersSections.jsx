@@ -7,7 +7,7 @@ import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import ImagePath from "../../assets/ImagePath";
 import ROUTE_PATHS from "../../routes/RoutePath";
-import useScrollStage, { scrollToEl } from "./useScrollStage";
+import useScrollStage, { useHeroFallback, scrollToEl } from "./useScrollStage";
 import {
   TITLE, HERO_HL, HERO_TEXT, CHIPS, MARQUEE, STATS, STORY_TAG, STORY_LEAD, STORY_STATEMENT, STORY_MORE,
   CULTURE_HEAD, CULTURE_TEXT, PILLARS, PROGRAMS_TITLE, PROGRAMS, BUILD_TAG, BUILD_TITLE, BUILD_TEXT, BUILD,
@@ -32,6 +32,7 @@ const words = (s, cls) => s.split(" ").map((w, i) => <span className={cls} key={
 export default function CareersSections() {
   const root = useRef(null);
 
+  useHeroFallback(root);
   const lenisRef = useScrollStage(root, ({ reduce, ctx, mm }) => {
     if (reduce) return;
     const $ = gsap.utils.toArray;
@@ -47,7 +48,7 @@ export default function CareersSections() {
           yPercent: 118, rotationX: -70, opacity: 0, stagger: 0.07, duration: 0.95, transformOrigin: "50% 100%",
           onComplete: () => gsap.set(".ct-h1-m", { overflow: "visible" }),
         }, 0.1)
-        .from(".ct-hero-p, .ct-hero-cta > *", { y: 30, opacity: 0, stagger: 0.1, duration: 0.8 }, 0.7)
+        .from(".ct-hero-p, .ct-hero-cta > *", { y: 30, opacity: 0, stagger: 0.1, duration: 0.8, clearProps: "opacity,transform" }, 0.7)
         .from(".cr-p", { strokeDashoffset: 1, duration: 1.8, stagger: 0.07, ease: "power2.inOut" }, 0.2)
         .from(".cr-bolt", { scale: 0, transformOrigin: "50% 50%", stagger: 0.04, duration: 0.5, ease: "back.out(2)" }, 1.2)
         .from(".cr-chip", { scale: 0.4, opacity: 0, stagger: 0.15, duration: 0.8, ease: "back.out(1.7)" }, 1.1);
