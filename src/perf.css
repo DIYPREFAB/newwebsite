@@ -1,0 +1,8 @@
+/* Off-screen sections do not run their CSS animations (see utils/perfBoost.js). */
+.is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
+
+/* Phones/tablets: blending a full-screen layer over the live 3D canvas forces an extra compositing pass every frame.
+   The film grain stays (same texture), just composited normally at a matching strength. */
+@media (pointer: coarse) {
+  .sx-grain { mix-blend-mode: normal; opacity: 0.035; }
+}

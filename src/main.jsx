@@ -8,6 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ContextWrapper } from "./contexts/Context.jsx";
 import { HelmetProvider } from "react-helmet-async";
+import "./perf.css";
+import initPerfBoost from "./utils/perfBoost";
 
 // Static fallback tags in index.html (description, Open Graph, Twitter) are only for crawlers that do not run scripts.
 // Remove them before the first render so <RouteMeta/> / <SeoHelmet/> are the only source of per-route tags (no duplicates).
@@ -34,3 +36,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </HelmetProvider>
   </QueryClientProvider>
 );
+
+initPerfBoost();
