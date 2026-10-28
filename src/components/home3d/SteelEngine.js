@@ -31,7 +31,7 @@ export const COLORS = {
 
 // 1 = original framing; larger = camera further away = smaller building on screen.
 // Fallback only: resize() picks the real value per screen shape (closer on wide desktops, further on phones).
-const CAMERA_PULLBACK = 1.2;
+const CAMERA_PULLBACK = 1.42;
 
 // --- model dimensions (metres) ---------------------------------------------
 const SPAN = 20;
@@ -607,7 +607,7 @@ export default class SteelScene {
     const aspect = w / h;
     this.camera.fov = aspect < 0.8 ? 52 : aspect < 1.2 ? 44 : 36;
     // camera distance per screen shape: close-up on wide desktops, a little further on laptops/tablets, furthest on phones
-    this.pullback = aspect >= 1.6 ? 1.2 : aspect >= 1.2 ? 1.35 : aspect >= 0.8 ? 1.5 : 1.6;
+    this.pullback = aspect >= 1.6 ? 1.42 : aspect >= 1.2 ? 1.52 : aspect >= 0.8 ? 1.65 : 1.75;
     // keep the building clear of the caption column: right on desktop, upper on phones
     const sx = aspect >= 1.2 ? -0.24 : 0;
     const sy = aspect < 0.9 ? 0.2 : aspect < 1.2 ? 0.1 : 0;
