@@ -85,7 +85,7 @@ export default function AboutSections() {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1 });
+      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
       lenisRef.current = lenis;
       lenis.on("scroll", ScrollTrigger.update);
       tick = (t) => lenis.raf(t * 1000);

@@ -50,7 +50,7 @@ export default function ScrollHome({ onCta }) {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1 });
+      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
       lenis.on("scroll", ScrollTrigger.update);
       tick = (t) => lenis.raf(t * 1000);
       gsap.ticker.add(tick);

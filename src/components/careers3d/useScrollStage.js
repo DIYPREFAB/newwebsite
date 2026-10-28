@@ -24,7 +24,7 @@ export default function useScrollStage(root, build) {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1 });
+      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
       lenisRef.current = lenis;
       // a refresh (or a fresh visit) always opens on the hero, never at an old scroll position
       if (!window.location.hash) lenis.scrollTo(0, { immediate: true, force: true });
