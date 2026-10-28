@@ -6,3 +6,12 @@
 @media (pointer: coarse) {
   .sx-grain { mix-blend-mode: normal; opacity: 0.035; }
 }
+
+/* Touch screens: frosted-glass (backdrop-filter) layers have to be re-blurred from the pixels behind them on every frame
+   while the page scrolls, which is what made the card, "how we work" and "7+" sections stall. The panels sit on flat
+   dark/light backgrounds, so the blur is barely visible; their own translucent fills stay exactly as designed.
+   The top bar gets a slightly stronger fill so its text keeps the same contrast without the blur. */
+@media (pointer: coarse) {
+  *, *::before, *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, 0.86); }
+}

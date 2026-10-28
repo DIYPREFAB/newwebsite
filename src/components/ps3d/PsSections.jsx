@@ -143,7 +143,7 @@ export default function PsSections() {
       lenis.on("scroll", ScrollTrigger.update);
       tick = (t) => lenis.raf(t * 1000);
       gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(100, 33);
     }
 
     const mm = gsap.matchMedia(rootEl);
