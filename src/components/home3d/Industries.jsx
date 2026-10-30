@@ -2,67 +2,89 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ROUTE_PATHS from "../../routes/RoutePath";
-import SteelBits from "./SteelBits";
-import GlassCore, { glassState } from "./GlassCore";
+import { glassState } from "./GlassCore"; // shared scroll-progress object (also read by the Key Benefits hero)
+import IndustryStage, { INDUSTRY_DATA } from "./IndustryDial";
+import "./industries.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const INDUSTRIES = ["Warehouses & Logistics", "Manufacturing", "Pharmaceutical", "Commercial", "Industrial"];
-const SIDES = [-1, -1, 1, 1, 1]; // first lines slide left, last lines slide right
+const N = INDUSTRY_DATA.length;
 
-// Headline zooms out from close-up in 3D, holds, then splits apart around a refractive glass sculpture.
+/**
+ * Industries: a pinned two-column section. The list of industries sits on the left, the blueprint stage on the right.
+ * Scrolling steps through the five industries (class toggles only, no React state per frame) while the stage tilts in 3D.
+ */
 export function animateIndustries() {
-  const sec = document.querySelector(".sh-split");
-  const lines = gsap.utils.toArray(".sh-split-line");
-  const pad = () => window.innerWidth * 0.05;
-  const gapY = () => window.innerHeight * (window.innerWidth < 800 ? 0.14 : 0.075); // phones: push the text well clear of the glass sphere
-  gsap.set(lines, { transformPerspective: 1200 });
+  const sec = document.querySelector(".ix");
+  if (!sec) return;
   glassState.p = 0;
+
+  const rows = gsap.utils.toArray(".ix-row", sec);
+  const scenes = gsap.utils.toArray(".ix-scene", sec);
+  const caps = gsap.utils.toArray(".ix-c", sec);
+  const segs = gsap.utils.toArray(".ix-seg", sec);
+  const countN = sec.querySelector(".ix-count-n");
+  const rail = sec.querySelector(".ix-rail-fill");
+
+  let last = -1;
+  const sync = (p) => {
+    const idx = Math.min(N - 1, Math.floor(p * N * 0.999));
+    if (rail) rail.style.transform = `scaleY(${(p).toFixed(3)})`;
+    if (idx === last) return;
+    last = idx;
+    rows.forEach((el, i) => { el.classList.toggle("on", i === idx); el.classList.toggle("done", i < idx); });
+    scenes.forEach((el, i) => el.classList.toggle("on", i === idx));
+    caps.forEach((el, i) => el.classList.toggle("on", i === idx));
+    segs.forEach((el, i) => { el.classList.toggle("on", i === idx); el.classList.toggle("done", i < idx); });
+    if (countN) countN.textContent = String(idx + 1).padStart(2, "0");
+  };
+  sync(0);
+
+  const prog = { p: 0 };
   gsap
     .timeline({
       defaults: { ease: "none" },
-      scrollTrigger: { trigger: sec, start: "top top", end: "+=340%", pin: true, scrub: 1, invalidateOnRefresh: true },
+      scrollTrigger: { trigger: sec, start: "top top", end: "+=320%", pin: true, scrub: 0.8, invalidateOnRefresh: true },
     })
-    // 1. strong zoom-out, lines tip up into place
-    .fromTo(".sh-split-lines", { scale: 3.6, filter: "blur(14px)" }, { scale: 1, filter: "blur(0px)", ease: "power3.out", duration: 0.34 }, 0)
-    .fromTo(lines, { opacity: 0, rotationX: -60, transformOrigin: "50% 100%" },
-      { opacity: 1, rotationX: 0, stagger: 0.03, duration: 0.2, ease: "power2.out" }, 0)
-    .fromTo(".sh-split-halo", { scale: 2.8, opacity: 0 }, { scale: 1, opacity: 1, ease: "power3.out", duration: 0.4 }, 0)
-    .fromTo(".sh-split-tag", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.22)
-    .to(".sh-split-tag", { opacity: 0, duration: 0.08 }, 0.42)
-    // 2. split + glass sculpture
-    .fromTo(".sh-split-glass", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.3 }, 0.46)
-    .to(lines, {
-      x: (i, el) => SIDES[i] * ((sec.offsetWidth - el.offsetWidth) / 2 - pad()),
-      y: (i) => (i < 2 ? -1 : 1) * gapY(),
-      rotationY: (i) => -SIDES[i] * 12,
-      ease: "power3.inOut", duration: 0.34, stagger: 0.04,
-    }, 0.44)
-    .to(glassState, { p: 1, duration: 1 }, 0)
-    .to(".sh-split-blob", { x: (i) => (i ? 90 : -90), y: (i) => (i ? -120 : 120), duration: 1 }, 0)
-    .fromTo(".sh-split-cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, 0.74)
-    .to(".sh-split .sh-bit", { y: (i, el) => -Number(el.dataset.sp) * 380, duration: 1 }, 0)
-    .to({}, { duration: 0.05 }, 0.95);
+    // 1. intro: text tips up into place, the stage swings in from the right
+    .fromTo(".ix-intro", { opacity: 0, y: 46, rotationX: -32, transformOrigin: "50% 100%", transformPerspective: 1000 },
+      { opacity: 1, y: 0, rotationX: 0, stagger: 0.035, duration: 0.16, ease: "power2.out" }, 0)
+    .fromTo(".ix-stage", { opacity: 0, x: 120, rotationY: -30, scale: 0.86, transformPerspective: 1400, transformOrigin: "0% 50%" },
+      { opacity: 1, x: 0, rotationY: 0, scale: 1, duration: 0.26, ease: "power3.out" }, 0.04)
+    // 2. step through the industries; the stage drifts and tilts gently while it does
+    .to(prog, { p: 1, duration: 0.8, onUpdate: () => sync(prog.p) }, 0.22)
+    .fromTo(".ix-stage-in", { rotationY: -7, rotationX: 3, transformPerspective: 1400 }, { rotationY: 7, rotationX: -3, duration: 0.8 }, 0.22)
+    .fromTo(".ix-art", { y: 8 }, { y: -8, duration: 0.8 }, 0.22)
+    .to({}, { duration: 0.06 }, 1.02);
 }
 
 export function Industries() {
   return (
-    <section className="sh-split" aria-label="Industries we serve">
-      <SteelBits n={30} />
-      <i className="sh-split-blob a" aria-hidden="true" />
-      <i className="sh-split-blob b" aria-hidden="true" />
-      <i className="sh-split-halo" aria-hidden="true" />
-      <span className="sh-tag sh-split-tag">Real-world outcomes</span>
-      <div className="sh-split-glass" aria-hidden="true">
-        <span className="sh-split-aura" />
-        <GlassCore />
+    <section className="ix" aria-label="Industries we serve">
+      <div className="ix-bg" aria-hidden="true" />
+      <div className="ix-wrap">
+        <div className="ix-list-col">
+          <span className="sh-tag ix-intro">Real-world outcomes</span>
+          <h2 className="ix-h ix-intro">Industries we build for</h2>
+          <div className="ix-listbox ix-intro">
+            <span className="ix-rail" aria-hidden="true"><i className="ix-rail-fill" /></span>
+            <ol className="ix-list">
+              {INDUSTRY_DATA.map((d, i) => (
+                <li className="ix-row" key={d.name}>
+                  <sup>{String(i + 1).padStart(2, "0")}</sup>
+                  <span className="ix-name">{d.name}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        <IndustryStage />
+
+        <Link className="ix-cta ix-intro" to={ROUTE_PATHS.PROJECT_CASE_STUDIES} data-cursor="Go">
+          Explore projects <i>→</i>
+        </Link>
       </div>
-      <h2 className="sh-split-lines">
-        {INDUSTRIES.map((n, i) => (
-          <span className="sh-split-line" key={n}><sup>{String(i + 1).padStart(2, "0")}</sup>{n}</span>
-        ))}
-      </h2>
-      <Link className="sh-split-cta" to={ROUTE_PATHS.PROJECT_CASE_STUDIES} data-cursor="Go">Explore projects <i>→</i></Link>
     </section>
   );
 }

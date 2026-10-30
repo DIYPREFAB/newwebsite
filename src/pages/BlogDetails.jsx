@@ -7,7 +7,7 @@ import Footer from "../common/Footer";
 import ScrollToTop from "../common/ScrollToTop";
 import { ThreadProvider, useThread } from "../components/blogthread/ThreadContext";
 import ArticleBody, { Inline } from "../components/blogthread/ArticleBody";
-import { sharePost, queryHref, openQuery } from "../components/blogthread/PostCard";
+import { sharePost } from "../components/blogthread/PostCard";
 import { FontLinks, useBlogBody } from "../components/blogthread/PageShell";
 import { getPost, getPosts, KINDS, absoluteUrl } from "../components/blogthread/blogData";
 import { IconArrow, IconBack, IconClock, IconQuery, IconShare } from "../components/blogthread/icons";
@@ -18,7 +18,7 @@ const ease = [0.2, 0.7, 0.2, 1];
 
 const ArticlePage = ({ post }) => {
   useBlogBody();
-  const { toast } = useThread();
+  const { toast, openQuery } = useThread();
   const [active, setActive] = useState("");
   const { scrollYProgress } = useScroll();
   const bar = useSpring(scrollYProgress, { stiffness: 160, damping: 30, restDelta: 0.001 });
@@ -93,7 +93,7 @@ const ArticlePage = ({ post }) => {
               </div>
             </div>
             <div className="bt-art-meta-actions">
-              <a href={queryHref(post)} onClick={(e) => openQuery(e, post)} className="bt-act"><IconQuery width={18} height={18} /> Query?</a>
+              <button type="button" className="bt-act" onClick={() => openQuery(post)} aria-haspopup="dialog"><IconQuery width={18} height={18} /> Query?</button>
               <button type="button" className="bt-act" onClick={() => sharePost(post, toast)}><IconShare width={18} height={18} /> Share</button>
             </div>
           </motion.div>

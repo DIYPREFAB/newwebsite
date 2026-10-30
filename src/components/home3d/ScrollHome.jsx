@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { lenisOptions, lenisTick } from "../../utils/lenisTick";
 import SteelHero from "./SteelHero";
 import CounterCard from "../../common/CounterCard";
 import { weOfferList } from "../../Constants";
@@ -11,6 +12,7 @@ import { CardPrism, animatePrism } from "./CardPrism";
 import { Industries, animateIndustries } from "./Industries";
 import { Reveal, animateReveal } from "./Reveal";
 import SteelBits from "./SteelBits";
+import { ClientStrip } from "./ClientMarquee";
 import Cursor from "./Cursor";
 import { bookCall } from "./booking";
 import "./home3d.css";
@@ -50,9 +52,9 @@ export default function ScrollHome({ onCta }) {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
+      lenis = new Lenis(lenisOptions);
       lenis.on("scroll", ScrollTrigger.update);
-      tick = (t) => lenis.raf(t * 1000);
+      tick = lenisTick(lenis);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(100, 33);
     }
@@ -160,6 +162,7 @@ export default function ScrollHome({ onCta }) {
 
       {/* 3. Proof */}
       <CounterCard />
+      <ClientStrip />
       <Reveal />
 
       {/* Who we are: frame shrinks with its content, bg flips, statement reveals */}

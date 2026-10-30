@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { lenisOptions, lenisTick } from "../../utils/lenisTick";
 import { RESPECT_REDUCED_MOTION } from "../contact3d/contactData";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,12 +25,12 @@ export default function useScrollStage(root, build) {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
+      lenis = new Lenis(lenisOptions);
       lenisRef.current = lenis;
       // a refresh (or a fresh visit) always opens on the hero, never at an old scroll position
       if (!window.location.hash) lenis.scrollTo(0, { immediate: true, force: true });
       lenis.on("scroll", ScrollTrigger.update);
-      tick = (t) => lenis.raf(t * 1000);
+      tick = lenisTick(lenis);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(100, 33);
     }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { lenisOptions, lenisTick } from "../../utils/lenisTick";
 import { FaArrowRight, FaMapMarkerAlt } from "react-icons/fa";
 import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
@@ -49,10 +50,10 @@ export default function ContactSections() {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
+      lenis = new Lenis(lenisOptions);
       lenisRef.current = lenis;
       lenis.on("scroll", ScrollTrigger.update);
-      tick = (t) => lenis.raf(t * 1000);
+      tick = lenisTick(lenis);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(100, 33);
     }

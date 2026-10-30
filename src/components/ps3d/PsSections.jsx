@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { FaArrowRight } from "react-icons/fa";
+import { lenisOptions, lenisTick } from "../../utils/lenisTick";
+import {
+  FaArrowRight, FaFileAlt, FaCube, FaCogs, FaFileInvoiceDollar, FaTruck, FaTasks, FaDraftingCompass,
+  FaExchangeAlt, FaLink, FaShieldAlt, FaHistory, FaDatabase, FaEye, FaBrain, FaCheck,
+} from "react-icons/fa";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
+import CapabilityLab from "./PsLab";
 import { RESPECT_REDUCED_MOTION, SHOW_EPC, HERO, EPC, BUILD, PROCESS, MARQUEE, CTA } from "./psData";
 import "../home3d/home3d.css";
 import "../home3d/home3d-v4.css";
@@ -46,6 +51,108 @@ function Words({ text, hl = [] }) {
 }
 function Split({ text, hl, className, tag: Tag = "span" }) {
   return <Tag className={className} aria-label={text}><Words text={text} hl={hl} /></Tag>;
+}
+
+
+// icon keys used in psData.js
+const ICONS = {
+  doc: FaFileAlt, cube: FaCube, cogs: FaCogs, invoice: FaFileInvoiceDollar, truck: FaTruck, tasks: FaTasks,
+  compass: FaDraftingCompass, swap: FaExchangeAlt, link: FaLink, shield: FaShieldAlt, history: FaHistory,
+  database: FaDatabase, eye: FaEye, brain: FaBrain,
+};
+
+// tilt + a soft light that follows the pointer (fine pointers only)
+const glareMove = (e) => {
+  if (e.pointerType === "touch") return;
+  tiltMove(e);
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+  el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+};
+const glareLeave = (e) => { e.currentTarget.style.transform = ""; };
+
+// Isometric steel building (portal frames, purlins, girts, bracing) generated once in a 560x360 drawing box.
+// Callout leaders start on real points of the structure and run to the legend column on the right.
+const BD = (() => {
+  const P = (x, y, z) => [216 + (x - y) * 30.6, 122 + (x + y) * 17.55 - z * 36];
+  const f = (n) => Math.round(n * 10) / 10;
+  const d = (pts) => pts.map((p, i) => { const [a, b] = P(...p); return `${i ? "L" : "M"}${f(a)} ${f(b)}`; }).join("");
+  const W = 4, L = 6, E = 1.4, R = 2.1, N = 5;
+  const lines = [];
+  const nodes = [];
+  lines.push(["bs", d([[0, 0, 0], [W, 0, 0], [W, L, 0], [0, L, 0], [0, 0, 0]])]);
+  for (let j = 0; j <= N; j++) {
+    const y = (L / N) * j;
+    lines.push(["gd", d([[0, y, 0], [W, y, 0]])]);
+    lines.push(["fr", d([[0, y, 0], [0, y, E], [W / 2, y, R], [W, y, E], [W, y, 0]])]);
+    [[0, E], [W / 2, R], [W, E]].forEach(([x, z]) => nodes.push(P(x, y, z).map(f)));
+  }
+  [[0, E], [1, 1.75], [2, R], [3, 1.75], [4, E]].forEach(([x, z]) => lines.push(["pu", d([[x, 0, z], [x, L, z]])]));
+  [0, W].forEach((x) => lines.push(["pu", d([[x, 0, 0.7], [x, L, 0.7]])]));
+  lines.push(["br", d([[W, 0, 0], [W, L / N, E]])], ["br", d([[W, L / N, 0], [W, 0, E]])]);
+  // callouts: [point on the structure], label row (y in the 360 box). Listed top to bottom so leaders never cross.
+  const targets = [[[2, 0, R], 40], [[W, 0, E], 110], [[W, 0, 0], 180], [[W, 2.4, 0], 250], [[W, 4.8, 0], 320]];
+  const calls = targets.map(([pt, y]) => { const [ax, ay] = P(...pt).map(f); return { ax, ay, y, d: `M${ax} ${ay}L352 ${y}` }; });
+  return { lines, nodes, calls };
+})();
+
+// The DIYVA platform console: stacked glass plates behind an app window, a drawing that builds itself, leader-lined callouts
+function PlatformConsole({ data }) {
+  return (
+    <div className="ps-con" aria-hidden="true">
+      <i className="ps-con-halo" />
+      <i className="ps-con-floor" />
+      <div className="ps-con-tilt">
+        <div className="ps-con-idle">
+          <div className="ps-con-scroll">
+            <i className="ps-plate p2" />
+            <i className="ps-plate p1" />
+            <div className="ps-win">
+              <div className="ps-win-bar">
+                <i /><i /><i />
+                <b>DIYVA</b>
+                <span>{data.window.project}</span>
+                <em>{data.window.status}</em>
+              </div>
+              <div className="ps-win-body">
+                <ul className="ps-win-nav">
+                  {data.modules.map((m, i) => {
+                    const Ic = ICONS[m.icon];
+                    return <li key={m.label} className={i === 0 ? "on" : ""}><Ic />{m.label}</li>;
+                  })}
+                </ul>
+                <div className="ps-win-main">
+                  <div className="ps-bd-wrap">
+                    <svg className="ps-bd" viewBox="0 0 560 360" fill="none">
+                      {BD.lines.map(([cls, dd], i) => <path key={i} className={`ln ${cls}`} pathLength="1" d={dd} />)}
+                      {BD.nodes.map(([x, y], i) => <circle key={i} className="nd" cx={x} cy={y} r="3" />)}
+                      {BD.calls.map((c, i) => <path key={`l${i}`} className="ld" pathLength="1" d={c.d} />)}
+                      {BD.calls.map((c, i) => <circle key={`a${i}`} className="an" cx={c.ax} cy={c.ay} r="4.5" />)}
+                    </svg>
+                    {data.chips.map((label, i) => (
+                      <span className="ps-cl" key={label} style={{ top: `${(BD.calls[i].y / 360) * 100}%` }}>
+                        <span className="ps-cl-in">{label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ps-impact">
+              <strong>{data.impact.title}</strong>
+              <ul>
+                {data.impact.rows.map((r) => <li key={r}><span>{r}</span><i className="tk"><FaCheck /></i></li>)}
+              </ul>
+              <em>{data.impact.note}</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // A fine-line portal frame that draws itself as you scroll (steel structure for chapter 02)
@@ -138,10 +245,10 @@ export default function PsSections() {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
+      lenis = new Lenis(lenisOptions);
       lenisRef.current = lenis;
       lenis.on("scroll", ScrollTrigger.update);
-      tick = (t) => lenis.raf(t * 1000);
+      tick = lenisTick(lenis);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(100, 33);
     }
@@ -225,24 +332,160 @@ export default function PsSections() {
           const headReveal = (scope) => {
             gsap.from(`${scope} .ps-ch-copy .ps-tag`, { opacity: 0, x: -30, duration: 0.7, ease: "power3.out", scrollTrigger: io(scope + " .ps-ch-copy", "top 85%") });
             gsap.from(`${scope} .ps-ch-copy .ps-c`, { yPercent: 115, rotationX: -80, opacity: 0, stagger: 0.02, duration: 0.9, transformOrigin: "50% 100%", ease: "power3.out", scrollTrigger: io(scope + " .ps-ch-copy", "top 82%") });
-            gsap.from(`${scope} .ps-ch-copy .ps-lead`, { y: 50 * k, opacity: 0, rotationX: -25, transformPerspective: 900, duration: 1, ease: "power3.out", scrollTrigger: io(scope + " .ps-ch-copy", "top 70%") });
+            gsap.from(`${scope} .ps-ch-copy .ps-lead`, { y: 50 * k, opacity: 0, rotationX: -25, transformPerspective: 900, duration: 1, ease: "power3.out", clearProps: "opacity,transform", scrollTrigger: io(scope + " .ps-ch-copy", "top 70%") });
           };
 
           if (SHOW_EPC) {
-          /* ---- 01 EPC: light collage ---- */
-          headReveal(".ps-epc");
-          gsap.fromTo(".ps-epc .ps-ghost", { xPercent: 12, rotationX: 50, opacity: 0.3 }, { xPercent: -14, rotationX: -25, opacity: 1, transformPerspective: 900, ease: "none", scrollTrigger: par(".ps-epc") });
+          /* ================= 01 EPC · DIYVA platform ================= */
 
-          const figs = $(".ps-epc .ps-fig");
-          const figSpeed = [-260, -90, -430];
-          const figRot = [{ a: -16, b: 14 }, { a: 18, b: -12 }, { a: -22, b: 20 }];
-          figs.forEach((el, i) => {
-            gsap.fromTo(el.querySelector(".ps-fig-in"), { clipPath: "inset(100% 0% 0% 0%)", scale: 0.8 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, ease: "power2.out", scrollTrigger: par(el, 0.6, "top 98%", "top 52%") });
-            gsap.fromTo(el, { y: -figSpeed[i] * 0.45 * k, rotationY: figRot[i].a, rotationX: 6, transformPerspective: 1300 }, { y: figSpeed[i] * 0.45 * k, rotationY: figRot[i].b, rotationX: -6, ease: "none", scrollTrigger: par(".ps-epc .ps-collage", 0.9) });
-            gsap.fromTo(el.querySelector("img"), { yPercent: -14, scale: 1.3 }, { yPercent: 14, scale: 1.3, ease: "none", scrollTrigger: par(el, 0.5) });
+          /* ---- act 1: platform stage (3D console) ---- */
+          headReveal(".ps-epc-stage");
+          gsap.from(".ps-epc-stage .ps-stage-cta", { y: 40, opacity: 0, duration: 0.9, ease: "back.out(1.5)", clearProps: "opacity,transform", scrollTrigger: io(".ps-epc-stage .ps-ch-copy", "top 62%") });
+          gsap.fromTo(".ps-epc-stage .ps-ghost", { xPercent: 12, rotationX: 50, opacity: 0.3 }, { xPercent: -14, rotationX: -25, opacity: 1, transformPerspective: 900, ease: "none", scrollTrigger: par(".ps-epc-stage") });
+
+          const stage = (s = 0.9, a = "top bottom", b = "bottom top") => par(".ps-epc-stage", s, a, b);
+
+          // depth without blur: layered glass plates sit behind the window and drift at their own speeds
+          gsap.set(".ps-plate.p1", { z: -60 * k });
+          gsap.set(".ps-plate.p2", { z: -120 * k });
+          gsap.set(".ps-impact", { z: 50 * k });
+          gsap.from(".ps-win", { opacity: 0, y: 130, rotationX: 28, scale: 0.84, duration: 1.3, ease: "power4.out", scrollTrigger: io(".ps-con", "top 88%", "bottom 5%") });
+          gsap.from(".ps-plate", { opacity: 0, y: 90, scale: 0.9, stagger: 0.14, duration: 1.2, delay: 0.1, ease: "power3.out", scrollTrigger: io(".ps-con", "top 88%", "bottom 5%") });
+          gsap.from(".ps-impact", { opacity: 0, x: -70, rotationY: 30, duration: 1.1, delay: 0.5, ease: "power3.out", scrollTrigger: io(".ps-con", "top 78%", "bottom 5%") });
+          gsap.from(".ps-con-floor, .ps-con-halo", { opacity: 0, duration: 1.4, scrollTrigger: io(".ps-con", "top 88%", "bottom 5%") });
+          gsap.fromTo(".ps-plate.p1", { y: 50 * k }, { y: -70 * k, ease: "none", scrollTrigger: stage(0.7) });
+          gsap.fromTo(".ps-plate.p2", { y: 90 * k }, { y: -130 * k, ease: "none", scrollTrigger: stage(0.6) });
+          gsap.to(".ps-impact", { y: -90 * k, ease: "none", scrollTrigger: stage(0.8) });
+          gsap.fromTo(".ps-con-scroll", { rotationY: -14, rotationX: 8, y: 70 * k }, { rotationY: 10, rotationX: -4, y: -80 * k, ease: "none", scrollTrigger: stage(0.9) });
+          gsap.set(".ps-con-floor", { rotationX: 74, transformOrigin: "50% 100%" });
+          gsap.fromTo(".ps-con-floor", { yPercent: -8 }, { yPercent: 18, ease: "none", scrollTrigger: stage(0.7) });
+          gsap.fromTo(".ps-con-halo", { scale: 0.8, y: 60 * k }, { scale: 1.2, y: -80 * k, ease: "none", scrollTrigger: stage(0.7) });
+
+          // the drawing builds itself: footprint, frames, purlins, bracing, then joints, then callouts. It finishes before the stage leaves view.
+          gsap.set(".ps-bd .ln, .ps-bd .ld", { strokeDasharray: 1, strokeDashoffset: 1 });
+          gsap.set(".ps-bd .nd, .ps-bd .an", { scale: 0, transformOrigin: "50% 50%" });
+          gsap.set(".ps-cl", { opacity: 0, x: 16 });
+          gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: stage(0.8, "top 85%", "top 30%") })
+            .to(".ps-bd .bs", { strokeDashoffset: 0, duration: 0.2 }, 0)
+            .to(".ps-bd .gd", { strokeDashoffset: 0, stagger: 0.03, duration: 0.15 }, 0.08)
+            .to(".ps-bd .fr", { strokeDashoffset: 0, stagger: 0.08, duration: 0.25 }, 0.2)
+            .to(".ps-bd .pu", { strokeDashoffset: 0, stagger: 0.04, duration: 0.25 }, 0.6)
+            .to(".ps-bd .br", { strokeDashoffset: 0, stagger: 0.05, duration: 0.2 }, 0.9)
+            .to(".ps-bd .nd", { scale: 1, stagger: 0.02, duration: 0.12, ease: "back.out(3)" }, 1.0)
+            .to(".ps-bd .an", { scale: 1, stagger: 0.1, duration: 0.15, ease: "back.out(3)" }, 1.15)
+            .to(".ps-bd .ld", { strokeDashoffset: 0, stagger: 0.1, duration: 0.25 }, 1.2)
+            .to(".ps-cl", { opacity: 1, x: 0, stagger: 0.1, duration: 0.25 }, 1.3);
+
+          // change-impact rows light up one by one
+          const impTrig = stage(0.8, "top 55%", "center 25%");
+          gsap.fromTo(".ps-impact li", { opacity: 0.25, x: -16 }, { opacity: 1, x: 0, stagger: 0.18, ease: "none", scrollTrigger: impTrig });
+          gsap.fromTo(".ps-impact .tk", { scale: 0 }, { scale: 1, stagger: 0.18, ease: "back.out(3)", scrollTrigger: impTrig });
+
+          // sidebar module follows the scroll
+          const navItems = $(".ps-win-nav li");
+          let navCur = 0;
+          ScrollTrigger.create({
+            trigger: ".ps-epc-stage", start: "top 75%", end: "bottom 35%",
+            onUpdate: (self) => {
+              const i = Math.max(0, Math.min(navItems.length - 1, Math.floor(self.progress * navItems.length)));
+              if (i === navCur) return;
+              navCur = i;
+              navItems.forEach((n, j) => n.classList.toggle("on", j === i));
+            },
           });
-          gsap.fromTo(".ps-epc .ps-badge", { rotationY: -180, scale: 0.4, opacity: 0, transformPerspective: 900 }, { rotationY: 0, scale: 1, opacity: 1, duration: 1.1, ease: "back.out(1.6)", scrollTrigger: io(".ps-epc .ps-collage", "top 70%") });
-          gsap.to(".ps-epc .ps-badge", { y: -120 * k, rotationZ: 8, ease: "none", scrollTrigger: par(".ps-epc .ps-collage", 0.9) });
+
+          // idle sway (touch devices keep a living scene) + mouse parallax on desktop
+          gsap.fromTo(".ps-con-idle", { rotationY: -4, rotationX: 1.5 }, { rotationY: 4, rotationX: -1.5, duration: 6, ease: "sine.inOut", yoyo: true, repeat: -1 });
+          if (fine) {
+            const tx = gsap.quickTo(".ps-con-tilt", "rotationY", { duration: 1.1, ease: "power3.out" });
+            const ty = gsap.quickTo(".ps-con-tilt", "rotationX", { duration: 1.1, ease: "power3.out" });
+            const move = (e) => { tx((e.clientX / innerWidth - 0.5) * 16); ty(-(e.clientY / innerHeight - 0.5) * 12); };
+            window.addEventListener("pointermove", move);
+            cleanups.push(() => window.removeEventListener("pointermove", move));
+          }
+
+          /* ---- act 2: capability cards ---- */
+          gsap.from(".ps-cap-head > *", { y: 60 * k, opacity: 0, rotationX: -40, transformPerspective: 900, stagger: 0.12, duration: 0.9, ease: "power3.out", scrollTrigger: io(".ps-cap-head", "top 88%") });
+          // capability lab: sticky rail + live panel. Scroll (or a click) picks the scene; the scenes animate themselves via CSS.
+          const lab = rootEl.querySelector(".ps-lab");
+          if (lab) {
+            const tabs = $(".ps-lab-tab"), scenes = $(".ps-lab-scene"), dots = $(".ps-lab-dots i");
+            const stageEl = lab.querySelector(".ps-lab-stage");
+            const countEl = lab.querySelector(".ps-lab-count b"), titleEl = lab.querySelector(".ps-lab-st");
+            const N = tabs.length;
+            let cur = -1;
+            const setActive = (i) => {
+              if (i === cur) return;
+              const dir = i > cur ? 1 : -1;
+              cur = i;
+              tabs.forEach((t, j) => t.classList.toggle("on", j === i));
+              scenes.forEach((s, j) => s.classList.toggle("on", j === i));
+              dots.forEach((d, j) => d.classList.toggle("on", j === i));
+              countEl.textContent = pad2(i + 1);
+              titleEl.textContent = EPC.items[i].title;
+              gsap.fromTo(".ps-lab-panel", { rotationY: 16 * dir, rotationX: -4 }, { rotationY: 0, rotationX: 0, duration: 0.95, ease: "power3.out", overwrite: "auto" });
+            };
+            const topPx = () => (parseFloat(getComputedStyle(rootEl).getPropertyValue("--nav")) || 96) + (lg ? 18 : 8);
+            const st = ScrollTrigger.create({
+              trigger: stageEl, pin: true, pinSpacing: true, anticipatePin: 1, invalidateOnRefresh: true,
+              start: () => `top ${topPx()}px`,
+              end: () => `+=${Math.round(window.innerHeight * 0.46 * N)}`,
+              onUpdate: (self) => {
+                const f = self.progress * N;
+                const i = Math.min(N - 1, Math.floor(f));
+                setActive(i);
+                tabs.forEach((t, j) => t.style.setProperty("--p", j < i ? 1 : j > i ? 0 : +(f - i).toFixed(3)));
+              },
+              onLeaveBack: () => { setActive(0); tabs.forEach((t) => t.style.setProperty("--p", 0)); },
+            });
+            ScrollTrigger.create({ trigger: lab, start: "top 78%", onEnter: () => { if (cur < 0) setActive(0); } });
+            const onLabClick = (e) => {
+              const el = e.target.closest("[data-i]");
+              if (!el || !lab.contains(el)) return;
+              const y = st.start + (st.end - st.start) * ((+el.dataset.i + 0.5) / N);
+              if (lenis) lenis.scrollTo(y, { duration: 1.2 }); else window.scrollTo({ top: y, behavior: "smooth" });
+            };
+            lab.addEventListener("click", onLabClick);
+            cleanups.push(() => lab.removeEventListener("click", onLabClick));
+
+            gsap.fromTo(".ps-lab-idle", { rotationY: -3, rotationX: 1 }, { rotationY: 3, rotationX: -1, duration: 6, ease: "sine.inOut", yoyo: true, repeat: -1 });
+            gsap.fromTo(".ps-lab-halo", { scale: 0.8 }, { scale: 1.15, ease: "none", scrollTrigger: par(lab, 0.7) });
+            if (fine) {
+              const tx = gsap.quickTo(".ps-lab-tilt", "rotationY", { duration: 1.1, ease: "power3.out" });
+              const ty = gsap.quickTo(".ps-lab-tilt", "rotationX", { duration: 1.1, ease: "power3.out" });
+              const move = (e) => { tx((e.clientX / innerWidth - 0.5) * 10); ty(-(e.clientY / innerHeight - 0.5) * 8); };
+              window.addEventListener("pointermove", move);
+              cleanups.push(() => window.removeEventListener("pointermove", move));
+            }
+          }
+
+          /* ---- act 3: lifecycle chevrons ---- */
+          headReveal(".ps-epc-flow");
+          gsap.fromTo(".ps-flow-bg img", { yPercent: -14, scale: 1.25 }, { yPercent: 14, scale: 1.4, ease: "none", scrollTrigger: par(".ps-epc-flow", 0.5) });
+          gsap.fromTo(".ps-flow-ghost", { xPercent: 10 }, { xPercent: -26, ease: "none", scrollTrigger: par(".ps-epc-flow") });
+          {
+            const chev = $(".ps-chev");
+            const N = chev.length;
+            const STEP = 0.4;
+            const flowTl = gsap.timeline({
+              defaults: { ease: "none" },
+              scrollTrigger: par(".ps-flow-rail", 0.8, "top 92%", "top 22%"),
+              onUpdate: () => chev.forEach((c, j) => c.classList.toggle("on", flowTl.progress() > (j + 0.7) / (N + 0.9))),
+            });
+            chev.forEach((c, i) => {
+              flowTl.fromTo(c, { opacity: 0, y: 150 * k, z: -460 * k, rotationY: -55, rotationX: 22, transformPerspective: 1400 }, { opacity: 1, y: 0, z: 0, rotationY: 0, rotationX: 0, duration: 0.55, ease: "power2.out" }, i * STEP);
+            });
+            flowTl.fromTo(".ps-flow-beam i", { scaleX: 0 }, { scaleX: 1, duration: (N - 1) * STEP + 0.6 }, 0);
+          }
+
+          /* ---- act 4: why one connected view ---- */
+          headReveal(".ps-epc-why");
+          $(".ps-why-t").forEach((li, i) => {
+            const right = i % 2;
+            gsap.fromTo(li, { y: (right ? 50 : -10) * k }, { y: (right ? -50 : 10) * k, ease: "none", scrollTrigger: par(li, 0.9) });
+            gsap.fromTo(li.querySelector(".ps-why-in"), { opacity: 0, rotationX: -70, y: 80 * k, z: -220 * k, transformPerspective: 1100, transformOrigin: "50% 0%" }, { opacity: 1, rotationX: 0, y: 0, z: 0, duration: 1.05, delay: (i % 2) * 0.1, ease: "power3.out", scrollTrigger: io(li, "top 93%", "bottom 6%") });
+            gsap.fromTo(li.querySelector(".ps-why-i"), { rotationY: -38, rotationX: 16, transformPerspective: 600 }, { rotationY: 38, rotationX: -16, ease: "none", scrollTrigger: par(li) });
+          });
           }
 
           /* ---- 02 Build: full-bleed parallax + drawing frame ---- */
@@ -446,27 +689,91 @@ export default function PsSections() {
 
       {SHOW_EPC && (
         <>
-      {/* ============ 2. Chapter 01 — EPC Consultancy ============ */}
+      {/* ============ 2. Chapter 01 — EPC Consultancy · DIYVA platform ============ */}
       <section className="ps-sec ps-ch ps-epc" id="epc" aria-label={EPC.name}>
         <SteelBits n={10} />
-        <div className="ps-ghost" aria-hidden="true">{EPC.n}</div>
-        <div className="ps-ch-top">
-          <div className="ps-ch-copy">
-            <span className="ps-tag">{EPC.n} · {EPC.name}</span>
-            <Split text={EPC.title} hl={EPC.hl} className="ps-h2" tag="h2" />
-            <p className="ps-lead">{EPC.text}</p>
-          </div>
-          <div className="ps-collage">
-            {EPC.collage.map((im, i) => (
-              <figure className={`ps-fig ${"abc"[i]}`} key={im.src + i}>
-                <div className="ps-fig-in"><img src={im.src} alt={im.alt} loading="lazy" decoding="async" width="1600" height="1066" /></div>
-              </figure>
-            ))}
-            <div className="ps-badge" aria-hidden="true"><strong>{EPC.n}</strong><span>EPC</span></div>
+
+        {/* act 1 · platform stage */}
+        <div className="ps-epc-stage">
+          <div className="ps-ghost" aria-hidden="true">{EPC.n}</div>
+          <div className="ps-ch-top">
+            <div className="ps-ch-copy">
+              <span className="ps-tag">{EPC.n} · {EPC.name}</span>
+              <Split text={EPC.title} hl={EPC.hl} className="ps-h2" tag="h2" />
+              <p className="ps-lead">{EPC.text}</p>
+              <div className="ps-stage-cta">
+                <button type="button" className="ps-btn" onClick={() => jump("#epc-how")} data-mag>{EPC.stage.cta}<i><FaArrowRight aria-hidden="true" /></i></button>
+              </div>
+            </div>
+            <PlatformConsole data={EPC.stage} />
           </div>
         </div>
-        <ServiceStack data={EPC} variant="light" />
-        <Ideal data={EPC} to={ROUTE_PATHS.CONTACT_US} />
+
+        {/* act 2 · how DIYVA supports your project */}
+        <div className="ps-cap" id="epc-how">
+          <div className="ps-cap-head">
+            <span className="ps-tag">Powered by DIYVA</span>
+            <h3 className="ps-h3">{EPC.listTitle}</h3>
+          </div>
+          <CapabilityLab items={EPC.items} icons={ICONS} bd={BD} />
+        </div>
+
+        {/* act 3 · lifecycle */}
+        <div className="ps-epc-flow">
+          <div className="ps-flow-bg" aria-hidden="true"><img src={EPC.flow.bg} alt="" loading="lazy" decoding="async" width="1600" height="1066" /></div>
+          <i className="ps-scrim" aria-hidden="true" />
+          <div className="ps-flow-ghost" aria-hidden="true">DIYVA</div>
+          <div className="ps-flow-in">
+            <div className="ps-ch-copy">
+              <span className="ps-tag">{EPC.flow.tag}</span>
+              <Split text={EPC.flow.title} hl={EPC.flow.hl} className="ps-h2" tag="h2" />
+              <p className="ps-lead">{EPC.flow.text}</p>
+            </div>
+            <div className="ps-flow-rail">
+              <div className="ps-flow-beam" aria-hidden="true"><i /></div>
+              <ol className="ps-flow-list">
+                {EPC.flow.steps.map((st, i) => {
+                  const Ic = ICONS[st.icon];
+                  return (
+                    <li className="ps-chev" key={st.title} style={{ zIndex: EPC.flow.steps.length - i }}>
+                      <div className="ps-chev-in">
+                        <span className="ps-chev-ic" aria-hidden="true"><Ic /></span>
+                        <div className="ps-chev-tx"><h4>{st.title}</h4><p>{st.text}</p></div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        {/* act 4 · why one connected view */}
+        <div className="ps-epc-why">
+          <div className="ps-why-wrap">
+            <div className="ps-why-copy">
+              <div className="ps-ch-copy">
+                <span className="ps-tag">{EPC.why.tag}</span>
+                <Split text={EPC.why.title} hl={EPC.why.hl} className="ps-h2" tag="h2" />
+                <p className="ps-lead">{EPC.why.text}</p>
+              </div>
+            </div>
+            <ul className="ps-why-list">
+              {EPC.why.items.map((w) => {
+                const Ic = ICONS[w.icon];
+                return (
+                  <li className="ps-why-t" key={w.title}>
+                    <div className="ps-why-in">
+                      <span className="ps-why-i" aria-hidden="true"><Ic /></span>
+                      <div><h4>{w.title}</h4><p>{w.text}</p></div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <Ideal data={EPC} to={ROUTE_PATHS.CONTACT_US} />
+        </div>
       </section>
         </>
       )}

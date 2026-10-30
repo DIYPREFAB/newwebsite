@@ -1,0 +1,29 @@
+/* Client-logo marquee: shared by the TrustDoor block and the strip under the stats bar */
+.sh-mq { position: relative; overflow: hidden; padding: 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.sh-mq-track { display: flex; align-items: center; gap: 18px; width: max-content; margin: 0; padding: 0; list-style: none; animation: shMq 40s linear infinite; will-change: transform; }
+.sh-mq-track.rev { animation-direction: reverse; }
+.sh-mq:hover .sh-mq-track { animation-play-state: paused; }
+@keyframes shMq { to { transform: translateX(calc(-50% - 9px)); } }
+.sh-mq-tile { flex: none; display: grid; place-items: center; min-width: 170px; height: 68px; padding: 0 26px; border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255,255,255,.96), rgba(228,240,243,.9)); border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 14px 34px rgba(0,8,16,.38), inset 0 1px 0 #fff; transition: transform .3s ease, box-shadow .3s ease; }
+.sh-mq-tile:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,8,16,.5), 0 0 0 1px rgba(143,224,212,.7), inset 0 1px 0 #fff; }
+.sh-mq-tile img { display: block; max-width: 140px; max-height: 40px; width: auto; height: auto; object-fit: contain; filter: grayscale(1) contrast(1.05); opacity: .85; transition: filter .3s, opacity .3s; }
+.sh-mq-tile:hover img { filter: none; opacity: 1; }
+.sh-mq-text { font-size: 14px; font-weight: 800; letter-spacing: .02em; color: #0b2740; white-space: nowrap; }
+@media (max-width: 700px) {
+  .sh-mq-tile { min-width: 130px; height: 54px; padding: 0 18px; }
+  .sh-mq-tile img { max-width: 100px; max-height: 30px; }
+  .sh-mq-text { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-mq { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .sh-mq-track { animation: none; }
+}
+
+/* Strip under the stats bar */
+.sh-clients { position: relative; padding: clamp(22px, 4vh, 40px) 0 clamp(40px, 7vh, 72px); background: var(--navy, #001524); text-align: center; }
+.sh-clients::before { content: ""; position: absolute; top: 0; left: 6vw; right: 6vw; height: 1px; background: linear-gradient(90deg, transparent, rgba(168, 218, 220, 0.28), transparent); }
+.sh-clients .sh-tag { color: #8fe0d4; margin-bottom: clamp(16px, 2.6vh, 26px); }

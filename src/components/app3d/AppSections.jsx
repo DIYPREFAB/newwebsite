@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { lenisOptions, lenisTick } from "../../utils/lenisTick";
 import { FaArrowRight, FaBuilding, FaGraduationCap, FaHome, FaHospital, FaIndustry } from "react-icons/fa";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import SteelBits from "../home3d/SteelBits";
@@ -87,10 +88,10 @@ export default function AppSections() {
 
     let lenis, tick;
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, syncTouch: true });
+      lenis = new Lenis(lenisOptions);
       lenisRef.current = lenis;
       lenis.on("scroll", ScrollTrigger.update);
-      tick = (t) => lenis.raf(t * 1000);
+      tick = lenisTick(lenis);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(100, 33);
     }

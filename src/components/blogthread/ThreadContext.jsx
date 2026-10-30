@@ -2,14 +2,18 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { uid } from "./utils";
 import { IconCheck } from "./icons";
+import QueryModal from "./QueryModal";
 
-// The blog is read-only: no sign-in, reactions or comments. This provider only supplies the small
-// "Link copied" toast used by the Share buttons.
+// The blog is read-only: no sign-in, reactions or comments. This provider supplies the small
+// "Link copied" toast used by the Share buttons and the popup Query form.
 const ThreadCtx = createContext(null);
 export const useThread = () => useContext(ThreadCtx);
 
 export const ThreadProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
+  const [queryPost, setQueryPost] = useState(null);
+  const openQuery = useCallback((post) => setQueryPost(post), []);
+  const closeQuery = useCallback(() => setQueryPost(null), []);
 
   const toast = useCallback((message) => {
     const id = uid();
@@ -17,12 +21,13 @@ export const ThreadProvider = ({ children }) => {
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 2600);
   }, []);
 
-  const value = useMemo(() => ({ toast }), [toast]);
+  const value = useMemo(() => ({ toast, openQuery }), [toast, openQuery]);
 
   return (
     <ThreadCtx.Provider value={value}>
       <MotionConfig reducedMotion="user">
         {children}
+        <QueryModal post={queryPost} onClose={closeQuery} />
         <div className="bt-toasts" role="status" aria-live="polite">
           <AnimatePresence>
             {toasts.map((t) => (

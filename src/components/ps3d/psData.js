@@ -1,9 +1,9 @@
 // Products & Services page content. Copy comes straight from the brief; images live in /public/images/ps.
 export const RESPECT_REDUCED_MOTION = false; // same switch as the other 3D pages: false = animate even if the device asks for less motion
 
-// TEMPORARY: the EPC Consultancy block is switched off. Set to true to bring the whole block back (section, hero button and
+// EPC Consultancy block: switched ON (restored). Set to false to hide the whole block again (section, hero button and
 // chip, "01/02" numbering, marquee words and the original hero / closing copy) - nothing else needs to change.
-export const SHOW_EPC = false;
+export const SHOW_EPC = true;
 
 const IMG = (n) => `/images/ps/${n}.webp`;
 
@@ -28,28 +28,78 @@ export const EPC = {
   id: "epc",
   n: "01",
   name: "EPC Consultancy",
-  title: "Plan Smarter. Build with Confidence.",
-  hl: ["Build", "with", "Confidence."],
+  title: "From Project Intent to Project Intelligence.",
+  hl: ["Project", "Intelligence."],
   text:
-    "Our EPC consultancy service helps you make informed decisions at every stage of your construction project. From engineering and design coordination to procurement planning and execution strategy, we help you establish a clear path from concept to construction.",
-  listTitle: "Our services include:",
+    "Our EPC consultancy is powered by DIYVA, our project intelligence platform. It creates one digital thread across the industrial building lifecycle, from tender documents to site execution, so information created at one stage becomes intelligence for every stage that follows.",
+
+  // ---- Act 1: the 3D platform console (illustrative UI, no figures)
+  stage: {
+    cta: "See how DIYVA helps",
+    window: { project: "Industrial building · R0.1", status: "Engineered" },
+    modules: [
+      { label: "Documents", icon: "doc" },
+      { label: "Model", icon: "cube" },
+      { label: "Engineering", icon: "cogs" },
+      { label: "BOQ & Cost", icon: "invoice" },
+      { label: "Procurement", icon: "truck" },
+      { label: "Execution", icon: "tasks" },
+    ],
+    chips: ["Design & Engineering", "Digital Building", "Cost & Commercial", "Procurement", "Execution"],
+    impact: {
+      title: "Change impact",
+      rows: ["Members", "Connections", "Quantities", "BOQ & cost", "Procurement", "Schedule"],
+      note: "Logged: who changed what, and why",
+    },
+  },
+
+  // ---- Act 2: how DIYVA supports your project
+  listTitle: "How DIYVA supports your project:",
   items: [
-    { title: "Engineering & Design Coordination", text: "Technical planning and coordination to meet your project requirements.", img: IMG("plan"), alt: "Engineers coordinating design drawings" },
-    { title: "Procurement Planning", text: "Support with material selection, quantity planning, and procurement coordination.", img: IMG("containers"), alt: "Engineers checking material consignments" },
-    { title: "Cost & Scope Estimation", text: "Assistance in defining project requirements, quantities, and preliminary costs.", img: IMG("inspect"), alt: "Engineer inspecting a steel component" },
-    { title: "Project Planning", text: "Scheduling, milestone planning, and execution strategy.", img: IMG("engineer"), alt: "Engineer planning a project schedule" },
-    { title: "Technical Consultancy", text: "Guidance on prefabrication systems, structural requirements, and constructability.", img: IMG("review"), alt: "Two engineers discussing technical details" },
-    { title: "Execution Coordination", text: "Support in coordinating project activities in line with the agreed scope.", img: IMG("meeting"), alt: "Project team meeting on a factory floor" },
+    { icon: "doc", title: "Understand Your Documents", text: "Tender documents, PDF drawings, QRF, Excel sheets and specifications become a structured project that engineers verify, with every input linked to its source.", img: IMG("plan"), alt: "Engineers reviewing project drawings" },
+    { icon: "cube", title: "Visualize & Engineer", text: "See the building take shape, from grid and footprint to an engineered model. AI proposes, engineering rules and standards validate, and engineers approve.", img: IMG("engineer"), alt: "Engineer working through a structural design" },
+    { icon: "compass", title: "Explore Design Alternatives", text: "Compare only the concepts that pass structural requirements, so you can weigh engineering and business priorities before committing to a revision.", img: IMG("review"), alt: "Two engineers comparing design options" },
+    { icon: "swap", title: "Know What Every Change Means", text: "Change one thing and see what it affects: members, connections, quantities, BOQ, cost, procurement and schedule, with a record of who changed what and why.", img: IMG("meeting"), alt: "Project team reviewing the impact of a change" },
+    { icon: "invoice", title: "BOQ, Cost & Procurement", text: "Approved engineering turns into a detailed BOQ/BOM, cost estimates and supplier-ready packages, and bids can be compared with the technical context intact.", img: IMG("containers"), alt: "Engineers checking material consignments" },
+    { icon: "tasks", title: "Execution Control", text: "Follow cost, schedule, supply and quality as one project story, and spot a potential delay before it becomes a surprise on site.", img: IMG("inspect"), alt: "Engineer inspecting a steel component on site" },
   ],
+
+  // ---- Act 3: lifecycle chevrons
+  flow: {
+    tag: "The project lifecycle",
+    title: "One digital thread from tender to site.",
+    hl: ["digital", "thread"],
+    text: "Information created at one stage becomes intelligence for every stage that follows.",
+    bg: IMG("hall"),
+    steps: [
+      { icon: "doc", title: "Tender & documents", text: "Drawings, QRF and specifications become one structured project." },
+      { icon: "cogs", title: "Engineering", text: "AI proposes. Standards validate. Engineers approve." },
+      { icon: "invoice", title: "Commercial", text: "BOQ/BOM and cost estimates follow approved engineering." },
+      { icon: "truck", title: "Procurement", text: "Supplier-ready packages and bids with technical context." },
+      { icon: "tasks", title: "Execution", text: "Cost, schedule, supply and quality as one project story." },
+    ],
+  },
+
+  // ---- Act 4: why a connected view
+  why: {
+    tag: "Why DIYVA",
+    title: "More than separate services. One connected view.",
+    hl: ["connected", "view."],
+    text: "DIYVA keeps engineering, cost, procurement and execution on the same record, so every decision is traceable and every change is understood.",
+    items: [
+      { icon: "link", title: "Connected information", text: "Every input stays linked to its source, from tender to site." },
+      { icon: "shield", title: "Engineering-led decisions", text: "AI proposes, engineering rules and standards validate, and engineers approve." },
+      { icon: "history", title: "Traceable revisions", text: "A record of who changed what and why." },
+      { icon: "database", title: "Commercial clarity", text: "BOQ, cost and procurement follow approved engineering." },
+      { icon: "eye", title: "Integrated visibility", text: "Cost, schedule, supply and quality read as one project story." },
+      { icon: "brain", title: "Continuous intelligence", text: "What one stage creates becomes insight for the next." },
+    ],
+  },
+
   idealLabel: "Ideal for",
   ideal:
-    "Businesses, developers, industrial facility owners, and project owners looking for professional guidance before or during construction.",
+    "Industrial project owners, developers and facility owners who want one connected view from tender to site, before or during construction.",
   cta: "Discuss Your Project",
-  collage: [
-    { src: IMG("engineer"), alt: "Engineer reviewing construction plans" },
-    { src: IMG("meeting"), alt: "Project discussion in a steel fabrication facility" },
-    { src: IMG("review"), alt: "Engineers in conversation at a workshop" },
-  ],
 };
 
 export const BUILD = {
@@ -95,9 +145,9 @@ export const PROCESS = {
 
 const MARQUEE_ALL = [
   ["EPC Consultancy", "Pre-Engineered Buildings", "Industrial Sheds", "Warehouses", "Structural Steel"],
-  ["Procurement Planning", "Modular Construction", "Site Execution", "Metal Structures", "Project Planning"],
+  ["Project Intelligence", "Modular Construction", "Site Execution", "Metal Structures", "Project Planning"],
 ];
-const EPC_WORDS = ["EPC Consultancy", "Procurement Planning"];
+const EPC_WORDS = ["EPC Consultancy", "Project Intelligence"];
 export const MARQUEE = SHOW_EPC ? MARQUEE_ALL : MARQUEE_ALL.map((row) => row.filter((w) => !EPC_WORDS.includes(w)));
 
 export const CTA = {

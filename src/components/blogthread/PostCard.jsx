@@ -6,21 +6,6 @@ import { KINDS } from "./blogData";
 import { IconArrow, IconClock, IconQuery, IconShare } from "./icons";
 import { formatDay } from "./utils";
 
-export const BLOG_MAIL = "info@diyprefab.com";
-export const queryHref = (post) => `mailto:${BLOG_MAIL}?subject=${encodeURIComponent(`Query: ${post.title}`)}`;
-
-// Gmail compose in a new tab: works on a PC even when no desktop mail app is set up for mailto:
-export const gmailHref = (post) =>
-  `https://mail.google.com/mail/?view=cm&fs=1&to=${BLOG_MAIL}&su=${encodeURIComponent(`Query: ${post.title}`)}`;
-
-// Phones keep the normal mailto: link (it opens their mail app); on a PC the click opens Gmail instead.
-export const openQuery = (e, post) => {
-  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) return;
-  e.preventDefault();
-  const w = window.open(gmailHref(post), "_blank", "noopener,noreferrer");
-  if (!w) window.location.href = queryHref(post);
-};
-
 export const sharePost = async (post, toast) => {
   const url = `${window.location.origin}/blog/${post.slug}`;
   try {
@@ -36,7 +21,7 @@ export const sharePost = async (post, toast) => {
 };
 
 const PostCard = ({ post, index }) => {
-  const { toast } = useThread();
+  const { toast, openQuery } = useThread();
   const nodeRef = useRef(null);
   const reached = useInView(nodeRef, { margin: "-45% 0px -45% 0px" });
   const passed = useInView(nodeRef, { margin: "0px 0px -45% 0px" });
@@ -86,9 +71,9 @@ const PostCard = ({ post, index }) => {
 
         <footer className="bt-actions">
           <div className="bt-actions-right">
-            <a href={queryHref(post)} onClick={(e) => openQuery(e, post)} className="bt-act">
+            <button type="button" className="bt-act" onClick={() => openQuery(post)} aria-haspopup="dialog">
               <IconQuery width={18} height={18} /> Query?
-            </a>
+            </button>
             <button type="button" className="bt-act" onClick={() => sharePost(post, toast)}>
               <IconShare width={18} height={18} /> Share
             </button>
