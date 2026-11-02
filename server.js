@@ -3,6 +3,7 @@
 // This server answers known routes with 200, moved URLs with a 301, and everything else with a real 404
 // (still serving index.html so the React "Page not found" screen renders, plus X-Robots-Tag: noindex).
 //   npm run build && npm start        (PORT / HOST env vars optional; default 0.0.0.0:3000)
+import process from "node:process";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";

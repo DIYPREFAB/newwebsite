@@ -48,7 +48,7 @@ const LeadFormModal = ({ open, onClose, onSubmit }) => {
         }
 
         // Phone validation (optional but if provided, should be valid)
-        if (formData.phone && !/^[\+]?[\d\s\-\(\)]{10,}$/.test(formData.phone.replace(/\s/g, ''))) {
+        if (formData.phone && !/^\+?[\d\s()-]{10,}$/.test(formData.phone.replace(/\s/g, ''))) {
             newErrors.phone = "Please enter a valid phone number";
         }
 
@@ -133,7 +133,7 @@ const LeadFormModal = ({ open, onClose, onSubmit }) => {
 
         try {
             // Call the API
-            const response = await FormServices.designConsultant(formData);
+            await FormServices.designConsultant(formData);
 
             // Show success message
             showToast("Thank you! We'll get back to you soon.", 'success');

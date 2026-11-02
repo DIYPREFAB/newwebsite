@@ -11,7 +11,6 @@ import config from "../../config";
 import axios from "axios";
 
 const Certifications = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [certifications, setCertifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -597,8 +596,6 @@ const Certifications = () => {
                 <Col key={cert.id || index} lg={3} md={6} sm={12}>
                   <div
                     className="cert-gallery-card"
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}
                     onClick={() => openLightbox(index)}
                   >
                     <div className="cert-image-container">

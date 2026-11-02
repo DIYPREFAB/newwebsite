@@ -382,7 +382,7 @@ export const sliderSettings = {
   swipeToSlide: true,
   touchThreshold: 10,
   accessibility: true,
-  beforeChange: (oldIndex, newIndex) => {
+  beforeChange: (oldIndex) => {
     // More efficient DOM manipulation
     const images = document.querySelectorAll(".slider-image");
     images.forEach((img, index) => {
@@ -391,7 +391,7 @@ export const sliderSettings = {
       }
     });
   },
-  afterChange: (currentSlide) => {
+  afterChange: () => {
     // Add zoom effect to active slide
     const activeImage = document.querySelector(".slick-active .slider-image");
     if (activeImage) {
