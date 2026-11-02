@@ -123,8 +123,6 @@ body.has-hn.ct-3d:not(.home-3d) { padding-top: 0 !important; background: #001524
 .ct-status { margin: 18px 0 0 !important; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
 .ct-status.error { color: #ffd2cb; background: rgba(255, 138, 122, .12); border: 1px solid rgba(255, 138, 122, .4); }
 .ct-status.warning { color: #ffe9b0; background: rgba(244, 197, 66, .12); border: 1px solid rgba(244, 197, 66, .4); }
-.ct-form .ct-btn { width: 100%; margin-top: 24px; padding-left: 26px; }
-.ct-form .ct-btn i { margin-left: auto; }
 .ct-spin { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(0, 21, 36, .3); border-top-color: #001524; animation: ctRot .7s linear infinite; }
 @keyframes ctRot { to { transform: rotate(360deg); } }
 .ct-sent { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: clamp(20px, 5vh, 50px) 10px; animation: ctPop .7s cubic-bezier(.2, .7, .2, 1) both; }
@@ -192,6 +190,13 @@ body.has-hn.ct-3d:not(.home-3d) { padding-top: 0 !important; background: #001524
 body.ct-reduce .ct-sweep, body.ct-reduce .ct-blip, body.ct-reduce .ct-pin i, body.ct-reduce .ct-scroll i::after { animation: none; }
 
 /* Send Message button: completely static on every device (no hover lift, no arrow slide, no scroll motion) */
-.ct-form .ct-btn, .ct-form .ct-btn:hover, .ct-form .ct-btn:active, .ct-form .ct-btn:focus-visible { transform: none !important; transition: none !important; animation: none !important; }
-.ct-form .ct-btn i, .ct-form .ct-btn:hover i { transform: none !important; transition: none !important; }
-.ct-form .ct-btn:hover { box-shadow: inherit; }
+
+/* small send button inside the Message block (bottom right) */
+.ct-field.area textarea { padding-right: 68px; }
+.ct-send { position: absolute; right: 10px; bottom: 10px; z-index: 2; display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; font-size: 15px; color: #001524; background: linear-gradient(135deg, #2fd4c0, #a8dadc); box-shadow: 0 8px 20px rgba(47, 212, 192, .3); }
+.ct-send svg { margin-left: -2px; }
+.ct-send:disabled { opacity: .7; cursor: not-allowed; }
+.ct-send:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+.ct-send .ct-spin { width: 16px; height: 16px; }
+/* the form underline must not pick up the process-steps .ct-line rules */
+.ct-field .ct-line { left: 14px; right: 14px; top: auto; bottom: 0; height: 2px; background: linear-gradient(90deg, #2fd4c0, #a8dadc); }

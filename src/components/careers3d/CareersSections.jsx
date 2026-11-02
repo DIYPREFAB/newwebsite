@@ -117,7 +117,9 @@ export default function CareersSections() {
 
         /* ============ CULTURE: pinned horizontal run on desktop, flying cards below that ============ */
         gsap.fromTo(".cr-cult-head > *", { y: 50 * k, opacity: 0 }, {
-          y: 0, opacity: 1, stagger: 0.12, duration: 0.9, ease: "power3.out", scrollTrigger: io(".cr-cult-head", "top 88%", "bottom 10%"),
+          y: 0, opacity: 1, stagger: 0.12, duration: 0.9, ease: "power3.out", // On desktop this block is pinned, so it never scrolls past the "bottom 10%" line the way a normal element would; a trigger
+          // on the head itself would reverse (hide) it as soon as the pin starts. Trigger on the section and only reverse when scrolling back up.
+          scrollTrigger: lg ? { trigger: ".cr-cult", start: "top 75%", toggleActions: "play none none reverse" } : io(".cr-cult-head", "top 88%", "bottom 10%"),
         });
         if (lg) {
           const track = root.current.querySelector(".cr-track");
@@ -128,10 +130,18 @@ export default function CareersSections() {
           });
           gsap.to(".cr-prog i", { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".cr-cult", start: "top top", end: () => `+=${dist()}`, scrub: true, invalidateOnRefresh: true } });
           gsap.to(".cr-cult-bg", { backgroundPositionX: "-900px", ease: "none", scrollTrigger: { trigger: ".cr-cult", start: "top top", end: () => `+=${dist()}`, scrub: true, invalidateOnRefresh: true } });
+          // The track stops moving once the last card is at the right edge, so that card never reaches the usual
+          // "left 48%" / "left 40%" end points and stayed tilted and faded. Finish its animations at its resting position instead.
+          const lastPan = $(".cr-pan").pop();
+          const restPct = (pan) => {
+            const padR = parseFloat(getComputedStyle(track).paddingRight) || 0;
+            return ((window.innerWidth - padR - pan.offsetWidth) / window.innerWidth) * 100 + 4; // +4: done a little before the end
+          };
           $(".cr-pan").forEach((pan) => {
+            const end = (normal) => () => `left ${pan === lastPan ? Math.max(normal, restPct(pan)) : normal}%`;
             gsap.fromTo(pan, { rotationY: 32, scale: 0.86, opacity: 0.3, transformPerspective: 1100 }, {
               rotationY: 0, scale: 1, opacity: 1, ease: "none",
-              scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left 96%", end: "left 48%", scrub: true },
+              scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left 96%", end: end(48), scrub: true, invalidateOnRefresh: true },
             });
             gsap.fromTo(pan.querySelector(".num"), { xPercent: 45 }, {
               xPercent: -45, ease: "none",
@@ -139,7 +149,7 @@ export default function CareersSections() {
             });
             gsap.fromTo(pan.querySelectorAll("li"), { x: 80, opacity: 0 }, {
               x: 0, opacity: 1, stagger: 0.12, ease: "none",
-              scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left 85%", end: "left 40%", scrub: true },
+              scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left 85%", end: end(40), scrub: true, invalidateOnRefresh: true },
             });
           });
         } else {

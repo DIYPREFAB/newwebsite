@@ -629,3 +629,40 @@ body.ps-reduce .ps-con-floor { animation: none; }
   .ps-lab-dots i.on { width: 28px; background: #1f9f90; }
 }
 @media (prefers-reduced-motion: reduce) { .ps-lab-scene * { animation-duration: .01s !important; animation-delay: 0s !important; } }
+
+/* scene 03: parameter-wise comparison */
+.lb-gridv { fill: none; stroke: rgba(168, 218, 220, .09); stroke-width: 1; }
+.lb-range { fill: rgba(168, 218, 220, .2); }
+.lb-cdot { stroke: #04121f; stroke-width: 2.2; filter: drop-shadow(0 0 7px var(--c)); }
+
+/* ---- 03 concept radar (premium): rings, spokes, blooming polygons, scanning labels */
+.ps-lab-scene .lb-eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: .24em; fill: #7fb3bd; }
+.ps-lab-scene text.lb-axl { font-size: 10.5px; font-weight: 700; letter-spacing: .03em; fill: #9fc0c6; }
+.ps-lab-scene text.lb-big { font-size: 46px; font-weight: 300; letter-spacing: -.02em; fill: #e9fbf8; }
+.lb-rg { fill: none; stroke: rgba(168, 218, 220, .13); stroke-width: 1; opacity: 0; }
+.lb-rg-o { stroke: rgba(168, 218, 220, .34); }
+.on .lb-rg { animation: lbFade .8s var(--dl, 0s) ease forwards; }
+.lb-spoke { fill: none; stroke: rgba(168, 218, 220, .16); stroke-width: 1; }
+.lb-poly { stroke-width: 1.8; fill-opacity: .11; stroke-linejoin: round; opacity: 0; transform-box: view-box; transform-origin: 180px 208px; transform: scale(.15); }
+.on .lb-poly { animation: lbBloom 1.1s var(--dl, 0s) cubic-bezier(.2, .8, .2, 1) forwards; }
+.lb-vx { stroke: #04121f; stroke-width: 1.6; filter: drop-shadow(0 0 4px var(--c)); }
+.lb-chip { fill: rgba(255, 255, 255, .045); stroke: rgba(168, 218, 220, .2); stroke-width: 1; }
+.lb-tick2 { fill: none; stroke: #3ddc97; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.on .lb-axl { animation: lbAx 10.5s var(--ai, 0s) 1.6s infinite; }
+@keyframes lbFade { to { opacity: 1; } }
+@keyframes lbBloom { 0% { opacity: 0; transform: scale(.15); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes lbAx { 0%, 13% { fill: #ffffff; } 16%, 100% { fill: #9fc0c6; } }
+
+/* ---- 03 concept comparison (verdict matrix) */
+.lb-sel { fill: rgba(61,220,151,.08); stroke: rgba(61,220,151,.5); stroke-width: 1.2; }
+.ps-lab-scene text.lb-ch { font-size: 12.5px; font-weight: 800; fill: #e9fbf8; letter-spacing: .02em; }
+.ps-lab-scene text.lb-rl { font-size: 11.5px; font-weight: 700; fill: #b4d0d5; }
+.ps-lab-scene text.lb-note { font-size: 11px; font-weight: 600; letter-spacing: 0; fill: #a9c4ca; }
+.ps-lab-scene tspan.lb-b { font-weight: 800; fill: #fff; }
+.lb-rowline { stroke: rgba(168,218,220,.1); stroke-width: 1; }
+.lb-vd-ok { fill: #3ddc97; } .lb-vd-mid { fill: rgba(244,197,66,.18); stroke: #f4c542; stroke-width: 1; } .lb-vd-no { fill: rgba(255,125,125,.14); stroke: #ff7d7d; stroke-width: 1; }
+.ps-lab-scene text.lb-vdt { font-size: 8.5px; font-weight: 800; letter-spacing: .1em; }
+.ps-lab-scene text.lb-vdt-ok { fill: #04251a; } .ps-lab-scene text.lb-vdt-mid { fill: #f4c542; } .ps-lab-scene text.lb-vdt-no { fill: #ff9a9a; }
+.lb-cell-hi { fill: rgba(61,220,151,.2); } .lb-cell-md { fill: rgba(244,197,66,.15); } .lb-cell-lo { fill: rgba(255,125,125,.15); }
+.ps-lab-scene text.lb-cellt { font-size: 10px; font-weight: 700; }
+.ps-lab-scene text.lb-cellt-hi { fill: #7ff0bd; } .ps-lab-scene text.lb-cellt-md { fill: #f4c542; } .ps-lab-scene text.lb-cellt-lo { fill: #ff9a9a; }

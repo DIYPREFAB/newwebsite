@@ -175,28 +175,7 @@ export const navItems = [
   {
     title: "Project & Case Studies",
     link: "/project-case-studies",
-    submenu: [
-      {
-        id: 38,
-        title: "Success Stories",
-        link: "/project-case-studies/success-stories",
-      },
-      {
-        id: 39,
-        title: "Client Testimonials",
-        link: "/project-case-studies/client-testimonials",
-      },
-      {
-        id: 40,
-        title: "Project Gallery",
-        link: "/project-case-studies/project-gallery",
-      },
-      {
-        id: 41,
-        title: "Hall of Fame",
-        link: "/project-case-studies/hall-of-fame",
-      },
-    ],
+    submenu: [],
   },
   {
     title: "Blog & News",

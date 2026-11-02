@@ -27,6 +27,8 @@ export default function HomeNav({ onCta }) {
     if (/^products?\s*(&|and)/i.test(n.title?.trim() || "")) return { title: n.title, link: n.link, submenu: [] };
     // Blog & News also opens its page directly (no dropdown); the articles are reached from inside it
     if (/^blog/i.test(n.title?.trim() || "")) return { title: n.title, link: n.link, submenu: [] };
+    // Project & Case Studies also opens its page directly (no dropdown); projects, case studies, gallery and testimonials are sections inside it
+    if (/^project/i.test(n.title?.trim() || "")) return { title: n.title, link: n.link, submenu: [] };
     // Applications also opens its page directly; the sector pages are reached from inside it
     if (n.title?.trim().toLowerCase() === "applications") return { title: n.title, link: n.link, submenu: [] };
     const submenu = (n.submenu || []).filter((s) => s.title?.trim().toLowerCase() !== "inquiry form");

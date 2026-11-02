@@ -45,7 +45,12 @@ export const EPC = {
       { label: "Procurement", icon: "truck" },
       { label: "Execution", icon: "tasks" },
     ],
-    chips: ["Design & Engineering", "Digital Building", "Cost & Commercial", "Procurement", "Execution"],
+    meters: [
+      { label: "Engineering", w: 0.88 },
+      { label: "BOQ & cost", w: 0.66 },
+      { label: "Procurement", w: 0.48 },
+    ],
+    chips: ["Design & Engineering", "Digital Building", "Procurement", "Cost & Commercial", "Execution"],
     impact: {
       title: "Change impact",
       rows: ["Members", "Connections", "Quantities", "BOQ & cost", "Procurement", "Schedule"],

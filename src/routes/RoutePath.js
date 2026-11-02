@@ -43,10 +43,6 @@ const ROUTE_PATHS = {
   HEALTHCARE_FACILITIES: "/applications/healthcare-facilities",
 
   PROJECT_CASE_STUDIES: "/project-case-studies",
-  SUCCESS_STORIES: "/project-case-studies/success-stories",
-  CLIENT_TESTIMONIALS: "/project-case-studies/client-testimonials",
-  PROJECT_GALLERY: "/project-case-studies/project-gallery",
-  HALL_OF_FAME: "/project-case-studies/hall-of-fame",
 
   BLOG_NEWS: "/blog-news",
   BLOG_DETAILS: "/blog/:slug",

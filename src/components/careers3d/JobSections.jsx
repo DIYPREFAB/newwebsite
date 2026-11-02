@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FaArrowRight, FaMapMarkerAlt, FaBriefcase } from "react-icons/fa";
+import { mailAttrs } from "../../utils/mailLink";
 import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import ROUTE_PATHS from "../../routes/RoutePath";
@@ -16,9 +17,8 @@ import "./careers3d.css";
 
 const BOTH = "play reverse play reverse";
 const io = (trigger, start = "top 90%", end = "bottom 10%") => ({ trigger, start, end, toggleActions: BOTH });
-// opens a Gmail compose window addressed to the hiring inbox
-const apply = (j) =>
-  `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(APPLY_EMAIL)}&su=${encodeURIComponent(`Application for ${j.title} - ${j.location}`)}`;
+// phones/tablets: mail app (mailto:), desktop: Gmail compose in a new tab
+const apply = (j) => mailAttrs(APPLY_EMAIL, `Application for ${j.title} - ${j.location}`);
 
 export default function JobSections() {
   const root = useRef(null);
@@ -193,7 +193,9 @@ export default function JobSections() {
               <article className="cr-job" key={j.id}>
                 <span className="n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 <div className="main">
-                  <h3>{j.title}</h3>
+                  <h3>
+                    <Link to={`${ROUTE_PATHS.JOB_OPENINGS}/${j.id}`} className="cr-toggle">{j.title}</Link>
+                  </h3>
                   <ul>
                     <li><FaBriefcase aria-hidden="true" />{j.company}</li>
                     <li><FaMapMarkerAlt aria-hidden="true" />{j.location}</li>
@@ -202,8 +204,9 @@ export default function JobSections() {
                 <div className="meta">
                   <p>Posted on: {j.postedOn}</p>
                   <p><strong>No of vacancies: </strong>{j.vacancies}</p>
+                  <p className="cr-view">View job description <FaArrowRight aria-hidden="true" /></p>
                 </div>
-                <a className="ct-btn" href={apply(j)} target="_blank" rel="noopener noreferrer">Apply Now<i><FaArrowRight /></i></a>
+                <a className="ct-btn" {...apply(j)}>Apply Now<i><FaArrowRight /></i></a>
               </article>
             ))}
             {!visible.length && (

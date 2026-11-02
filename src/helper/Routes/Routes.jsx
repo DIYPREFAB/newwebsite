@@ -45,10 +45,6 @@ const P = {
   HealthcareFacilities: page(() => import("../../pages/HealthcareFacilities")),
 
   ProjectCaseandStudies: page(() => import("../../pages/ProjectCaseandStudies")),
-  SuccssStories: page(() => import("../../pages/SuccssStories")),
-  HallOfFame: page(() => import("../../pages/HallOfFame")),
-  ClientTestimonial: page(() => import("../../pages/ClientTestimonial")),
-  ProjectGallery: page(() => import("../../pages/ProjectGallery")),
 
   BlogandNews: page(() => import("../../pages/BlogandNews")),
   BlogDetails: page(() => import("../../pages/BlogDetails")),
@@ -58,6 +54,7 @@ const P = {
 
   Career: page(() => import("../../pages/Career")),
   JobOpening: page(() => import("../../pages/JobOpening")),
+  JobDetail: page(() => import("../../pages/JobDetail")),
   WorkCulture: page(() => import("../../pages/WorkCulture")),
 
   ContactUs: page(() => import("../../pages/ContactUs")),
@@ -129,11 +126,7 @@ const ROUTES = [
   [ROUTE_PATHS.EDUCATIONAL_INSTITUTIONS, P.EducationalInstitution],
   [ROUTE_PATHS.HEALTHCARE_FACILITIES, P.HealthcareFacilities],
 
-  [ROUTE_PATHS.PROJECT_CASE_STUDIES, P.ProjectCaseandStudies],
-  [ROUTE_PATHS.SUCCESS_STORIES, P.SuccssStories],
-  [ROUTE_PATHS.HALL_OF_FAME, P.HallOfFame],
-  [ROUTE_PATHS.CLIENT_TESTIMONIALS, P.ClientTestimonial],
-  [ROUTE_PATHS.PROJECT_GALLERY, P.ProjectGallery],
+  [ROUTE_PATHS.PROJECT_CASE_STUDIES, P.ProjectCaseandStudies, "blank"],
 
   [ROUTE_PATHS.BLOG_NEWS, P.BlogandNews],
   [ROUTE_PATHS.BLOG_DETAILS, P.BlogDetails],
@@ -143,6 +136,7 @@ const ROUTES = [
 
   [ROUTE_PATHS.CAREERS, P.Career],
   [ROUTE_PATHS.JOB_OPENINGS, P.JobOpening],
+  [`${ROUTE_PATHS.JOB_OPENINGS}/:jobId`, P.JobDetail],
   [ROUTE_PATHS.WORK_CULTURE, P.WorkCulture],
 
   [ROUTE_PATHS.CONTACT_US, P.ContactUs, "blank"],

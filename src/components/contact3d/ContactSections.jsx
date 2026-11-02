@@ -8,6 +8,7 @@ import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import { bookCall, BOOKING_LABEL } from "../home3d/booking";
 import ContactForm from "./ContactForm";
+import { mailAttrs } from "../../utils/mailLink";
 import { TITLE, HERO_HL, HERO_TEXT, CHANNELS, STEPS, RESPECT_REDUCED_MOTION } from "./contactData";
 import "../home3d/home3d.css";
 import "../home3d/home3d-v4.css";
@@ -279,6 +280,7 @@ export default function ContactSections() {
               href={c.href}
               onMouseMove={spot}
               {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              {...(c.mail ? mailAttrs(c.mail) : {})}
             >
               <span className="ic"><c.Icon aria-hidden="true" /></span>
               <h3>{c.label}</h3>

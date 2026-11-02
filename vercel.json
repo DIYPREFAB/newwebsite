@@ -43,6 +43,26 @@
       "permanent": true
     },
     {
+      "source": "/project-case-studies/success-stories",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/project-case-studies/client-testimonials",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/project-case-studies/project-gallery",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/project-case-studies/hall-of-fame",
+      "destination": "/project-case-studies",
+      "permanent": true
+    },
+    {
       "source": "/generate-sitemap",
       "destination": "/",
       "permanent": true
@@ -175,22 +195,6 @@
     },
     {
       "source": "/project-case-studies",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/project-case-studies/success-stories",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/project-case-studies/client-testimonials",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/project-case-studies/project-gallery",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/project-case-studies/hall-of-fame",
       "destination": "/index.html"
     },
     {

@@ -376,7 +376,7 @@ export default function AppSections() {
         <SteelBits n={8} />
         <div className="ap-core-head">
           <span className="cr-tag">Under every sector</span>
-          <h2 className="cr-h2">One engineering core, <span className="hl">five ways to use it.</span></h2>
+          <h2 className="cr-h2">One engineering core, <span className="hl">four ways to use it.</span></h2>
         </div>
         <div className="ap-core-grid">
           {CORE.map((c) => (

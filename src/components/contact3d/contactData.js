@@ -19,7 +19,7 @@ export const MAPS_HREF = "https://www.google.com/maps/search/?api=1&query=32_C+N
 
 export const CHANNELS = [
   { id: "office", Icon: ImOffice, label: "Head Office", value: ADDRESS, action: "Open in Maps", href: MAPS_HREF, external: true },
-  { id: "email", Icon: MdOutlineEmail, label: "Email Us", value: EMAIL, action: "Write to us", href: `mailto:${EMAIL}` },
+  { id: "email", Icon: MdOutlineEmail, label: "Email Us", value: EMAIL, action: "Write to us", href: `mailto:${EMAIL}`, mail: EMAIL },
   { id: "phone", Icon: IoCallOutline, label: "Let's Talk", value: PHONE_LABEL, action: "Call now", href: PHONE_HREF },
 ];
 

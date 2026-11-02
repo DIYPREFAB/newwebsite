@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { FaArrowRight, FaCheck } from "react-icons/fa";
+import { FaCheck, FaPaperPlane } from "react-icons/fa";
 import FormServices from "../../services/FormServices";
 
 const EMPTY = { name: "", company: "", phone: "", email: "", subject: "", message: "" };
@@ -110,13 +110,13 @@ export default function ContactForm() {
           />
           <label htmlFor="ct-message">Message<b aria-hidden="true"> *</b></label>
           <i className="ct-line" aria-hidden="true" />
+          <button type="submit" className="ct-send" disabled={loading} aria-label={loading ? "Sending message" : "Send message"} title="Send message">
+            {loading ? <span className="ct-spin" aria-hidden="true" /> : <FaPaperPlane aria-hidden="true" />}
+          </button>
           {errors.message && <small id="ct-message-e" role="alert">{errors.message}</small>}
         </div>
       </div>
       {status && <p className={`ct-status ${status.type}`} role="alert">{status.text}</p>}
-      <button type="submit" className="ct-btn" disabled={loading}>
-        {loading ? (<><span className="ct-spin" aria-hidden="true" />Sending...</>) : (<>Send Message<i><FaArrowRight /></i></>)}
-      </button>
     </form>
   );
 }

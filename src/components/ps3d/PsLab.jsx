@@ -65,38 +65,81 @@ function SceneModel({ bd }) {
   );
 }
 
-/* 03 · Design alternatives: three concepts, the ones that fail the structure check fade, the best one lifts */
+/* 03 · Design alternatives: a radar of the selection parameters, one polygon per concept.
+   The parameters are our selection criteria; ADD OR REMOVE A ROW IN ALT_PARAMS and the radar, the axis labels and the
+   big count all follow. Values are ILLUSTRATIVE (read off the concept-comparison radar); no totals and no winner are shown. */
+// Concept comparison: one glance. Rows = decision parameters, columns = concepts, each cell is a Strong / Fair / Weak chip.
+// Add an 8th parameter by adding one row. Scores are illustrative (0-1): >=.8 Strong, >=.65 Fair, else Weak.
+const ALT_CONCEPTS = [
+  { k: "A", verdict: "SELECTED", tone: "ok", col: "#3ddc97" },
+  { k: "B", verdict: "MODERATE", tone: "mid", col: "#f4c542" },
+  { k: "C", verdict: "REJECTED", tone: "no", col: "#ff7d7d" },
+];
+const ALT_PARAMS = [
+  ["Structural Performance", 0.95, 0.82, 0.78],
+  ["Lifecycle", 0.88, 0.9, 0.55],
+  ["Quality", 0.9, 0.8, 0.7],
+  ["Maintainability", 0.85, 0.85, 0.6],
+  ["Material Efficiency", 0.9, 0.7, 0.65],
+  ["Schedule", 0.92, 0.75, 0.5],
+  ["Cost", 0.8, 0.9, 0.72],
+];
+const band = (s) => (s >= 0.8 ? ["Strong", "hi"] : s >= 0.65 ? ["Fair", "md"] : ["Weak", "lo"]);
 function SceneAlt() {
-  const cards = [
-    { x: 24, name: "Concept A", d: "M22 150V96L66 66L110 96V150M16 150H116", pass: true },
-    { x: 174, name: "Concept B", d: "M22 150V80L66 58L110 80V150M16 150H116M22 110H110", pass: true, win: true },
-    { x: 324, name: "Concept C", d: "M22 150V122L66 102L110 122V150M16 150H116", pass: false },
-  ];
+  const colX = [262, 346, 430]; // column centres
+  const y0 = 108, step = 29;
+  const rows = ALT_PARAMS.length;
+  const endY = y0 + rows * step;
   return (
-    <svg viewBox="0 0 480 320" preserveAspectRatio="xMidYMid meet">
-      {cards.map((c, i) => (
-        <g key={c.name} transform={`translate(${c.x},40)`}>
-          <g className="lb-s" style={v({ "--dl": `${i * 0.18}s`, "--dy": "50px", "--dx": "0px" })}>
-            <g className={c.win ? "lb-win" : c.pass ? "" : "lb-fail"} style={v({ "--dl": c.win ? "2s" : "1.7s" })}>
-              <rect className="lb-card" x="0" y="0" width="132" height="190" rx="14" />
-              {c.win && <rect className="lb-p lb-glow" x="0" y="0" width="132" height="190" rx="14" style={v({ "--dl": "2s" })} />}
-              <text x="14" y="26">{c.name}</text>
-              <path className="lb-d lb-ln fr" pathLength="1" d={c.d} style={v({ "--dl": `${0.5 + i * 0.2}s`, "--t": "1s" })} />
-              <g className="lb-p" style={v({ "--dl": `${1.3 + i * 0.12}s` })}>
-                <circle cx="112" cy="22" r="11" className={c.pass ? "lb-badge ok" : "lb-badge no"} />
-                <path className="lb-tick" d={c.pass ? "M106 22l4 4l8-9" : "M107 17l10 10M117 17l-10 10"} />
-              </g>
+    <svg viewBox="0 0 480 376" preserveAspectRatio="xMidYMid meet">
+      <g className="lb-p" style={v({ "--dl": "0s" })}>
+        <text className="lb-eyebrow" x="24" y="26">CONCEPT SELECTION</text>
+      </g>
+      <line className="lb-d" x1="24" y1="38" x2="456" y2="38" pathLength="1" style={v({ stroke: "rgba(168,218,220,.3)", strokeWidth: 1, "--dl": ".1s" })} />
+
+      {/* the recommended column gets a soft highlight */}
+      <rect className="lb-sel" x={colX[0] - 40} y="48" width="80" height={endY - 48 + 4} rx="14" />
+
+      {/* column heads: concept + verdict */}
+      {ALT_CONCEPTS.map((c, j) => (
+        <g key={c.k} className="lb-p" style={v({ "--dl": `${0.4 + j * 0.15}s` })}>
+          <text className="lb-ch" x={colX[j]} y="68" textAnchor="middle">Concept {c.k}</text>
+          <rect className={`lb-vd lb-vd-${c.tone}`} x={colX[j] - 34} y="76" width="68" height="18" rx="9" />
+          <text className={`lb-vdt lb-vdt-${c.tone}`} x={colX[j]} y="88.5" textAnchor="middle">{c.verdict}</text>
+        </g>
+      ))}
+
+      {/* parameter rows */}
+      {ALT_PARAMS.map((p, i) => {
+        const y = y0 + i * step;
+        return (
+          <g key={p[0]}>
+            <g className="lb-s" style={v({ "--dl": `${0.7 + i * 0.12}s`, "--dx": "-24px" })}>
+              <text className="lb-rl" x="24" y={y + 15}>{p[0]}</text>
+              {i < rows && <line x1="24" y1={y + 25.5} x2="456" y2={y + 25.5} className="lb-rowline" />}
             </g>
+            {[1, 2, 3].map((c, j) => {
+              const [label, cls] = band(p[c]);
+              return (
+                <g key={c} className="lb-p" style={v({ "--dl": `${0.9 + i * 0.12 + j * 0.06}s` })}>
+                  <rect className={`lb-cell lb-cell-${cls}`} x={colX[j] - 30} y={y + 3} width="60" height="20" rx="10" />
+                  <text className={`lb-cellt lb-cellt-${cls}`} x={colX[j]} y={y + 16.5} textAnchor="middle">{label}</text>
+                </g>
+              );
+            })}
           </g>
-        </g>
-      ))}
-      {[["Structural", 270, 190], ["Business fit", 296, 150]].map(([t, y, w], i) => (
-        <g key={t}>
-          <text className="lb-p" x="24" y={y} style={v({ "--dl": `${2.2 + i * 0.25}s` })}>{t}</text>
-          <rect className="lb-track" x="124" y={y - 9} width="240" height="8" rx="4" />
-          <rect className={i ? "lb-g lb-fillt" : "lb-g lb-fillm"} x="124" y={y - 9} width={w} height="8" rx="4" style={v({ "--dl": `${2.3 + i * 0.25}s`, "--t": "1s" })} />
-        </g>
-      ))}
+        );
+      })}
+
+      {/* the reasoning, one line per verdict */}
+      <g className="lb-s" style={v({ "--dl": "2.1s", "--dx": "0px", "--dy": "14px" })}>
+        <circle cx="30" cy={endY + 18} r="3.5" fill="#3ddc97" />
+        <text className="lb-note" x="40" y={endY + 21.5}><tspan className="lb-b">A</tspan> leads on engineering and schedule, so we go ahead.</text>
+        <circle cx="30" cy={endY + 34} r="3.5" fill="#f4c542" />
+        <text className="lb-note" x="40" y={endY + 37.5}><tspan className="lb-b">B</tspan> is cheaper to run but slower, so we keep it as a fallback.</text>
+        <circle cx="30" cy={endY + 50} r="3.5" fill="#ff7d7d" />
+        <text className="lb-note" x="40" y={endY + 53.5}><tspan className="lb-b">C</tspan> is weak on lifecycle and schedule, so we drop it.</text>
+      </g>
     </svg>
   );
 }

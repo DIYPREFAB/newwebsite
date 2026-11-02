@@ -10,6 +10,11 @@ const LEGACY_REDIRECTS = {
   "/home": "/",
   "/introduction-to-diy-prefab-solutions": "/key-benefits-of-prefab-construction",
   "/featured-projects": "/project-case-studies",
+  // the old Project & Case Studies sub-pages now live as sections of the single Projects page
+  "/project-case-studies/success-stories": "/project-case-studies",
+  "/project-case-studies/client-testimonials": "/project-case-studies",
+  "/project-case-studies/project-gallery": "/project-case-studies",
+  "/project-case-studies/hall-of-fame": "/project-case-studies",
   "/generate-sitemap": "/",
 };
 
