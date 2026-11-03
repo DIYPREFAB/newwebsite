@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# Opt in to the Node 24 runtime for JavaScript actions (clears the "Node.js 20 is deprecated" notice)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,26 +46,28 @@ jobs:
         path: dist/
         
   # ============================================
-  # OPTION 1: Deploy to Vercel (Recommended)
+  # OPTION 1: Deploy to Vercel (DISABLED)
+  # The old job used "vercel/action-deploy", which does not exist, so the whole workflow failed on it.
+  # You deploy with PM2 on your VPS (OPTION 5 below). To use Vercel instead, either connect the repo in the
+  # Vercel dashboard (Git integration deploys on every push, no workflow needed) or un-comment this CLI version
+  # after adding VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID under Settings > Secrets > Actions.
   # ============================================
-  deploy-vercel:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Deploy to Vercel
-      uses: vercel/action-deploy@v1
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      env:
-        VITE_HUBSPOT_ACCESS_TOKEN: ${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}
-        VITE_HUBSPOT_PORTAL_ID: ${{ secrets.VITE_HUBSPOT_PORTAL_ID }}
+  # deploy-vercel:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   env:
+  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: actions/setup-node@v4
+  #     with:
+  #       node-version: '20'
+  #   - run: npm i -g vercel
+  #   - run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+  #   - run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+  #   - run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   # ============================================
   # OPTION 2: Deploy to Netlify
