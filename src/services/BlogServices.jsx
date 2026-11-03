@@ -5,12 +5,12 @@ import staticBlogs from "../data/staticBlogs";
 const BlogServices = {};
 
 BlogServices.blogList = (query) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         axios.get(`${config.apiUrl}/api/blogs${query}`)
             .then(response => {
                 resolve(response);
             })
-            .catch(error => {
+            .catch(() => {
                 // API failed — return static blog data formatted as the frontend expects
                 const formattedResponse = {
                     data: {
@@ -30,7 +30,7 @@ BlogServices.blogList = (query) => {
 };
 
 BlogServices.blogBySlug = (params) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         if (!params?.slug) {
             return resolve({ data: { status: false, message: "No slug provided" } });
         }
@@ -39,7 +39,7 @@ BlogServices.blogBySlug = (params) => {
             .then(response => {
                 resolve(response);
             })
-            .catch(error => {
+            .catch(() => {
                 // API failed — find static blog by slug
                 const blog = staticBlogs.find(b => b.slug === params.slug);
                 if (blog) {
