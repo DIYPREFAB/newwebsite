@@ -5,6 +5,8 @@
    even if scripts are slow or motion is switched off.
    ===================================================================== */
 .ps-root { --nav: 96px; --mint: #86cfc3; --acc: #6fc4b4; --teal: #2fd4c0; --ink: #001524; --ink2: #04182a; --mute: #a9c3cb; position: relative; font-family: Lato, Arial, sans-serif; background: #001524; color: #fff; overflow-x: hidden; }
+.brand-diy { color: var(--mint); }
+.brand-va { color: #f4c542; }
 @supports (overflow: clip) { .ps-root { overflow-x: clip; } }
 :where(.ps-root) :where(h1, h2, h3, h4, p, ol, ul, figure) { margin: 0; text-shadow: none; }
 .ps-root ol, .ps-root ul { padding: 0; list-style: none; }
@@ -526,9 +528,9 @@ body.ps-reduce .ps-con-floor { animation: none; }
 .ps-lab-tab.on .ps-lab-prog { opacity: 1; }
 .ps-lab-dots { display: none; }
 
-.ps-lab-view { position: relative; height: 100%; perspective: 1400px; }
+.ps-lab-view { position: relative; height: 100%; }
 .ps-lab-halo { position: absolute; inset: -6% -8%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(47, 212, 192, .3), rgba(31, 159, 144, .07) 62%, transparent 78%); }
-.ps-lab-tilt, .ps-lab-idle { position: absolute; inset: 0; transform-style: preserve-3d; }
+.ps-lab-tilt, .ps-lab-idle { position: absolute; inset: 0; }
 .ps-lab-panel { position: absolute; inset: 3% 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 26px; color: #fff; background: linear-gradient(160deg, #10304d 0%, #082138 55%, #04121f 100%); border: 1px solid rgba(168, 218, 220, .3); box-shadow: 0 70px 110px -40px rgba(0, 21, 36, .9), inset 0 1px 0 rgba(255, 255, 255, .12); }
 .ps-lab-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(168, 218, 220, .05) 1px, transparent 1px) 0 0 / 34px 34px, linear-gradient(90deg, rgba(168, 218, 220, .05) 1px, transparent 1px) 0 0 / 34px 34px, radial-gradient(60% 60% at 50% 45%, rgba(47, 212, 192, .13), transparent 75%); }
 .ps-lab-top { position: relative; z-index: 1; display: flex; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid rgba(168, 218, 220, .14); background: rgba(255, 255, 255, .03); }
@@ -540,10 +542,13 @@ body.ps-reduce .ps-con-floor { animation: none; }
 .ps-lab-count { flex: none; margin-left: 10px; padding: 4px 10px; border-radius: 20px; font-style: normal; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: var(--ink); background: var(--mint); }
 .ps-lab-count b { font-weight: 900; }
 .ps-lab-scenes { position: relative; z-index: 1; flex: 1; min-height: 0; }
-.ps-lab-scene { position: absolute; inset: 0; padding: clamp(10px, 1.6vw, 22px); opacity: 0; transform: translateY(26px) scale(.96); transition: opacity .45s, transform .6s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
-.ps-lab-scene.on { opacity: 1; transform: none; }
-.ps-lab-scene svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.ps-lab-scene text { font-family: inherit; font-size: 12.5px; font-weight: 800; fill: #cfe3e6; }
+/* Scenes enter with opacity + a small translate only. A scale() here made the browser rasterize the scene at 96% and
+   stretch it up, which is what made the right-hand visual (BOQ included) open blurry. Hidden scenes are also taken
+   out of painting (visibility) so only the live one is composited. */
+.ps-lab-scene { position: absolute; inset: 0; padding: clamp(10px, 1.6vw, 22px); opacity: 0; visibility: hidden; transform: translateY(14px); transition: opacity .4s, transform .55s cubic-bezier(.2, .8, .2, 1), visibility 0s .55s; pointer-events: none; }
+.ps-lab-scene.on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.ps-lab-scene svg { display: block; width: 100%; height: 100%; overflow: visible; text-rendering: geometricPrecision; shape-rendering: geometricPrecision; }
+.ps-lab-scene text { font-family: inherit; font-size: 12.5px; font-weight: 800; fill: #cfe3e6; -webkit-font-smoothing: antialiased; }
 .ps-lab-scene .lb-small { font-size: 11.5px; font-weight: 700; fill: #9fc0c6; }
 .ps-lab-scene .lb-note { font-size: 11.5px; font-weight: 700; letter-spacing: .03em; fill: #8fb0b8; }
 
@@ -653,16 +658,30 @@ body.ps-reduce .ps-con-floor { animation: none; }
 @keyframes lbBloom { 0% { opacity: 0; transform: scale(.15); } 100% { opacity: 1; transform: scale(1); } }
 @keyframes lbAx { 0%, 13% { fill: #ffffff; } 16%, 100% { fill: #9fc0c6; } }
 
-/* ---- 03 concept comparison (verdict matrix) */
-.lb-sel { fill: rgba(61,220,151,.08); stroke: rgba(61,220,151,.5); stroke-width: 1.2; }
-.ps-lab-scene text.lb-ch { font-size: 12.5px; font-weight: 800; fill: #e9fbf8; letter-spacing: .02em; }
-.ps-lab-scene text.lb-rl { font-size: 11.5px; font-weight: 700; fill: #b4d0d5; }
-.ps-lab-scene text.lb-note { font-size: 11px; font-weight: 600; letter-spacing: 0; fill: #a9c4ca; }
-.ps-lab-scene tspan.lb-b { font-weight: 800; fill: #fff; }
-.lb-rowline { stroke: rgba(168,218,220,.1); stroke-width: 1; }
-.lb-vd-ok { fill: #3ddc97; } .lb-vd-mid { fill: rgba(244,197,66,.18); stroke: #f4c542; stroke-width: 1; } .lb-vd-no { fill: rgba(255,125,125,.14); stroke: #ff7d7d; stroke-width: 1; }
-.ps-lab-scene text.lb-vdt { font-size: 8.5px; font-weight: 800; letter-spacing: .1em; }
+/* ---- 03 concept scorecard (cards, factor bars, totals) */
+.ps-lab-scene { --cA: #7ff0d8; --cB: #8cc8ff; --cC: #c8b4ff; }
+.lb-a-card { fill: rgba(255, 255, 255, .035); stroke: rgba(168, 218, 220, .2); stroke-width: 1; }
+.lb-a-best { fill: rgba(61, 220, 151, .07); stroke: rgba(61, 220, 151, .6); stroke-width: 1.3; }
+.lb-a-top { fill: #3ddc97; }
+.lb-a-shed { fill: none; stroke: inherit; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+.lb-a-loadband { fill: rgba(244, 165, 58, .06); stroke: rgba(244, 165, 58, .16); stroke-width: 1; stroke-dasharray: 3 4; }
+.lb-a-ic { fill: none; stroke: #8fe0d4; stroke-width: 1.15; stroke-linecap: round; stroke-linejoin: round; }
+.lb-a-ic-l { stroke: #f2a43a; }
+.lb-dim { opacity: .62; }
+.lb-rowline { stroke: rgba(168, 218, 220, .1); stroke-width: 1; }
+.lb-vd-ok { fill: #3ddc97; } .lb-vd-mid { fill: rgba(244, 197, 66, .16); stroke: #f4c542; stroke-width: 1; } .lb-vd-no { fill: rgba(255, 125, 125, .14); stroke: #ff7d7d; stroke-width: 1; }
+.ps-lab-scene text.lb-vdt { font-size: 8.5px; font-weight: 800; letter-spacing: .12em; }
 .ps-lab-scene text.lb-vdt-ok { fill: #04251a; } .ps-lab-scene text.lb-vdt-mid { fill: #f4c542; } .ps-lab-scene text.lb-vdt-no { fill: #ff9a9a; }
-.lb-cell-hi { fill: rgba(61,220,151,.2); } .lb-cell-md { fill: rgba(244,197,66,.15); } .lb-cell-lo { fill: rgba(255,125,125,.15); }
-.ps-lab-scene text.lb-cellt { font-size: 10px; font-weight: 700; }
-.ps-lab-scene text.lb-cellt-hi { fill: #7ff0bd; } .ps-lab-scene text.lb-cellt-md { fill: #f4c542; } .ps-lab-scene text.lb-cellt-lo { fill: #ff9a9a; }
+.ps-lab-scene text.lb-ch { font-size: 13px; font-weight: 800; fill: #f2fffc; letter-spacing: .01em; }
+.ps-lab-scene text.lb-rl { font-size: 11px; font-weight: 700; fill: #c3dade; }
+.ps-lab-scene text.lb-a-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; fill: #f2a43a; }
+.ps-lab-scene text.lb-a-leg { font-size: 9px; font-weight: 700; letter-spacing: .02em; fill: #8fb0b8; }
+.ps-lab-scene text.lb-a-val { font-size: 11.5px; font-weight: 800; fill: #eafffb; font-variant-numeric: tabular-nums; }
+.ps-lab-scene text.lb-a-val-l { fill: #ffc98a; }
+.ps-lab-scene text.lb-a-tl { font-size: 8.5px; font-weight: 800; letter-spacing: .18em; fill: #7fb3bd; }
+.ps-lab-scene text.lb-a-big { font-size: 30px; font-weight: 300; letter-spacing: -.02em; fill: #e9fbf8; font-variant-numeric: tabular-nums; }
+.ps-lab-scene text.lb-a-big-best { fill: #7ff0bd; font-weight: 400; }
+.ps-lab-scene text.lb-a-of { font-size: 11px; font-weight: 700; fill: #8fb0b8; }
+.ps-lab-scene text.lb-a-pass { font-size: 9.5px; font-weight: 700; fill: #8fd9bd; }
+.ps-lab-scene text.lb-a-foot { font-size: 10px; font-weight: 600; letter-spacing: .01em; fill: #9ab9c0; }
+.lb-a-okdot { fill: #3ddc97; }

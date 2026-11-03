@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FaArrowRight, FaArrowLeft, FaMapMarkerAlt, FaBriefcase, FaClock } from "react-icons/fa";
 import { mailAttrs } from "../../utils/mailLink";
+import BrandText from "../../common/BrandText";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import { getJob, APPLY_EMAIL } from "./careersData";
 import "../home3d/home3d.css";
@@ -56,7 +57,7 @@ export default function JobDetailSections() {
         <article className="jd-body cr-detail-pad">
           {d.about && (<section><h2>About the role</h2><p>{d.about}</p></section>)}
           {d.sections.map((s) => (
-            <section key={s.h}><h2>{s.h}</h2><ul className="cr-pts">{s.pts.map((t) => <li key={t}>{t}</li>)}</ul></section>
+            <section key={s.h}><h2><BrandText text={s.h} /></h2><ul className="cr-pts">{s.pts.map((t) => <li key={t}>{t}</li>)}</ul></section>
           ))}
           {d.note && <p className="cr-note">{d.note}</p>}
           <div className="jd-apply">

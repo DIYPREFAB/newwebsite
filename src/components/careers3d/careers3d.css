@@ -3,6 +3,8 @@
    (ct-* base classes) with cr-* additions. navy #001524, teal #2fd4c0 / #a8dadc.
    ===================================================================== */
 .cr-root .ct-sec, .cr-root .ct-hero { isolation: isolate; }
+.cr-root .brand-diy { color: #0f7f73; }
+.cr-root .brand-va { color: #d58b00; }
 
 /* ---------------- Hero: steel portal frame ---------------- */
 .cr-stage { position: absolute; z-index: 2; right: 4vw; top: 50%; width: min(64vh, 44vw, 620px); aspect-ratio: 1; transform: translateY(-46%); }
@@ -64,7 +66,7 @@
 .cr-track { display: flex; gap: clamp(18px, 2.4vw, 36px); width: max-content; padding: 0 6vw; will-change: transform; }
 .cr-pan { position: relative; flex: 0 0 auto; width: min(34vw, 520px); padding: clamp(20px, 3vh, 32px) clamp(22px, 2.2vw, 34px); border-radius: 22px; overflow: hidden; background: linear-gradient(165deg, #0f2d47 0%, #08203a 55%, #04121f 100%); border: 1px solid rgba(168, 218, 220, .16); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .08); }
 .cr-pan::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 40% at 90% 0%, rgba(47, 212, 192, .16), transparent 70%); }
-.cr-pan .num { position: absolute; right: -4%; top: -6%; font-size: clamp(120px, 14vw, 220px); font-weight: 900; line-height: 1; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 1.5px rgba(143, 224, 212, .3); pointer-events: none; }
+.cr-pan .num { position: absolute; right: 6%; top: 2%; font-size: clamp(120px, 14vw, 220px); font-weight: 900; line-height: 1; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 1.5px rgba(143, 224, 212, .3); pointer-events: none; }
 .cr-pan h3 { position: relative; max-width: 80%; font-size: clamp(20px, 2vw, 28px); font-weight: 900; line-height: 1.15; color: #fff; }
 .cr-pan > p { position: relative; margin-top: 10px !important; font-size: 14px; line-height: 1.65; color: #a9c3cb; }
 .cr-pan ul { position: relative; margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }

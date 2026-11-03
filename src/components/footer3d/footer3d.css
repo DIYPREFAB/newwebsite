@@ -3,7 +3,7 @@
 .ft3 *, .ft3 *::before, .ft3 *::after { box-sizing: border-box; }
 .ft3 .sh-dots { --bit: rgba(14, 159, 143, .35); --bit-a: #0e9f8f; }
 .ft3-line { position: absolute; left: 0; right: 0; top: 0; z-index: 3; height: 2px; transform-origin: left; background: linear-gradient(90deg, transparent, #2fd4c0 30%, #0e9f8f 70%, transparent); box-shadow: 0 0 14px rgba(47, 212, 192, .45); }
-.ft3-ghost { position: absolute !important; left: 0; right: 0; bottom: -1.5vw; z-index: 0; text-align: center; font-size: clamp(40px, 13vw, 300px); font-weight: 900; line-height: .9; letter-spacing: -.05em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(14, 159, 143, .18); pointer-events: none; will-change: transform; user-select: none; }
+.ft3-ghost { position: absolute !important; left: 0; right: 0; bottom: -1.2vw; z-index: 0; text-align: center; font-size: clamp(40px, 13vw, 300px); font-weight: 900; line-height: 1.05; letter-spacing: -.05em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(14, 159, 143, .18); pointer-events: none; will-change: transform; user-select: none; }
 .ft3-wrap { position: relative; z-index: 2; max-width: 1320px; margin: 0 auto; }
 .ft3-grid { display: grid; grid-template-columns: 1.5fr .7fr .7fr 1.5fr; gap: clamp(28px, 4vw, 64px); }
 .ft3-col { will-change: transform; }

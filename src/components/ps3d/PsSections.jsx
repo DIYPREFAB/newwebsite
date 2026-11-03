@@ -9,6 +9,7 @@ import {
   FaExchangeAlt, FaLink, FaShieldAlt, FaHistory, FaDatabase, FaEye, FaBrain, FaCheck,
 } from "react-icons/fa";
 import ROUTE_PATHS from "../../routes/RoutePath";
+import BrandText from "../../common/BrandText";
 import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import CapabilityLab from "./PsLab";
@@ -101,7 +102,7 @@ function PlatformConsole({ data }) {
             <div className="ps-win">
               <div className="ps-win-bar">
                 <i /><i /><i />
-                <b>DIYVA</b>
+                <b><BrandText text="DIYVA" /></b>
                 <span>{data.window.project}</span>
                 <em>{data.window.status}</em>
               </div>
@@ -412,7 +413,10 @@ export default function PsSections() {
               dots.forEach((d, j) => d.classList.toggle("on", j === i));
               countEl.textContent = pad2(i + 1);
               titleEl.textContent = EPC.items[i].title;
-              gsap.fromTo(".ps-lab-panel", { rotationY: 16 * dir, rotationX: -4 }, { rotationY: 0, rotationX: 0, duration: 0.95, ease: "power3.out", overwrite: "auto" });
+              // Switching scenes used to swing the whole panel 16deg in 3D. Text drawn on a rotated layer is re-sampled by the
+              // browser, so every new scene (BOQ included) opened soft and only sharpened once the swing ended. Now the panel
+              // only glides a few pixels (pure translate = no re-sampling) and the transform is removed when it lands.
+              gsap.fromTo(".ps-lab-panel", { y: 12 * dir }, { y: 0, duration: 0.6, ease: "power3.out", overwrite: "auto", clearProps: "transform" });
             };
             const topPx = () => (parseFloat(getComputedStyle(rootEl).getPropertyValue("--nav")) || 96) + (lg ? 18 : 8);
             const st = ScrollTrigger.create({
@@ -437,15 +441,9 @@ export default function PsSections() {
             lab.addEventListener("click", onLabClick);
             cleanups.push(() => lab.removeEventListener("click", onLabClick));
 
-            gsap.fromTo(".ps-lab-idle", { rotationY: -3, rotationX: 1 }, { rotationY: 3, rotationX: -1, duration: 6, ease: "sine.inOut", yoyo: true, repeat: -1 });
             gsap.fromTo(".ps-lab-halo", { scale: 0.8 }, { scale: 1.15, ease: "none", scrollTrigger: par(lab, 0.7) });
-            if (fine) {
-              const tx = gsap.quickTo(".ps-lab-tilt", "rotationY", { duration: 1.1, ease: "power3.out" });
-              const ty = gsap.quickTo(".ps-lab-tilt", "rotationX", { duration: 1.1, ease: "power3.out" });
-              const move = (e) => { tx((e.clientX / innerWidth - 0.5) * 10); ty(-(e.clientY / innerHeight - 0.5) * 8); };
-              window.addEventListener("pointermove", move);
-              cleanups.push(() => window.removeEventListener("pointermove", move));
-            }
+            // No hover tilt on purpose: any 3D rotation makes the browser re-sample the text on the panel, so the visuals
+            // went soft whenever the pointer moved over them. The panel now stays perfectly flat and crisp at all times.
           }
 
           /* ---- act 3: lifecycle chevrons ---- */
@@ -689,9 +687,9 @@ export default function PsSections() {
             <div className="ps-ch-copy">
               <span className="ps-tag">{EPC.n} · {EPC.name}</span>
               <Split text={EPC.title} hl={EPC.hl} className="ps-h2" tag="h2" />
-              <p className="ps-lead">{EPC.text}</p>
+              <p className="ps-lead"><BrandText text={EPC.text} /></p>
               <div className="ps-stage-cta">
-                <button type="button" className="ps-btn" onClick={() => jump("#epc-how")} data-mag>{EPC.stage.cta}<i><FaArrowRight aria-hidden="true" /></i></button>
+                <button type="button" className="ps-btn" onClick={() => jump("#epc-how")} data-mag><BrandText text={EPC.stage.cta} /><i><FaArrowRight aria-hidden="true" /></i></button>
               </div>
             </div>
             <PlatformConsole data={EPC.stage} />
@@ -701,8 +699,8 @@ export default function PsSections() {
         {/* act 2 · how DIYVA supports your project */}
         <div className="ps-cap" id="epc-how">
           <div className="ps-cap-head">
-            <span className="ps-tag">Powered by DIYVA</span>
-            <h3 className="ps-h3">{EPC.listTitle}</h3>
+            <span className="ps-tag"><BrandText text="Powered by DIYVA" /></span>
+            <h3 className="ps-h3"><BrandText text={EPC.listTitle} /></h3>
           </div>
           <CapabilityLab items={EPC.items} icons={ICONS} bd={BD} />
         </div>
@@ -711,12 +709,12 @@ export default function PsSections() {
         <div className="ps-epc-flow">
           <div className="ps-flow-bg" aria-hidden="true"><img src={EPC.flow.bg} alt="" loading="lazy" decoding="async" width="1600" height="1066" /></div>
           <i className="ps-scrim" aria-hidden="true" />
-          <div className="ps-flow-ghost" aria-hidden="true">DIYVA</div>
+          <div className="ps-flow-ghost" aria-hidden="true"><BrandText text="DIYVA" /></div>
           <div className="ps-flow-in">
             <div className="ps-ch-copy">
               <span className="ps-tag">{EPC.flow.tag}</span>
               <Split text={EPC.flow.title} hl={EPC.flow.hl} className="ps-h2" tag="h2" />
-              <p className="ps-lead">{EPC.flow.text}</p>
+              <p className="ps-lead"><BrandText text={EPC.flow.text} /></p>
             </div>
             <div className="ps-flow-rail">
               <div className="ps-flow-beam" aria-hidden="true"><i /></div>
@@ -742,9 +740,9 @@ export default function PsSections() {
           <div className="ps-why-wrap">
             <div className="ps-why-copy">
               <div className="ps-ch-copy">
-                <span className="ps-tag">{EPC.why.tag}</span>
+                <span className="ps-tag"><BrandText text={EPC.why.tag} /></span>
                 <Split text={EPC.why.title} hl={EPC.why.hl} className="ps-h2" tag="h2" />
-                <p className="ps-lead">{EPC.why.text}</p>
+                <p className="ps-lead"><BrandText text={EPC.why.text} /></p>
               </div>
             </div>
             <ul className="ps-why-list">

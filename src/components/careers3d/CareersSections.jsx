@@ -143,8 +143,8 @@ export default function CareersSections() {
               rotationY: 0, scale: 1, opacity: 1, ease: "none",
               scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left 96%", end: end(48), scrub: true, invalidateOnRefresh: true },
             });
-            gsap.fromTo(pan.querySelector(".num"), { xPercent: 45 }, {
-              xPercent: -45, ease: "none",
+            gsap.fromTo(pan.querySelector(".num"), { xPercent: 10 }, {
+              xPercent: -10, ease: "none",
               scrollTrigger: { trigger: pan, containerAnimation: slide, start: "left right", end: "right left", scrub: true },
             });
             gsap.fromTo(pan.querySelectorAll("li"), { x: 80, opacity: 0 }, {

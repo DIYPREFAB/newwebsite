@@ -1,4 +1,5 @@
 import { EPC } from "./psData";
+import BrandText from "../../common/BrandText";
 
 // "Capability lab": a sticky rail of the six DIYVA points on the left and ONE live panel on the right.
 // Scrolling (or clicking a tab) swaps the scene; each scene is a small SVG story drawn with CSS animations,
@@ -65,65 +66,165 @@ function SceneModel({ bd }) {
   );
 }
 
-/* 03 · Design alternatives: a radar of the selection parameters, one polygon per concept.
-   The parameters are our selection criteria; ADD OR REMOVE A ROW IN ALT_PARAMS and the radar, the axis labels and the
-   big count all follow. Values are ILLUSTRATIVE (read off the concept-comparison radar); no totals and no winner are shown. */
-// Concept comparison: one glance. Rows = decision parameters, columns = concepts, each cell is a Strong / Fair / Weak chip.
-// Add an 8th parameter by adding one row. Scores are illustrative (0-1): >=.8 Strong, >=.65 Fair, else Weak.
+/* 03 · Design alternatives: a weighted scorecard, one card per concept (modelled on the concept-comparison board).
+
+   HOW THE MARKS WORK (edit ALT_PARAMS and everything below follows: bars, totals, verdicts, ranking)
+   - Every factor is scored 0-5 per concept.
+   - dir "up"   = a BENEFIT (structure, lifecycle, quality, maintainability, material efficiency, utility):
+                  more points is better and counts as-is.
+   - dir "down" = a LOAD (schedule, cost): more points means a longer programme / a bigger bill, so it must never
+                  help a concept. It is drawn as a load bar and counts toward the total as (5 - points).
+                  A concept can therefore never gain marks by being slower or dearer.
+   - "w" is an optional weight (default 1) if the client wants one factor to matter more.
+   Scores are ILLUSTRATIVE. The verdict is not typed in: the highest total is SELECTED, the next is FALLBACK and the
+   rest are REJECTED, so the badges can never disagree with the numbers. */
+const ALT_MAX = 5;
 const ALT_CONCEPTS = [
-  { k: "A", verdict: "SELECTED", tone: "ok", col: "#3ddc97" },
-  { k: "B", verdict: "MODERATE", tone: "mid", col: "#f4c542" },
-  { k: "C", verdict: "REJECTED", tone: "no", col: "#ff7d7d" },
+  { k: "A", kind: "clear", g: "psAltA" },
+  { k: "B", kind: "cols", g: "psAltB" },
+  { k: "C", kind: "saw", g: "psAltC" },
 ];
 const ALT_PARAMS = [
-  ["Structural Performance", 0.95, 0.82, 0.78],
-  ["Lifecycle", 0.88, 0.9, 0.55],
-  ["Quality", 0.9, 0.8, 0.7],
-  ["Maintainability", 0.85, 0.85, 0.6],
-  ["Material Efficiency", 0.9, 0.7, 0.65],
-  ["Schedule", 0.92, 0.75, 0.5],
-  ["Cost", 0.8, 0.9, 0.72],
+  { label: "Structural Performance", ic: "shield", dir: "up", s: [4.6, 4.1, 3.9] },
+  { label: "Lifecycle", ic: "cycle", dir: "up", s: [4.4, 4.3, 2.9] },
+  { label: "Quality", ic: "medal", dir: "up", s: [4.5, 4.0, 3.6] },
+  { label: "Maintainability", ic: "wrench", dir: "up", s: [4.2, 4.2, 3.0] },
+  { label: "Material Efficiency", ic: "cube", dir: "up", s: [4.5, 3.5, 3.4] },
+  { label: "Utility", ic: "grid", dir: "up", s: [4.3, 3.7, 3.2] },
+  { label: "Schedule", ic: "clock", dir: "down", s: [2.0, 3.6, 4.1] },
+  { label: "Cost", ic: "coin", dir: "down", s: [3.0, 2.4, 3.4] },
 ];
-const band = (s) => (s >= 0.8 ? ["Strong", "hi"] : s >= 0.65 ? ["Fair", "md"] : ["Weak", "lo"]);
+const altPts = (p, j) => (p.dir === "down" ? ALT_MAX - p.s[j] : p.s[j]) * (p.w ?? 1);
+const ALT_OUT = ALT_PARAMS.reduce((a, p) => a + ALT_MAX * (p.w ?? 1), 0);
+const ALT_TOTALS = ALT_CONCEPTS.map((_, j) => ALT_PARAMS.reduce((a, p) => a + altPts(p, j), 0));
+const ALT_RANK = ALT_TOTALS.map((t) => ALT_TOTALS.filter((u) => u > t).length); // 0 = best
+const ALT_VERDICT = [
+  { text: "SELECTED", tone: "ok" },
+  { text: "FALLBACK", tone: "mid" },
+  { text: "REJECTED", tone: "no" },
+];
+
+// 14x14 line icons, one per factor
+const ALT_ICONS = {
+  shield: "M7 1.6 12 3.6v3.6c0 2.7-2 4.6-5 5.8-3-1.2-5-3.1-5-5.8V3.6z",
+  cycle: "M11.8 7A4.8 4.8 0 1 1 10.4 3.6M11.9 1.8v2.8H9.1",
+  medal: "M7 1.8a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4zM5.4 10l-.9 3L7 11.8 9.5 13l-.9-3M5.3 6l1.2 1.2L8.8 4.9",
+  wrench: "M9.6 1.8a3 3 0 0 0-2.7 4.1L2 10.8 3.2 12l4.9-4.9A3 3 0 0 0 12.2 4.4L10.4 6.2 8.9 5.7 8.4 4.2 10.2 2.4z",
+  cube: "M7 1.5 12 4v6L7 12.5 2 10V4zM2 4l5 2.5L12 4M7 6.5v6",
+  grid: "M2 2h10v10H2zM2 7h10M7 7v5",
+  clock: "M7 1.8a5.2 5.2 0 1 0 0 10.4A5.2 5.2 0 0 0 7 1.8zM7 4.2V7l2 1.3",
+  coin: "M7 1.8a5.2 5.2 0 1 0 0 10.4A5.2 5.2 0 0 0 7 1.8zM7 4v6M8.7 5.3c-.4-.5-1-.7-1.7-.7-.9 0-1.6.4-1.6 1.1 0 1.5 3.3.7 3.3 2.3 0 .7-.7 1.2-1.7 1.2-.7 0-1.3-.3-1.7-.8",
+};
+
+// tiny warehouse line-drawings (front gable + side wall), one silhouette per concept idea
+function altShed(kind) {
+  const d = [];
+  const t = (i, n) => i / (n + 1);
+  const side = (n) => {
+    let ribs = "", roof = "";
+    for (let i = 1; i <= n; i++) {
+      const u = t(i, n), x = 54 + 50 * u;
+      ribs += `M${x} ${34 - 6 * u}V${20 - 6 * u}`;
+      roof += `M${x} ${20 - 6 * u}L${31 + 50 * u} ${11 - 6 * u}`;
+    }
+    return [ribs, roof];
+  };
+  if (kind === "saw") {
+    d.push("M8 34V20L19 12V20L30 12V20L41 12V20H54V34Z");
+    d.push("M54 34L104 28V14L54 20");
+    d.push("M19 12L69 6M30 12L80 6M41 12L91 6M54 20L104 14");
+    d.push(side(5)[0]);
+  } else {
+    d.push("M8 34V20L31 11L54 20V34Z");
+    d.push("M54 34L104 28V14L54 20");
+    d.push("M31 11L81 5L104 14M54 20L104 14");
+    const [ribs, roof] = side(5);
+    d.push(ribs, roof);
+    if (kind === "cols") d.push("M23 34V17M39 34V17"); // internal columns: not a clear span
+  }
+  return d;
+}
+
 function SceneAlt() {
-  const colX = [262, 346, 430]; // column centres
-  const y0 = 108, step = 29;
-  const rows = ALT_PARAMS.length;
-  const endY = y0 + rows * step;
+  const CX = [186, 324, 462], CW = 130, CTOP = 28, CH = 440;
+  const ROW0 = 132, RH = 29;
+  const BX = 10, BW = 74;
+  const yRow = (i) => ROW0 + i * RH + (i >= 6 ? 6 : 0); // a small gap before the two load rows
+  const loadFrom = ALT_PARAMS.findIndex((p) => p.dir === "down");
+  const totalTop = yRow(ALT_PARAMS.length - 1) + RH + 8;
+  const grads = [["psAltA", "#1fb8a4", "#8ff0da"], ["psAltB", "#3b82f6", "#8cc8ff"], ["psAltC", "#8b6cf0", "#c8b4ff"], ["psAltL", "#f2a43a", "#ff7d7d"]];
   return (
-    <svg viewBox="0 0 480 376" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 620 500" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        {grads.map(([id, a, b]) => (
+          <linearGradient key={id} id={id} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor={a} />
+            <stop offset="1" stopColor={b} />
+          </linearGradient>
+        ))}
+      </defs>
+
       <g className="lb-p" style={v({ "--dl": "0s" })}>
-        <text className="lb-eyebrow" x="24" y="26">CONCEPT SELECTION</text>
+        <text className="lb-eyebrow" x="24" y="16">CONCEPT SELECTION</text>
       </g>
-      <line className="lb-d" x1="24" y1="38" x2="456" y2="38" pathLength="1" style={v({ stroke: "rgba(168,218,220,.3)", strokeWidth: 1, "--dl": ".1s" })} />
+      <g className="lb-p" style={v({ "--dl": ".15s" })}>
+        <rect x="346" y="8" width="8" height="8" rx="2" fill="url(#psAltA)" />
+        <text className="lb-a-leg" x="359" y="15.5">Benefit · higher is better</text>
+        <rect x="490" y="8" width="8" height="8" rx="2" fill="url(#psAltL)" />
+        <text className="lb-a-leg" x="503" y="15.5">Load · lower is better</text>
+      </g>
 
-      {/* the recommended column gets a soft highlight */}
-      <rect className="lb-sel" x={colX[0] - 40} y="48" width="80" height={endY - 48 + 4} rx="14" />
-
-      {/* column heads: concept + verdict */}
-      {ALT_CONCEPTS.map((c, j) => (
-        <g key={c.k} className="lb-p" style={v({ "--dl": `${0.4 + j * 0.15}s` })}>
-          <text className="lb-ch" x={colX[j]} y="68" textAnchor="middle">Concept {c.k}</text>
-          <rect className={`lb-vd lb-vd-${c.tone}`} x={colX[j] - 34} y="76" width="68" height="18" rx="9" />
-          <text className={`lb-vdt lb-vdt-${c.tone}`} x={colX[j]} y="88.5" textAnchor="middle">{c.verdict}</text>
-        </g>
-      ))}
-
-      {/* parameter rows */}
-      {ALT_PARAMS.map((p, i) => {
-        const y = y0 + i * step;
+      {/* concept cards */}
+      {ALT_CONCEPTS.map((c, j) => {
+        const best = ALT_RANK[j] === 0, vd = ALT_VERDICT[Math.min(ALT_RANK[j], 2)];
+        const cx = CX[j], mid = cx + CW / 2;
+        const sh = altShed(c.kind);
         return (
-          <g key={p[0]}>
-            <g className="lb-s" style={v({ "--dl": `${0.7 + i * 0.12}s`, "--dx": "-24px" })}>
-              <text className="lb-rl" x="24" y={y + 15}>{p[0]}</text>
-              {i < rows && <line x1="24" y1={y + 25.5} x2="456" y2={y + 25.5} className="lb-rowline" />}
+          <g key={c.k} className={ALT_RANK[j] >= 2 ? "lb-dim" : ""}>
+            <g className="lb-s" style={v({ "--dl": `${0.1 + j * 0.12}s`, "--dx": "0px", "--dy": "18px" })}>
+              <rect className={best ? "lb-a-card lb-a-best" : "lb-a-card"} x={cx} y={CTOP} width={CW} height={CH} rx="16" />
+              {best && <rect className="lb-a-top" x={cx + 1} y={CTOP + 1} width={CW - 2} height="3" rx="1.5" />}
             </g>
-            {[1, 2, 3].map((c, j) => {
-              const [label, cls] = band(p[c]);
+
+            {/* silhouette */}
+            <g transform={`translate(${cx + 11} ${CTOP + 12})`} style={{ stroke: `var(--c${c.k})` }}>
+              {sh.map((dd, i) => <path key={i} className="lb-d lb-a-shed" pathLength="1" d={dd} style={v({ "--dl": `${0.5 + j * 0.12 + i * 0.07}s`, "--t": ".9s" })} />)}
+            </g>
+
+            <g className="lb-p" style={v({ "--dl": `${0.55 + j * 0.12}s` })}>
+              <text className="lb-ch" x={mid} y={CTOP + 72} textAnchor="middle">Concept {c.k}</text>
+              <rect className={`lb-vd lb-vd-${vd.tone}`} x={mid - 36} y={CTOP + 80} width="72" height="17" rx="8.5" />
+              <text className={`lb-vdt lb-vdt-${vd.tone}`} x={mid} y={CTOP + 91.8} textAnchor="middle">{vd.text}</text>
+            </g>
+          </g>
+        );
+      })}
+
+      {/* tint behind the two load rows */}
+      <g className="lb-p" style={v({ "--dl": "1.3s" })}>
+        <rect className="lb-a-loadband" x="16" y={yRow(loadFrom) - 1} width="588" height={RH * 2 - 1} rx="10" />
+      </g>
+
+      {/* factor rows */}
+      {ALT_PARAMS.map((p, i) => {
+        const y = yRow(i), cy = y + RH / 2 - 0.5, load = p.dir === "down";
+        return (
+          <g key={p.label}>
+            <g className="lb-s" style={v({ "--dl": `${0.6 + i * 0.09}s`, "--dx": "-22px" })}>
+              <g transform={`translate(24 ${cy - 7})`}><path className={load ? "lb-a-ic lb-a-ic-l" : "lb-a-ic"} d={ALT_ICONS[p.ic]} /></g>
+              <text className="lb-rl" x="46" y={load ? cy - 0.5 : cy + 4}>{p.label}</text>
+              {load && <text className="lb-a-sub" x="46" y={cy + 9.5}>load · lower is better</text>}
+              {i < ALT_PARAMS.length - 1 && i !== loadFrom - 1 && <line className="lb-rowline" x1="24" y1={y + RH} x2="176" y2={y + RH} />}
+            </g>
+            {ALT_CONCEPTS.map((c, j) => {
+              const s = p.s[j];
               return (
-                <g key={c} className="lb-p" style={v({ "--dl": `${0.9 + i * 0.12 + j * 0.06}s` })}>
-                  <rect className={`lb-cell lb-cell-${cls}`} x={colX[j] - 30} y={y + 3} width="60" height="20" rx="10" />
-                  <text className={`lb-cellt lb-cellt-${cls}`} x={colX[j]} y={y + 16.5} textAnchor="middle">{label}</text>
+                <g key={c.k}>
+                  <rect className="lb-track" x={CX[j] + BX} y={cy - 3} width={BW} height="6" rx="3" />
+                  <rect className="lb-g" x={CX[j] + BX} y={cy - 3} width={(BW * s) / ALT_MAX} height="6" rx="3" fill={`url(#${load ? "psAltL" : c.g})`} style={v({ "--dl": `${0.85 + i * 0.09 + j * 0.05}s`, "--t": ".8s" })} />
+                  <g className="lb-p" style={v({ "--dl": `${1 + i * 0.09 + j * 0.05}s` })}>
+                    <text className={load ? "lb-a-val lb-a-val-l" : "lb-a-val"} x={CX[j] + CW - 10} y={cy + 4} textAnchor="end">{s.toFixed(1)}</text>
+                  </g>
                 </g>
               );
             })}
@@ -131,14 +232,30 @@ function SceneAlt() {
         );
       })}
 
-      {/* the reasoning, one line per verdict */}
-      <g className="lb-s" style={v({ "--dl": "2.1s", "--dx": "0px", "--dy": "14px" })}>
-        <circle cx="30" cy={endY + 18} r="3.5" fill="#3ddc97" />
-        <text className="lb-note" x="40" y={endY + 21.5}><tspan className="lb-b">A</tspan> leads on engineering and schedule, so we go ahead.</text>
-        <circle cx="30" cy={endY + 34} r="3.5" fill="#f4c542" />
-        <text className="lb-note" x="40" y={endY + 37.5}><tspan className="lb-b">B</tspan> is cheaper to run but slower, so we keep it as a fallback.</text>
-        <circle cx="30" cy={endY + 50} r="3.5" fill="#ff7d7d" />
-        <text className="lb-note" x="40" y={endY + 53.5}><tspan className="lb-b">C</tspan> is weak on lifecycle and schedule, so we drop it.</text>
+      {/* totals */}
+      {ALT_CONCEPTS.map((c, j) => {
+        const best = ALT_RANK[j] === 0, cx = CX[j], tot = ALT_TOTALS[j];
+        return (
+          <g key={c.k} className={ALT_RANK[j] >= 2 ? "lb-dim" : ""}>
+          <g className="lb-p" style={v({ "--dl": `${1.9 + j * 0.15}s` })}>
+            <line className="lb-rowline" x1={cx + 12} y1={totalTop} x2={cx + CW - 12} y2={totalTop} />
+            <text className="lb-a-tl" x={cx + 12} y={totalTop + 17}>TOTAL SCORE</text>
+            <text className={best ? "lb-a-big lb-a-big-best" : "lb-a-big"} x={cx + 12} y={totalTop + 46}>{tot.toFixed(1)}</text>
+            <text className="lb-a-of" x={cx + CW - 12} y={totalTop + 46} textAnchor="end">/ {ALT_OUT}</text>
+            <rect className="lb-track" x={cx + 12} y={totalTop + 56} width={CW - 24} height="4" rx="2" />
+            <rect className="lb-g" x={cx + 12} y={totalTop + 56} width={((CW - 24) * tot) / ALT_OUT} height="4" rx="2" fill={best ? "url(#psAltA)" : "rgba(168,218,220,.5)"} style={v({ "--dl": `${2.1 + j * 0.15}s`, "--t": ".9s" })} />
+            <g transform={`translate(${cx + 12} ${totalTop + 68})`}>
+              <circle cx="5" cy="5" r="5" className="lb-a-okdot" />
+              <path className="lb-tick" d="M2.6 5.2 4.4 7 7.6 3.4" style={{ strokeWidth: 1.5 }} />
+              <text className="lb-a-pass" x="15" y="8.6">Engineering passed</text>
+            </g>
+          </g>
+          </g>
+        );
+      })}
+
+      <g className="lb-p" style={v({ "--dl": "2.6s" })}>
+        <text className="lb-a-foot" x="24" y="490">Schedule and Cost are scored as load: every extra point lowers the total (counted as 5 − score).</text>
       </g>
     </svg>
   );
@@ -200,8 +317,8 @@ function SceneBoq() {
         </g>
       ))}
       <g className="lb-p" style={v({ "--dl": "3s" })}>
-        <rect className="lb-pill lb-ok" x="372" y="107" width="86" height="26" rx="13" />
-        <text className="lb-oktxt" x="415" y="124" textAnchor="middle">Best fit</text>
+        <rect className="lb-pill lb-ok" x="388" y="109" width="70" height="22" rx="11" />
+        <text className="lb-oktxt" x="423" y="124" textAnchor="middle">Best fit</text>
       </g>
       <text className="lb-p lb-note" x="330" y="300" style={v({ "--dl": "3.4s" })}>Technical context intact</text>
     </svg>
@@ -268,7 +385,7 @@ export default function CapabilityLab({ items, icons, bd }) {
               <div className="ps-lab-panel">
                 <div className="ps-lab-top">
                   <i /><i /><i />
-                  <b>DIYVA</b>
+                  <b><BrandText text="DIYVA" /></b>
                   <span className="ps-lab-st">{items[0].title}</span>
                   <em className="ps-lab-count"><b>01</b> / {pad2(N)}</em>
                 </div>
