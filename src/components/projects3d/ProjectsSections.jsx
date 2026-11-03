@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createElement, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -100,8 +100,8 @@ function Words({ text, hl = [] }) {
     </span>
   ));
 }
-function Split({ text, hl, className, tag: Tag = "span" }) {
-  return <Tag className={className} aria-label={text}><Words text={text} hl={hl} /></Tag>;
+function Split({ text, hl, className, tag = "span" }) {
+  return createElement(tag, { className, "aria-label": text }, <Words text={text} hl={hl} />);
 }
 
 /* =====================================================================

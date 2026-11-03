@@ -23,7 +23,12 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['error', {
+        // <motion.div> etc. is a JSX use ESLint core can't see; capitalised names are components
+        varsIgnorePattern: '^([A-Z_]|motion$)',
+        argsIgnorePattern: '^_',
+        caughtErrors: 'none',
+      }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createElement, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -53,17 +53,17 @@ const nodePos = (i) => {
   return { x: 50 + 40 * Math.cos(a), y: 50 + 40 * Math.sin(a) };
 };
 
-function Split({ text, hl, className, tag: Tag = "span" }) {
-  return (
-    <Tag className={className} aria-label={text}>
-      {text.split(" ").map((w, i) => (
-        <span className="cr-m" key={i} aria-hidden="true">
-          <span className={`cr-w${hl?.has(w) ? " hl" : ""}`}>
-            {[...w].map((c, j) => <span className="cr-c" key={j}>{c}</span>)}
-          </span>
+function Split({ text, hl, className, tag = "span" }) {
+  return createElement(
+    tag,
+    { className, "aria-label": text },
+    text.split(" ").map((w, i) => (
+      <span className="cr-m" key={i} aria-hidden="true">
+        <span className={`cr-w${hl?.has(w) ? " hl" : ""}`}>
+          {[...w].map((c, j) => <span className="cr-c" key={j}>{c}</span>)}
         </span>
-      ))}
-    </Tag>
+      </span>
+    )),
   );
 }
 

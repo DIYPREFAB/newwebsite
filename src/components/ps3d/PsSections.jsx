@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createElement, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -49,8 +49,8 @@ function Words({ text, hl = [] }) {
     </span>
   ));
 }
-function Split({ text, hl, className, tag: Tag = "span" }) {
-  return <Tag className={className} aria-label={text}><Words text={text} hl={hl} /></Tag>;
+function Split({ text, hl, className, tag = "span" }) {
+  return createElement(tag, { className, "aria-label": text }, <Words text={text} hl={hl} />);
 }
 
 

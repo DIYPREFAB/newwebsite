@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createElement, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -46,11 +46,11 @@ function Words({ text, hl = [] }) {
     </span>
   ));
 }
-function Split({ text, hl, className, tag: Tag = "span" }) {
-  return <Tag className={className} aria-label={text}><Words text={text} hl={hl} /></Tag>;
+function Split({ text, hl, className, tag = "span" }) {
+  return createElement(tag, { className, "aria-label": text }, <Words text={text} hl={hl} />);
 }
 
-function Photo({ im, className = "", lazy = true }) {
+function Photo({ im, className = "" }) {
   return (
     <figure className={`ab-fig ${className}`}>
       <div className="ab-fig-in"><img src={im.src} alt={im.alt} loading="eager" decoding="async" width="1400" height="933" /></div>

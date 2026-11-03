@@ -21,7 +21,7 @@ const ScrollToTop = () => {
         top: 0,
         behavior: "smooth"
       });
-    } catch (error) {
+    } catch {
       // Fallback for browsers that don't support smooth scrolling
       window.scrollTo(0, 0);
     }

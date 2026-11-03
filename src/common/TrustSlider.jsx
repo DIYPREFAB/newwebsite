@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Slider from 'react-slick';
 import ImagePath from '../assets/ImagePath';
@@ -15,7 +15,7 @@ const imageList = [
 
 
 // Optimized Trust Logo Component
-const TrustLogoImage = React.memo(({ src, alt, index }) => {
+const TrustLogoImage = React.memo(({ src, alt }) => {
   return (
     <div className="trust-logo-wrapper">
       <img
@@ -109,7 +109,6 @@ const TrustSlider = React.memo(() => {
         <TrustLogoImage
           src={item.img}
           alt={item.alt}
-          index={index}
         />
       </div>
     )), []);
