@@ -1,4 +1,5 @@
 import React, {
+  createElement,
   useState,
   lazy,
   Suspense,
@@ -391,7 +392,7 @@ const LazySection = React.memo(
                 )
               }
             >
-              <Component {...props} />
+              {createElement(Component, props)}
             </Suspense>
           </ErrorBoundary>
         ) : (

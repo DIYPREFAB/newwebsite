@@ -4,7 +4,7 @@ import { weDo } from '../../Constants'
 import { useNavigate } from 'react-router-dom'
 import ROUTE_PATHS from '../../routes/RoutePath'
 
-const WeDo = ({ handleComingSoon }) => {
+const WeDo = () => {
   const navigate=useNavigate()
   return (
       <section className="we-do-section">

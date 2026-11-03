@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, createElement, lazy } from "react";
 import { Navigate, Route } from "react-router-dom";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import LEGACY_REDIRECTS from "../../routes/redirects";
@@ -196,7 +196,7 @@ const RoutesPath = () => {
           path={path}
           element={
             <Suspense fallback={fb === "blank" ? <BlankFallback /> : <LoadingFallback />}>
-              <Component />
+              {createElement(Component)}
             </Suspense>
           }
         />

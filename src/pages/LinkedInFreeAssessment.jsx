@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Card, Form, Alert } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
 import SeoHelmet from '../common/SeoHelmet';
 import { createContact, createDeal } from '../services/HubSpotService';
 import { trackLandingPageView, trackCombinedConversion } from '../services/AnalyticsService';
@@ -13,7 +12,6 @@ import { trackLandingPageView, trackCombinedConversion } from '../services/Analy
  */
 
 const LinkedInFreeAssessment = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

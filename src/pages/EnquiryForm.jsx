@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 import { Col, Container, Row } from 'reactstrap';
 import NavBar from "../common/NavBar";
 import Banner from "../common/Banner";

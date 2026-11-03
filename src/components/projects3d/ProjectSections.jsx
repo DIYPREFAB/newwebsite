@@ -224,7 +224,7 @@ export default function ProjectSections() {
     mm.add(
       { lg: "(min-width: 1001px)", md: "(min-width: 601px) and (max-width: 1000px)", wide: "(min-width: 861px)" },
       (c) => {
-        const { lg, md, wide } = c.conditions;
+        const { lg, md } = c.conditions;
         const k = lg ? 1 : md ? 0.75 : 0.55;
         const heroST = (end = "bottom top") => ({ trigger: ".pj-hero", start: "top top", end, scrub: 0.8 });
 

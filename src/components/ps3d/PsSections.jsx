@@ -61,17 +61,6 @@ const ICONS = {
   database: FaDatabase, eye: FaEye, brain: FaBrain,
 };
 
-// tilt + a soft light that follows the pointer (fine pointers only)
-const glareMove = (e) => {
-  if (e.pointerType === "touch") return;
-  tiltMove(e);
-  const el = e.currentTarget;
-  const r = el.getBoundingClientRect();
-  if (!r.width || !r.height) return;
-  el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
-  el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
-};
-const glareLeave = (e) => { e.currentTarget.style.transform = ""; };
 
 // Isometric steel building (portal frames, purlins, girts, bracing) generated once in a 560x360 drawing box.
 // Callout leaders start on real points of the structure and run to the legend column on the right.

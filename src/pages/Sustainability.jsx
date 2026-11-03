@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect, Component } from "react";
+import React, { lazy, Suspense, useState, Component } from "react";
 import ImagePath from "../assets/ImagePath";
 import { FaWarehouse } from "react-icons/fa";
 import { FaHelmetSafety } from "react-icons/fa6";
@@ -83,7 +83,7 @@ class LazyErrorBoundary extends Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }

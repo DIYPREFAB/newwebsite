@@ -7,8 +7,8 @@
  * Track custom GA4 event
  */
 export const trackGAEvent = (eventName, eventParams = {}) => {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', eventName, {
+  if (typeof window.gtag !== 'undefined') {
+    window.gtag('event', eventName, {
       ...eventParams,
       send_to: import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-S8KND0M92C'
     });

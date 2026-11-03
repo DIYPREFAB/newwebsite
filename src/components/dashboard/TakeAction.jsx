@@ -4,7 +4,7 @@ import ImagePath from '../../assets/ImagePath'
 import { Link } from 'react-router-dom'
 import ROUTE_PATHS from '../../routes/RoutePath'
 
-const TakeAction = ({  }) => {
+const TakeAction = () => {
   return (
      <section className="take-action">
         <img src={ImagePath.TakeAction} alt="Take Action" className="img-fluid" />

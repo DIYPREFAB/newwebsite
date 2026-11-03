@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import Banner from "../common/Banner";
 import NavBar from "../common/NavBar";
@@ -41,10 +41,9 @@ const LoadingSpinner = ({ message = LOADING_TEXT }) => (
 
 const IndustryTrends = () => {
   const seo = useSeoHelmet("industry-trends");
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
-  const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const [limit] = useState(DEFAULT_LIMIT);
 
   // Memoized current page
   const currentPage = useMemo(() =>
@@ -72,7 +71,7 @@ const IndustryTrends = () => {
     service: BlogServices.blogList,
     params: queryParams,
     select: (data) => data?.data,
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Optional: Analytics or other side effects
     }
   });

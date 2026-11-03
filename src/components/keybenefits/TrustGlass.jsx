@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createElement, useEffect, useRef } from "react";
 import { FaHardHat, FaRulerCombined, FaTools } from "react-icons/fa";
 import { glassState } from "../home3d/GlassCore";
 import { RESPECT_REDUCED_MOTION } from "./keybenefitsData";
@@ -283,7 +283,7 @@ export default function TrustGlass() {
             <div className="tg-spin" style={{ animationDelay: `${delay}s` }} key={i}>
               <div className="tg-arm">
                 <div className="tg-counter" style={{ animationDelay: `${delay}s` }}>
-                  <div className="tg-bb"><span className="tg-token"><Icon /></span></div>
+                  <div className="tg-bb"><span className="tg-token">{createElement(Icon)}</span></div>
                 </div>
               </div>
             </div>

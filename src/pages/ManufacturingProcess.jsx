@@ -119,7 +119,7 @@ class LazyComponentErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
@@ -154,7 +154,7 @@ class LazyComponentErrorBoundary extends React.Component {
 }
 
 // Memoized InfoBox component
-const InfoBox = React.memo(({ icon: Icon, title, children }) => (
+const InfoBox = React.memo(({ title, children }) => (
   <div className="info-box">
     <div className="info-box-icons" />
     <h6>{title}</h6>

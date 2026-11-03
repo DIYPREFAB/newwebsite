@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { Suspense, useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import Banner from "../common/Banner";
 import NavBar from "../common/NavBar";

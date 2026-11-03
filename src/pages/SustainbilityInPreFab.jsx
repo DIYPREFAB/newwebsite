@@ -1,9 +1,9 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Banner from "../common/Banner";
 import NavBar from "../common/NavBar";
 import useSeoHelmet from '../hooks/ReactHelmet';
 import SeoHelmet from '../common/SeoHelmet';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useCustomQuery } from '../utils/QueryHooks';
 import BlogServices from '../services/BlogServices';
 import { buildQueryString } from '../utils/BuildQuery';
@@ -77,7 +77,7 @@ class ErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 

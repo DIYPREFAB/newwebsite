@@ -12,7 +12,7 @@ import {
   Row,
 } from "reactstrap";
 import { chooseUs } from '../../Constants';
-const WhyChoose = ({toggleVideo}) => {
+const WhyChoose = () => {
   return (
       <section className="why-choose-us">
         <Container>

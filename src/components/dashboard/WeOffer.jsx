@@ -4,7 +4,7 @@ import { weOfferList } from '../../Constants'
 import { Button, Container } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
-const WeOffer = ({  }) => {
+const WeOffer = () => {
   return (
     <section
         className="we-offer"
