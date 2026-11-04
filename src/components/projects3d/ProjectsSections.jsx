@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { lenisOptions, lenisTick } from "../../utils/lenisTick";
-import { FaArrowRight, FaCheck, FaChevronLeft, FaChevronRight, FaFileSignature, FaMapMarkerAlt, FaTimes } from "react-icons/fa";
+import { FaArrowDown, FaArrowRight, FaCheck, FaChevronLeft, FaChevronRight, FaClipboardCheck, FaDraftingCompass, FaFileSignature, FaHardHat, FaIndustry, FaLayerGroup, FaMapMarkerAlt, FaTimes, FaTools, FaTruck, FaWarehouse } from "react-icons/fa";
 import { navItems } from "../../Constants";
 import SteelBits from "../home3d/SteelBits";
 import BimHero from "./BimHero";
@@ -71,6 +71,26 @@ const splitNum = (v) => {
   return m ? [m[1], m[2]] : [String(v), ""];
 };
 const countAttrs = (raw) => ({ "data-to": parseFloat(raw.replace(/,/g, "")), "data-dec": (raw.split(".")[1] || "").length });
+// picks a line icon for a scope item from its wording (falls back to a tick)
+const SCOPE_ICONS = [
+  [/supervis|inspect|quality|safety/i, FaClipboardCheck],
+  [/install|erect|commission/i, FaHardHat],
+  [/deliver|transport|logistic|dispatch/i, FaTruck],
+  [/gutter|downspout|bolt|connection|fastener|accessor/i, FaTools],
+  [/sheet|roof|wall|cladding|panel|skylight|louver/i, FaWarehouse],
+  [/secondary|purlin|girt|brac|component/i, FaLayerGroup],
+  [/fabricat|manufactur|supply/i, FaIndustry],
+  [/design|engineer|detail|drawing/i, FaDraftingCompass],
+];
+const scopeIcon = (t) => (SCOPE_ICONS.find(([re]) => re.test(t)) || [null, FaCheck])[1];
+const FigN = ({ raw }) => {
+  const [n, u] = splitNum(raw);
+  return (
+    <b className="pj-fig-n">
+      <span className="pj-fig-v"><span className="pj-cnt" {...countAttrs(n)}>{n}</span>{u && <small>{u}</small>}</span>
+    </b>
+  );
+};
 const fmtNum = (n, dec) => n.toLocaleString("en-IN", { minimumFractionDigits: dec, maximumFractionDigits: dec });
 
 // the card's on-screen box, used to grow the project sheet out of it and shrink it back
@@ -115,7 +135,7 @@ const numOf = (v) => parseFloat(String(v).replace(/,/g, "")) || 0;
 const frameD = (x0, y0, W, H, R) => `M${x0} ${y0} V${y0 - H} L${x0 + W / 2} ${y0 - H - R} L${x0 + W} ${y0 - H} V${y0}`;
 
 function CardSketch({ p }) {
-  const eave = numOf(p.specs.find((s) => /clear height/i.test(s[0]))?.[1]) || 5;
+  const eave = numOf(p.specs.find((s) => /clear height|eave height/i.test(s[0]))?.[1]) || 5;
   const T = (x, y, t, anchor = "middle") => <text className="tx" x={x} y={y} textAnchor={anchor}>{t}</text>;
   const L = (d, cls = "") => <path className={`ln ${cls}`} d={d} pathLength="1" />;
   let body;
@@ -193,6 +213,7 @@ function ProjectCard({ p, i, onOpen }) {
               <i className="pj-card-grid" />
               <CardSketch p={p} />
               <span className="pj-card-badge">{p.badge}</span>
+              <span className="pj-card-no">{String(i + 1).padStart(2, "0")}</span>
             </div>
             <div className="pj-card-body">
               <span className="pj-client">{p.client}</span>
@@ -221,7 +242,7 @@ function PlanSketch({ plan, area }) {
   const x0 = 76;
   const y0 = 54;
   return (
-    <svg className="pj-plan" viewBox="0 0 380 340" role="img" aria-label={`Plan view to scale: ${plan.w} m wide by ${plan.l} m long, ${area}`}>
+    <svg className="pj-plan" viewBox={`0 0 380 ${y0 + h + 24}`} role="img" aria-label={`Plan view to scale: ${plan.w} m wide by ${plan.l} m long, ${area}`}>
       <defs>
         <pattern id="pj-hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <path d="M0 0V10" stroke="currentColor" strokeOpacity=".22" strokeWidth="1" />
@@ -234,7 +255,6 @@ function PlanSketch({ plan, area }) {
       <text className="pj-plan-t" x={x0 + w / 2} y={y0 - 28} textAnchor="middle">{plan.w} m</text>
       <text className="pj-plan-t" x={x0 - 34} y={y0 + h / 2} textAnchor="middle" transform={`rotate(-90 ${x0 - 34} ${y0 + h / 2})`}>{plan.l} m</text>
       <text className="pj-plan-a" x={x0 + w / 2} y={y0 + h / 2 + 5} textAnchor="middle">{area}</text>
-      <text className="pj-plan-n" x={x0 + w / 2} y={y0 + h + 28} textAnchor="middle">Plan view, drawn to scale</text>
     </svg>
   );
 }
@@ -255,6 +275,13 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
   const latest = useRef({});
   const swipe = useRef(null);
   const [lb, setLb] = useState(null);
+  const lbDir = useRef(0); // 0 = opened, 1 = next, -1 = previous (drives the slide direction in the photo viewer)
+  const [ratios, setRatios] = useState({}); // real width / height of each gallery photo, measured when it loads
+  const setRatio = (src, el) => {
+    if (!el || !el.naturalWidth || !el.naturalHeight) return;
+    const r = el.naturalWidth / el.naturalHeight;
+    setRatios((o) => (Math.abs((o[src] || 0) - r) < 0.001 ? o : { ...o, [src]: r }));
+  };
 
   const facts = [...p.meta, ["Location", p.location], ...(rec ? [["Completion record", `${rec.doc}, ${rec.date}`]] : [])];
   const totalSpec = p.specs.find(([l]) => /total/i.test(l));
@@ -270,7 +297,7 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
     if (r) gsap.fromTo(el, { clipPath: OPEN_INSET }, { clipPath: insetOf(r), duration: 0.85, ease: "power4.inOut", onComplete: onClose });
     else gsap.to(el, { opacity: 0, duration: 0.4, onComplete: onClose });
   };
-  const stepLb = (d) => setLb((v) => (v === null ? v : (v + d + p.gallery.length) % p.gallery.length));
+  const stepLb = (d) => { lbDir.current = d; setLb((v) => (v === null ? v : (v + d + p.gallery.length) % p.gallery.length)); };
   latest.current = { lb, requestClose, stepLb };
 
   /* ---- scroll lock, focus, keys (Escape, arrows, focus trap) */
@@ -325,6 +352,7 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
       gsap.to(o, { v: to, duration: 1.8, ease: "power2.out", onUpdate: () => { c.textContent = fmtNum(o.v, dec); }, scrollTrigger: on(trg, start) });
     };
 
+    const pointerOff = [];
     const ctx = gsap.context(() => {
       /* entrance: the card grows into the full sheet */
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -337,83 +365,172 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
       tl.from(q(".pj-sh-bar > :not(.pj-sh-prog)"), { y: -28, opacity: 0, stagger: 0.08, duration: 0.6 }, 0.7)
         .from(q(".pj-sh-cv .pj-c"), { yPercent: 115, rotationX: -80, opacity: 0, stagger: 0.02, duration: 0.9, transformOrigin: "50% 100%" }, 0.6)
         .from(q(".pj-sh-cv-fade"), { y: 34, opacity: 0, stagger: 0.09, duration: 0.8 }, 0.95)
-        .from(Q(".pj-sh-gn"), { opacity: 0, x: 80, duration: 1.2 }, 0.5)
+        .from(q(".pj-cvf"), { y: 22, opacity: 0, stagger: 0.1, duration: 0.7 }, 1.35)
+        .fromTo(Q(".pj-sh-cv-facts"), { "--ln": 0 }, { "--ln": 1, duration: 1.2, ease: "power3.inOut" }, 1.2)
         .add(() => gsap.set(q(".pj-sh-cv .pj-m"), { overflow: "visible" }));
 
       /* progress through the sheet */
       gsap.to(Q(".pj-sh-prog"), { scaleX: 1, ease: "none", scrollTrigger: { scroller: sc, start: 0, end: "max", scrub: 0.2 } });
 
-      /* cover: photo drifts slower than the page, copy and numeral drift faster */
+      /* cover: the photo drifts slower than the page, the copy lifts and fades as you leave it */
       const cv = Q(".pj-sh-cv");
       gsap.to(Q(".pj-sh-cv-img img"), { yPercent: 7, ease: "none", scrollTrigger: par(cv, 0.6, "top top") });
       gsap.to(Q(".pj-sh-cv-copy"), { y: -120 * k, opacity: 0.05, ease: "none", scrollTrigger: par(cv, 0.6, "top top", "bottom 25%") });
-      gsap.to(Q(".pj-sh-gn"), { y: -280 * k, ease: "none", scrollTrigger: par(cv, 0.6, "top top") });
-      gsap.to(Q(".pj-sh-hint"), { opacity: 0, ease: "none", scrollTrigger: par(cv, 0.3, "top top", "20% top") });
+      { const kc = Q(".pj-sh-cv .pj-cnt"); if (kc) count(kc, kc, "top 98%"); }
 
-      /* overview */
+      /* pointer tilt (mouse only): the panel leans toward the cursor */
+      const fp = matchMedia("(pointer: fine)").matches;
+      const tilt = (el, max = 5) => {
+        if (!fp || !el) return;
+        gsap.set(el, { transformPerspective: 1100 });
+        const rx = gsap.quickTo(el, "rotationX", { duration: 0.8, ease: "power3.out" });
+        const ry = gsap.quickTo(el, "rotationY", { duration: 0.8, ease: "power3.out" });
+        const mv = (e) => { const r = el.getBoundingClientRect(); ry(((e.clientX - r.left) / r.width - 0.5) * max * 2); rx(-((e.clientY - r.top) / r.height - 0.5) * max * 2); };
+        const lv = () => { rx(0); ry(0); };
+        el.addEventListener("pointermove", mv); el.addEventListener("pointerleave", lv);
+        pointerOff.push(() => { el.removeEventListener("pointermove", mv); el.removeEventListener("pointerleave", lv); });
+      };
+
+      /* overview: label slides in, the paragraph rises word by word out of a mask, the details card opens upward
+         and its hairlines draw one after another */
       const ov = Q(".pj-sh-ov");
-      gsap.from(q(".pj-sh-ov .pj-sh-k, .pj-sh-ov-t"), { y: 60 * k, opacity: 0, stagger: 0.12, duration: 1, scrollTrigger: on(ov, "top 78%") });
-      q(".pj-sh-fact").forEach((f, i) => {
-        gsap.from(f, { x: 60 * k, opacity: 0, duration: 0.85, delay: i * 0.08, scrollTrigger: on(ov, "top 70%") });
-        gsap.fromTo(f, { y: (i % 2 ? 1 : -1) * 26 * k }, { y: (i % 2 ? -1 : 1) * 26 * k, ease: "none", scrollTrigger: par(ov, 0.8) });
-      });
+      gsap.from(Q(".pj-sh-ov .pj-sh-k"), { y: 24 * k, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: on(ov, "top 78%") });
+      gsap.from(q(".pj-sh-ov-t .pj-w"), { yPercent: 118, stagger: 0.016, duration: 1.1, ease: "power4.out", scrollTrigger: on(ov, "top 74%") });
+      gsap.fromTo(Q(".pj-sh-ov-main"), { y: 20 * k }, { y: -20 * k, ease: "none", scrollTrigger: par(ov, 0.8) });
+      const card = Q(".pj-sh-card");
+      gsap.fromTo(card, { opacity: 0, scale: 0.95, clipPath: "inset(14% 0% 0% 0% round 20px)" }, { opacity: 1, scale: 1, clipPath: "inset(0% 0% 0% 0% round 20px)", duration: 1.2, ease: "power4.out", clearProps: "clipPath", scrollTrigger: on(ov, "top 72%") });
+      gsap.fromTo(card, { "--ln": 0 }, { "--ln": 1, duration: 1.3, ease: "power3.inOut", scrollTrigger: on(ov, "top 72%") });
+      gsap.fromTo(q(".pj-sh-fact"), { "--ln": 0 }, { "--ln": 1, duration: 1.1, stagger: 0.14, delay: 0.3, ease: "power3.inOut", scrollTrigger: on(ov, "top 72%") });
+      gsap.from(q(".pj-sh-card-h, .pj-sh-fact dt, .pj-sh-fact dd"), { y: 16 * k, opacity: 0, stagger: 0.06, duration: 0.8, delay: 0.35, ease: "power3.out", scrollTrigger: on(ov, "top 72%") });
+      gsap.fromTo(card, { y: 22 * k }, { y: -22 * k, ease: "none", scrollTrigger: par(ov, 0.8) });
+      tilt(card, 4);
 
-      /* specifications */
+      /* specifications: the blueprint panel is wiped open, the plan is drawn and a scan line sweeps it; the figure cells
+         open upward in a diagonal sequence and their numbers roll up out of a mask while they count */
       const sp = Q(".pj-sh-spec");
-      gsap.from(Q(".pj-sh-spec .pj-sh-k"), { y: 40, opacity: 0, duration: 0.8, scrollTrigger: on(sp, "top 80%") });
-      q(".pj-fig").forEach((f, i) => {
-        gsap.from(f, { y: 90 * k, opacity: 0, rotationX: -22, transformPerspective: 900, duration: 1, ease: "power3.out", scrollTrigger: on(f, "top 92%") });
-        gsap.fromTo(f.querySelector(".pj-fig-n"), { y: (i % 2 ? -1 : 1) * 42 * k }, { y: (i % 2 ? 1 : -1) * 42 * k, ease: "none", scrollTrigger: par(f, 0.7) });
-        const c = f.querySelector(".pj-cnt");
-        if (c) count(c, f, "top 90%");
-      });
-      const plan = Q(".pj-plan");
-      if (plan) {
-        gsap.fromTo(plan.querySelectorAll(".dr"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8, stagger: 0.25, ease: "power2.inOut", scrollTrigger: on(plan, "top 85%") });
-        gsap.from(plan.querySelectorAll(".pj-plan-fill, text"), { opacity: 0, duration: 1, delay: 0.6, stagger: 0.12, scrollTrigger: on(plan, "top 85%") });
-        gsap.fromTo(plan, { y: 60 * k, rotation: -2 }, { y: -60 * k, rotation: 2, ease: "none", scrollTrigger: par(plan, 0.8) });
+      gsap.from(q(".pj-sp-head > *"), { y: 30 * k, opacity: 0, stagger: 0.1, duration: 0.9, ease: "power3.out", scrollTrigger: on(sp, "top 80%") });
+      const bp = Q(".pj-bp");
+      if (bp) {
+        const scan = bp.querySelector(".pj-bp-scan");
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: on(bp, "top 85%") });
+        tl.fromTo(bp, { clipPath: "inset(0% 0% 100% 0% round 6px)", opacity: 0 }, { clipPath: "inset(0% 0% 0% 0% round 6px)", opacity: 1, duration: 1.2, ease: "power4.inOut", clearProps: "clipPath" }, 0)
+          .fromTo(bp.querySelectorAll(".dr"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8, stagger: 0.25, ease: "power2.inOut" }, 0.5)
+          .from(bp.querySelectorAll(".pj-plan-fill, .pj-plan text, .pj-bp-tag, .pj-bp-c"), { opacity: 0, duration: 1, stagger: 0.08 }, 1.2)
+          .fromTo(scan, { left: "0%", opacity: 1 }, { left: "100%", duration: 1.6, ease: "power2.inOut" }, 0.7)
+          .to(scan, { opacity: 0, duration: 0.3 }, 2.1);
+        gsap.fromTo(bp, { y: 36 * k }, { y: -36 * k, ease: "none", scrollTrigger: par(bp, 0.8) });
+        tilt(bp, 4);
       }
+      q(".pj-fig").forEach((f, i) => {
+        const d = (i % 2) * 0.1 + Math.floor(i / 2) * 0.08;
+        const v = f.querySelector(".pj-fig-v");
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: on(f, "top 92%") });
+        tl.fromTo(f, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "power4.inOut", clearProps: "clipPath" }, d)
+          .from(f.querySelectorAll(".pj-fig-l, .pj-fig-i"), { y: 14, opacity: 0, stagger: 0.06, duration: 0.7 }, d + 0.35)
+          .from(v, { yPercent: 110, duration: 1, ease: "power4.out" }, d + 0.3);
+        const c = f.querySelector(".pj-cnt");
+        if (c && Number.isFinite(Number(c.dataset.to))) count(c, f, "top 90%");
+        if (fp) {
+          const mv = (e) => { const r = f.getBoundingClientRect(); f.style.setProperty("--mx", `${e.clientX - r.left}px`); f.style.setProperty("--my", `${e.clientY - r.top}px`); };
+          f.addEventListener("pointermove", mv);
+          pointerOff.push(() => f.removeEventListener("pointermove", mv));
+        }
+      });
       q(".pj-bar").forEach((b, i) => {
-        gsap.from(b, { y: 50 * k, opacity: 0, duration: 0.8, delay: i * 0.05, scrollTrigger: on(b, "top 94%") });
+        gsap.from(b, { y: 40 * k, opacity: 0, duration: 0.8, delay: i * 0.05, scrollTrigger: on(b, "top 94%") });
         gsap.fromTo(b.querySelector(".pj-bar-f"), { scaleX: 0 }, { scaleX: 1, transformOrigin: "left", duration: 1.5, ease: "power3.out", scrollTrigger: on(b, "top 94%") });
       });
-      q(".pj-row").forEach((r, i) => {
-        gsap.from(r, { x: (i % 2 ? 1 : -1) * 80 * k, opacity: 0, duration: 0.85, scrollTrigger: on(r, "top 94%") });
+      q(".pj-row").forEach((r) => {
+        gsap.from(r, { y: 36 * k, opacity: 0, duration: 0.85, ease: "power3.out", scrollTrigger: on(r, "top 94%") });
       });
 
-      /* scope */
+      /* scope: cards. Each card stands up out of the floor (a tilted plane that swings upright) while its hairline draws;
+         once seated, the icon and the title drift at different speeds for depth, and with a mouse the card leans toward
+         the cursor. Everything is tied to the scroll position, so it reverses when you scroll back up. */
       const scp = Q(".pj-sh-scope");
-      gsap.from(q(".pj-sc-head > *"), { y: 50 * k, opacity: 0, stagger: 0.1, duration: 0.9, scrollTrigger: on(scp, "top 76%") });
-      gsap.fromTo(Q(".pj-sh-big"), { y: 70 * k }, { y: -70 * k, ease: "none", scrollTrigger: par(scp, 0.8) });
-      q(".pj-sc").forEach((li) => {
-        gsap.from(li, { x: 80 * k, opacity: 0, duration: 0.85, scrollTrigger: on(li, "top 94%") });
-        gsap.fromTo(li.querySelector(".ln"), { scaleX: 0 }, { scaleX: 1, transformOrigin: "left", duration: 1.2, ease: "power3.out", scrollTrigger: on(li, "top 94%") });
+      gsap.from(q(".pj-sc-head > *"), { y: 30 * k, opacity: 0, stagger: 0.1, duration: 0.9, ease: "power3.out", scrollTrigger: on(scp, "top 76%") });
+      q(".pj-sc").forEach((li, i) => {
+        const col = i % 3;
+        const inn = li.querySelector(".pj-sc-in");
+        gsap.fromTo(li, { y: 80 * k, opacity: 0, rotationX: -26, scale: 0.94, transformPerspective: 900, transformOrigin: "50% 100%" }, { y: 0, opacity: 1, rotationX: 0, scale: 1, ease: "none", scrollTrigger: S(li, { start: `top ${98 - col * 3}%`, end: `top ${70 - col * 3}%`, scrub: 0.6 }) });
+        gsap.fromTo(inn, { "--ln": 0 }, { "--ln": 1, ease: "none", scrollTrigger: S(li, { start: `top ${92 - col * 3}%`, end: `top ${60 - col * 3}%`, scrub: 0.5 }) });
+        gsap.fromTo(li.querySelector(".pj-sc-ic"), { y: -16 * k }, { y: 16 * k, ease: "none", scrollTrigger: par(li, 0.6) });
+        gsap.fromTo(li.querySelector(".pj-sc-t"), { y: 10 * k }, { y: -10 * k, ease: "none", scrollTrigger: par(li, 0.6) });
+        tilt(inn, 5);
+        if (fp) {
+          const mv = (e) => { const r = inn.getBoundingClientRect(); inn.style.setProperty("--mx", `${e.clientX - r.left}px`); inn.style.setProperty("--my", `${e.clientY - r.top}px`); };
+          inn.addEventListener("pointermove", mv);
+          pointerOff.push(() => inn.removeEventListener("pointermove", mv));
+        }
       });
 
-      /* outcome */
+      /* outcome (light): the photo opens from a small inset window into its full frame while the image settles from a zoom,
+         and the paragraph is "read" word by word as you scroll, with a rail filling beside it. All scrubbed, so reversible. */
       const out = Q(".pj-sh-out");
-      gsap.fromTo(Q(".pj-sh-out-img img"), { yPercent: -8 }, { yPercent: 8, ease: "none", scrollTrigger: par(out, 0.6) });
-      gsap.from(q(".pj-sh-out .pj-sh-k, .pj-sh-out-t, .pj-sh-doc"), { y: 70 * k, opacity: 0, stagger: 0.15, duration: 1, scrollTrigger: on(out, "top 70%") });
+      const win = { start: "top 85%", end: "top 20%", scrub: 0.6 };
+      const rd = { start: "top 62%", end: "center 38%", scrub: 0.5 };
+      gsap.from(Q(".pj-sh-out .pj-sh-k"), { y: 24 * k, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: on(out, "top 78%") });
+      const ofig = Q(".pj-out-fig");
+      gsap.fromTo(ofig, { clipPath: "inset(20% 16% 20% 16% round 28px)" }, { clipPath: "inset(0% 0% 0% 0% round 18px)", ease: "none", scrollTrigger: S(out, win) });
+      gsap.fromTo(ofig.querySelector("img"), { scale: 1.3 }, { scale: 1.04, ease: "none", scrollTrigger: S(out, win) });
+      gsap.fromTo(ofig.querySelector("img"), { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: par(out, 0.6) });
+      gsap.fromTo(Q(".pj-out-chip"), { y: 20, opacity: 0 }, { y: 0, opacity: 1, ease: "none", scrollTrigger: S(out, { start: "top 50%", end: "top 25%", scrub: 0.5 }) });
+      gsap.fromTo(q(".pj-sh-out-t .pj-w"), { opacity: 0.14 }, { opacity: 1, stagger: { each: 0.1 }, ease: "none", scrollTrigger: S(out, rd) });
+      gsap.fromTo(Q(".pj-out-rail b"), { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: S(out, rd) });
+      gsap.fromTo(Q(".pj-sh-doc"), { y: 30 * k, opacity: 0, clipPath: "inset(0% 100% 0% 0% round 14px)" }, { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0% round 14px)", ease: "none", scrollTrigger: S(out, { start: "top 45%", end: "top 20%", scrub: 0.5 }) });
+      gsap.fromTo(Q(".pj-out-main"), { y: 26 * k }, { y: -26 * k, ease: "none", scrollTrigger: par(out, 0.8) });
 
-      /* gallery: the frames drift at different speeds, the photos inside them drift again */
-      const drift = [56, -34, 44, -56];
+      /* gallery: each frame is wiped open (alternating sides) while its photo settles from a slow zoom, then the label
+         and badge rise in. With a mouse the photo shifts against the pointer and a glare follows the cursor. */
+      const fine = matchMedia("(pointer: fine)").matches;
       q(".pj-gf").forEach((f, i) => {
-        gsap.fromTo(f, { y: drift[i % 4] * k }, { y: -drift[i % 4] * k, ease: "none", scrollTrigger: par(f, 0.7) });
         const inn = f.querySelector(".pj-gf-in");
-        gsap.fromTo(inn, { opacity: 0, y: 70 * k, rotationX: -16, scale: 0.92, transformPerspective: 1100 }, { opacity: 1, y: 0, rotationX: 0, scale: 1, duration: 1, ease: "power3.out", scrollTrigger: on(f, "top 94%") });
-        gsap.fromTo(f.querySelector("img"), { yPercent: -9 }, { yPercent: 9, ease: "none", scrollTrigger: par(f, 0.5) });
+        const img = f.querySelector("img");
+        const bits = f.querySelectorAll(".pj-gf-cap, .pj-gf-view");
+        const left = i % 2 === 0;
+        const d = (i % 2) * 0.14 + Math.floor(i / 2) * 0.08;
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        tl.fromTo(inn, { clipPath: left ? "inset(0% 100% 0% 0% round 14px)" : "inset(0% 0% 0% 100% round 14px)", y: 30 * k }, { clipPath: "inset(0% 0% 0% 0% round 14px)", y: 0, duration: 1.15, ease: "power4.inOut", clearProps: "clipPath,transform" }, d)
+          .fromTo(img, { scale: 1.3 }, { scale: 1, duration: 1.8, ease: "power2.out", clearProps: "transform" }, d)
+          .fromTo(bits, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, clearProps: "opacity,transform" }, d + 0.7);
+        // plays every time the frame scrolls into view (down or up) and rewinds once it has left
+        ScrollTrigger.create(S(f, { start: "top 94%", end: "bottom 6%", onEnter: () => tl.restart(), onEnterBack: () => tl.restart(), onLeave: () => tl.pause(0), onLeaveBack: () => tl.pause(0) }));
+        if (fine) {
+          const qx = gsap.quickTo(img, "x", { duration: 0.9, ease: "power3.out" });
+          const qy = gsap.quickTo(img, "y", { duration: 0.9, ease: "power3.out" });
+          const mv = (e) => {
+            const r = inn.getBoundingClientRect();
+            const nx = (e.clientX - r.left) / r.width - 0.5;
+            const ny = (e.clientY - r.top) / r.height - 0.5;
+            qx(-nx * 22); qy(-ny * 16);
+            inn.style.setProperty("--mx", `${(nx + 0.5) * 100}%`);
+            inn.style.setProperty("--my", `${(ny + 0.5) * 100}%`);
+          };
+          const lv = () => { qx(0); qy(0); };
+          inn.addEventListener("pointermove", mv);
+          inn.addEventListener("pointerleave", lv);
+          pointerOff.push(() => { inn.removeEventListener("pointermove", mv); inn.removeEventListener("pointerleave", lv); });
+        }
       });
-      gsap.from(q(".pj-sh-gal .pj-sh-k, .pj-sh-gal-h p"), { y: 40, opacity: 0, stagger: 0.1, duration: 0.8, scrollTrigger: on(Q(".pj-sh-gal"), "top 80%") });
+      gsap.from(q(".pj-sh-gal .pj-sh-k"), { y: 40, opacity: 0, duration: 0.8, scrollTrigger: on(Q(".pj-sh-gal"), "top 80%") });
+      gsap.fromTo(Q(".pj-gal-note .ln"), { scaleX: 0 }, { scaleX: 1, transformOrigin: "left", duration: 1.3, ease: "power3.out", scrollTrigger: on(Q(".pj-gal-note"), "top 98%") });
+      gsap.from(q(".pj-gal-note span"), { y: 22, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: on(Q(".pj-gal-note"), "top 98%") });
 
       /* next project */
-      gsap.from(q(".pj-sh-ft .pj-sh-next, .pj-sh-ft-a > *"), { y: 70 * k, opacity: 0, stagger: 0.12, duration: 0.9, scrollTrigger: on(Q(".pj-sh-ft"), "top 85%") });
+      gsap.from(q(".pj-sh-ft .pj-sh-next, .pj-sh-ft-a > *"), { y: 36 * k, opacity: 0, stagger: 0.12, duration: 0.9, scrollTrigger: on(Q(".pj-sh-ft"), "top 85%") });
     }, el);
 
     const r1 = setTimeout(() => ScrollTrigger.refresh(), 150);
     const r2 = setTimeout(() => ScrollTrigger.refresh(), 900);
-    return () => { clearTimeout(r1); clearTimeout(r2); ctx.revert(); };
+    return () => { clearTimeout(r1); clearTimeout(r2); pointerOff.forEach((f) => f()); ctx.revert(); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const cvDate = p.meta.find(([l]) => /purchase|contract/i.test(l)) || null;
+  const goOverview = () => {
+    const sc = scr.current;
+    const ov = sc && sc.querySelector(".pj-sh-ov");
+    if (sc && ov) sc.scrollTo({ top: ov.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 64, behavior: "smooth" });
+  };
   const figs = p.specs.map(([label, value]) => ({ label, value, parts: splitNum(value) }));
 
   return (
@@ -430,52 +547,68 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
         <header className="pj-sh-cv">
           <div className="pj-sh-cv-img" aria-hidden="true"><img src={p.cover.src} alt="" /></div>
           <i className="pj-sh-cv-shade" aria-hidden="true" />
-          <div className="pj-sh-gn" aria-hidden="true">{p.n}</div>
+          <i className="pj-sh-cv-grid" aria-hidden="true" />
           <div className="pj-sh-cv-copy">
-            <div className="pj-sh-cv-main">
-              <span className="pj-client pj-sh-cv-fade">{p.client}</span>
-              <h2 id="pj-sh-title" className="pj-sh-h" aria-label={p.title}><Words text={p.title} /></h2>
-              <div className="pj-sh-cv-meta pj-sh-cv-fade">
-                <span className="pj-place"><FaMapMarkerAlt aria-hidden="true" />{p.location}</span>
-                <span className="pj-sh-badge">{p.badge}</span>
-              </div>
+            <div className="pj-sh-cv-top pj-sh-cv-fade">
+              <span className="pj-sh-cv-tag">Project {pad2(index + 1)}</span>
+              <span className="pj-sh-badge">{p.badge}</span>
             </div>
-            <div className="pj-sh-kpi pj-sh-cv-fade">
-              <strong>{p.kpi.big}{p.kpi.unit && <small>{p.kpi.unit}</small>}</strong>
-              <span>{p.kpi.label}</span>
+            <span className="pj-client pj-sh-cv-fade">{p.client}</span>
+            <h2 id="pj-sh-title" className="pj-sh-h" aria-label={p.title}><Words text={p.title} /></h2>
+            <div className="pj-sh-cv-facts pj-sh-cv-fade">
+              <div className="pj-cvf pj-cvf--kpi">
+                <span className="pj-cvf-l">{p.kpi.label}</span>
+                <span className="pj-cvf-v">
+                  {/^[\d.,]+$/.test(p.kpi.big) ? <span className="pj-cnt" {...countAttrs(p.kpi.big)}>{p.kpi.big}</span> : p.kpi.big}
+                  {p.kpi.unit && <small>{p.kpi.unit}</small>}
+                </span>
+              </div>
+              <div className="pj-cvf"><span className="pj-cvf-l">Location</span><span className="pj-cvf-v"><FaMapMarkerAlt aria-hidden="true" />{p.location}</span></div>
+              {cvDate && <div className="pj-cvf"><span className="pj-cvf-l">{cvDate[0]}</span><span className="pj-cvf-v">{cvDate[1]}</span></div>}
+              <button type="button" className="pj-cvf-go" onClick={goOverview} aria-label="Scroll to project overview" data-mag><FaArrowDown aria-hidden="true" /></button>
             </div>
           </div>
-          <div className="pj-sh-hint" aria-hidden="true"><i />Scroll</div>
         </header>
 
         {/* ---- overview */}
         <section className="pj-sh-sec pj-sh-ov" aria-label="Project overview">
           <div className="pj-sh-in pj-sh-ov-g">
-            <div>
+            <div className="pj-sh-ov-main">
               <h3 className="pj-sh-k">Project overview</h3>
-              <p className="pj-sh-ov-t">{p.overview}</p>
+              <p className="pj-sh-ov-t" aria-label={p.overview}><Words text={p.overview} /></p>
             </div>
-            <dl className="pj-sh-facts">
-              {facts.map(([a, b]) => <div className="pj-sh-fact" key={a}><dt>{a}</dt><dd>{b}</dd></div>)}
-            </dl>
+            <aside className="pj-sh-card" aria-label="Project details">
+              <span className="pj-sh-card-h">Project details</span>
+              <dl className="pj-sh-facts">
+                {facts.map(([a, b]) => <div className="pj-sh-fact" key={a}><dt>{a}</dt><dd>{b}</dd></div>)}
+              </dl>
+            </aside>
           </div>
         </section>
 
         {/* ---- specifications */}
         <section className="pj-sh-sec pj-sh-spec" aria-label="Specifications">
           <div className="pj-sh-in">
-            <h3 className="pj-sh-k">Specifications</h3>
+            <div className="pj-sp-head">
+              <h3 className="pj-sh-k">Specifications</h3>
+              <span className="pj-sp-cnt"><b>{pad2(p.specs.length)}</b>key figures</span>
+            </div>
 
             {p.specMode === "plan" && (
               <div className="pj-sp-plan">
-                <PlanSketch plan={p.plan} area={p.area} />
+                <div className="pj-bp">
+                  <i className="pj-bp-c a" aria-hidden="true" /><i className="pj-bp-c b" aria-hidden="true" /><i className="pj-bp-c c" aria-hidden="true" /><i className="pj-bp-c d" aria-hidden="true" />
+                  <span className="pj-bp-tag">Plan view</span>
+                  <span className="pj-bp-tag pj-bp-tag--r">Drawn to scale</span>
+                  <i className="pj-bp-scan" aria-hidden="true" />
+                  <PlanSketch plan={p.plan} area={p.area} />
+                </div>
                 <div className="pj-figs">
-                  {figs.map((f) => (
+                  {figs.map((f, i) => (
                     <div className="pj-fig" key={f.label}>
-                      <b className="pj-fig-n">
-                        <span className="pj-cnt" {...countAttrs(f.parts[0])}>{f.parts[0]}</span>{f.parts[1] && <small>{f.parts[1]}</small>}
-                      </b>
+                      <span className="pj-fig-i" aria-hidden="true">{pad2(i + 1)}</span>
                       <span className="pj-fig-l">{f.label}</span>
+                      <FigN raw={f.value} />
                     </div>
                   ))}
                 </div>
@@ -486,10 +619,8 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
               <div className="pj-sp-bars">
                 {totalSpec && (
                   <div className="pj-fig pj-fig--total">
-                    <b className="pj-fig-n">
-                      <span className="pj-cnt" {...countAttrs(splitNum(totalSpec[1])[0])}>{splitNum(totalSpec[1])[0]}</span><small>{splitNum(totalSpec[1])[1]}</small>
-                    </b>
                     <span className="pj-fig-l">{totalSpec[0]}</span>
+                    <FigN raw={totalSpec[1]} />
                   </div>
                 )}
                 <ul className="pj-bars" aria-label="Area of each building, as a share of the total">
@@ -517,28 +648,51 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
 
         {/* ---- scope */}
         <section className="pj-sh-sec pj-sh-scope" aria-label="Scope of work">
-          <div className="pj-sh-in pj-sc-g">
+          <div className="pj-sh-in">
             <div className="pj-sc-head">
               <h3 className="pj-sh-k">Scope of work</h3>
-              <strong className="pj-sh-big" aria-hidden="true">{pad2(p.scope.length)}</strong>
-              <span>{p.scope.length === 1 ? "item" : "items"} in scope</span>
+              <span className="pj-sc-cnt"><b>{pad2(p.scope.length)}</b>{p.scope.length === 1 ? "item" : "items"} in scope</span>
             </div>
             <ul className="pj-sc-list">
-              {p.scope.map((s) => (
-                <li className="pj-sc" key={s}><i className="ln" aria-hidden="true" /><FaCheck aria-hidden="true" /><span>{s}</span></li>
-              ))}
+              {p.scope.map((s, i) => {
+                const Ic = scopeIcon(s);
+                return (
+                  <li className="pj-sc" key={s}>
+                    <div className="pj-sc-in">
+                      <div className="pj-sc-top">
+                        <span className="pj-sc-ic" aria-hidden="true"><Ic /></span>
+                        <span className="pj-sc-n" aria-hidden="true">{pad2(i + 1)}</span>
+                      </div>
+                      <span className="pj-sc-t">{s}</span>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </section>
 
-        {/* ---- outcome */}
+        {/* ---- outcome (light) */}
         <section className="pj-sh-out" aria-label="Project outcome">
-          <div className="pj-sh-out-img" aria-hidden="true"><img src={(p.gallery[1] || p.cover).src} alt="" loading="lazy" /></div>
-          <i className="pj-sh-out-shade" aria-hidden="true" />
-          <div className="pj-sh-in">
-            <h3 className="pj-sh-k">Project outcome</h3>
-            <p className="pj-sh-out-t">{p.outcome}</p>
-            {rec && <div className="pj-sh-doc"><FaFileSignature aria-hidden="true" /><span>{rec.doc}</span><b>{rec.date}</b></div>}
+          <div className="pj-sh-in pj-out-g">
+            <div className="pj-out-main">
+              <h3 className="pj-sh-k">Project outcome</h3>
+              <div className="pj-out-txt">
+                <i className="pj-out-rail" aria-hidden="true"><b /></i>
+                <p className="pj-sh-out-t" aria-label={p.outcome}><Words text={p.outcome} /></p>
+              </div>
+              {rec && (
+                <div className="pj-sh-doc">
+                  <span className="pj-doc-ic" aria-hidden="true"><FaFileSignature /></span>
+                  <span className="pj-doc-t"><small>Completion record</small><span>{rec.doc}</span></span>
+                  <b>{rec.date}</b>
+                </div>
+              )}
+            </div>
+            <figure className="pj-out-fig" aria-hidden="true">
+              <img src={(p.gallery[1] || p.cover).src} alt="" loading="lazy" />
+              <figcaption className="pj-out-chip">{p.badge}</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -547,18 +701,26 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
           <div className="pj-sh-in">
             <div className="pj-sh-gal-h">
               <h3 className="pj-sh-k">Project gallery</h3>
-              <p>A look at the plant floor where our steel is cut, fitted and checked.</p>
             </div>
+            {/* Rows of two. Every frame takes its photo's exact ratio and the two frames in a row share one height, so the
+                photos are never cropped and the whole set (four photos = two rows) stays on one screen. */}
             <div className="pj-gg">
-              {p.gallery.map((g, i) => (
-                <div className={`pj-gf g${i}`} key={g.src}>
-                  <button type="button" className="pj-gf-in" onClick={() => setLb(i)} aria-label={`Enlarge photo: ${g.cap}`} data-cursor="View">
-                    <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
-                    <span className="pj-gf-cap">{g.cap}</span>
-                  </button>
+              {Array.from({ length: Math.ceil(p.gallery.length / 2) }, (_, r) => p.gallery.slice(r * 2, r * 2 + 2).map((g, j) => ({ g, i: r * 2 + j }))).map((row, ri) => (
+                <div className="pj-gr" key={ri} style={{ "--n": row.length, "--sum": row.reduce((a, { g }) => a + (ratios[g.src] || 1.5), 0) }}>
+                  {row.map(({ g, i }) => (
+                    <div className="pj-gf" key={g.src} style={{ "--ar": ratios[g.src] || 1.5 }}>
+                      <button type="button" className="pj-gf-in" onClick={() => { lbDir.current = 0; setLb(i); }} aria-label={`Enlarge photo: ${g.cap}`} data-cursor="View">
+                        <img src={g.src} alt={g.alt} decoding="async" ref={(el) => { if (el && el.complete) setRatio(g.src, el); }} onLoad={(e) => setRatio(g.src, e.currentTarget)} />
+                        <span className="pj-gf-no">{String(i + 1).padStart(2, "0")}</span>
+                        <span className="pj-gf-cap">{g.cap}</span>
+                        <span className="pj-gf-view" aria-hidden="true">View<FaArrowRight /></span>
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
+            <p className="pj-gal-note"><i className="ln" aria-hidden="true" /><span>{p.galleryNote || "A look at the plant floor where our steel is cut, fitted and checked."}</span></p>
           </div>
         </section>
 
@@ -599,8 +761,9 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
           <button type="button" className="pj-lb-x" onClick={() => setLb(null)} aria-label="Close photo viewer" autoFocus><FaTimes aria-hidden="true" /></button>
           <button type="button" className="pj-lb-n p" onClick={(e) => { e.stopPropagation(); stepLb(-1); }} aria-label="Previous photo"><FaChevronLeft aria-hidden="true" /></button>
           <figure onClick={(e) => e.stopPropagation()}>
-            <img key={lb} src={p.gallery[lb].src} alt={p.gallery[lb].alt} />
-            <figcaption><strong>{p.gallery[lb].cap}</strong><span>{lb + 1} / {p.gallery.length}</span></figcaption>
+            <img key={lb} className={lbDir.current > 0 ? "go-n" : lbDir.current < 0 ? "go-p" : ""} src={p.gallery[lb].src} alt={p.gallery[lb].alt} />
+            <figcaption key={`c${lb}`}><strong>{p.gallery[lb].cap}</strong><span>{lb + 1} / {p.gallery.length}</span></figcaption>
+            <i className="pj-lb-bar" aria-hidden="true"><b style={{ width: `${((lb + 1) / p.gallery.length) * 100}%` }} /></i>
           </figure>
           <button type="button" className="pj-lb-n n" onClick={(e) => { e.stopPropagation(); stepLb(1); }} aria-label="Next photo"><FaChevronRight aria-hidden="true" /></button>
         </div>
@@ -747,14 +910,14 @@ export default function ProjectsSections() {
           /* ================================================= 01 FEATURED PROJECTS ================================================= */
           headReveal(".pj-pj");
           ghost(".pj-pj");
-          // Cards: a "curtain" reveal. Each card is uncovered from the bottom while it settles upward, then its blueprint
-          // draws itself, the badge pops in, the text rises line by line and the headline figure counts up. The columns
-          // start one after another. Scrolling only adds a slow drift to the blueprint; with a mouse the card leans
-          // toward the pointer, lifts slightly and a soft glare follows the cursor.
+          // Cards: calm and static. Each card is uncovered with a "curtain" reveal (once), its blueprint draws itself, the
+          // text rises and the headline figure counts up. Nothing floats or rolls while scrolling. With a mouse the
+          // blueprint and badge shift slightly against the pointer and a soft glare follows the cursor; the rest of the
+          // hover motion (lift, border glow, sheen, redraw) lives in the CSS.
           const cards = $(".pj-card");
+          const topOf = (el) => Math.round(el.getBoundingClientRect().top);
+          const cols = Math.max(1, cards.filter((c) => Math.abs(topOf(c) - topOf(cards[0])) < 8).length);
           cards.forEach((card, i) => {
-            const drift = card.querySelector(".pj-card-drift");
-            const tilt = card.querySelector(".pj-card-tilt");
             const inn = card.querySelector(".pj-card-in");
             const sk = card.querySelector(".pj-sk");
             const badge = card.querySelector(".pj-card-badge");
@@ -767,35 +930,25 @@ export default function ProjectsSections() {
             const kpiRaw = kpiNode ? kpiNode.nodeValue.trim() : "";
             const kpiNum = /^[\d.,]+$/.test(kpiRaw) ? parseFloat(kpiRaw.replace(/,/g, "")) : null;
             const kpiDec = kpiNum === null ? 0 : (kpiRaw.split(".")[1] || "").length;
-            const d = (lg ? i % 3 : i % 2) * 0.16;
+            const d = (i % cols) * 0.1;
             const cnt = { v: 0 };
+            const once = { trigger: card, start: "top 92%", once: true };
 
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: io(card, "top 88%") });
-            tl.fromTo(inn, { clipPath: "inset(100% 0% 0% 0% round 22px)", y: 90 * k, scale: 0.94 }, { clipPath: "inset(0% 0% 0% 0% round 22px)", y: 0, scale: 1, duration: 1.2, ease: "power4.inOut", clearProps: "clipPath,transform" }, d)
-              .fromTo(grid, { scale: 1.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.7, ease: "power2.out", clearProps: "opacity" }, d + 0.1)
-              .fromTo(lines, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.5, stagger: 0.07, ease: "power2.inOut" }, d + 0.45)
-              .fromTo(marks, { opacity: 0 }, { opacity: 1, duration: 0.6, stagger: 0.035 }, d + 1.0)
-              .from(badge, { scale: 0.5, opacity: 0, transformOrigin: "0% 50%", duration: 0.7, ease: "back.out(2.2)" }, d + 0.55)
-              .from(parts, { y: 28, opacity: 0, duration: 0.85, stagger: 0.08, clearProps: "opacity,transform" }, d + 0.5);
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: once });
+            tl.fromTo(inn, { clipPath: "inset(100% 0% 0% 0% round 16px)", y: 48 * k, scale: 0.97 }, { clipPath: "inset(0% 0% 0% 0% round 16px)", y: 0, scale: 1, duration: 1.05, ease: "power4.inOut", clearProps: "clipPath,transform" }, d)
+              .fromTo(grid, { scale: 1.25, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4, ease: "power2.out", clearProps: "opacity,transform" }, d + 0.1)
+              .fromTo(lines, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, stagger: 0.05, ease: "power2.inOut", clearProps: "strokeDashoffset" }, d + 0.4)
+              .fromTo(marks, { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 0.03, clearProps: "opacity" }, d + 0.9)
+              .from(badge, { scale: 0.6, opacity: 0, transformOrigin: "0% 50%", duration: 0.6, ease: "back.out(2)", clearProps: "opacity,transform" }, d + 0.5)
+              .from(parts, { y: 20, opacity: 0, duration: 0.75, stagger: 0.07, clearProps: "opacity,transform" }, d + 0.45);
             if (kpiNum !== null) {
-              tl.to(cnt, { v: kpiNum, duration: 1.6, ease: "power2.out", onUpdate: () => { kpiNode.nodeValue = fmtNum(cnt.v, kpiDec); } }, d + 0.7);
+              const finalTxt = fmtNum(kpiNum, kpiDec);
+              tl.to(cnt, { v: kpiNum, duration: 1.3, ease: "power2.out", onUpdate: () => { kpiNode.nodeValue = fmtNum(cnt.v, kpiDec); }, onComplete: () => { kpiNode.nodeValue = finalTxt; } }, d + 0.6);
             }
 
-            // always moving: the card floats gently on its own, and as it travels up the screen it rolls through 3D
-            gsap.fromTo(drift, { y: -9, rotationZ: -0.5 }, { y: 9, rotationZ: 0.5, duration: 2.6 + i * 0.55, ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.35 });
-            const pass = (lg ? [60, -40, 70][i % 3] : 30) * k;
-            gsap.fromTo(card, { rotationX: 13, y: pass, transformPerspective: 1100 }, { rotationX: -11, y: -pass, ease: "none", scrollTrigger: par(card, 0.9) });
-
-            // slow scroll drift of the blueprint inside its frame
-            gsap.fromTo(sk, { yPercent: -6, scale: 1.06 }, { yPercent: 6, scale: 1.06, ease: "none", scrollTrigger: par(card, 0.6) });
-
-            // pointer: lean, lift, counter-shift of the blueprint and badge, glare under the cursor
+            // pointer: blueprint and badge shift slightly against the cursor, glare under the cursor
             if (fine) {
-              gsap.set(tilt, { transformPerspective: 900 });
-              const qt = (el, prop, dur = 0.7) => gsap.quickTo(el, prop, { duration: dur, ease: "power3.out" });
-              const rx = qt(tilt, "rotationX");
-              const ry = qt(tilt, "rotationY");
-              const lift = qt(tilt, "y", 0.5);
+              const qt = (el, prop) => gsap.quickTo(el, prop, { duration: 0.8, ease: "power3.out" });
               const skx = qt(sk, "x");
               const sky = qt(sk, "y");
               const bx = qt(badge, "x");
@@ -805,12 +958,11 @@ export default function ProjectsSections() {
                 const r = card.getBoundingClientRect();
                 const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
                 const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
-                ry(nx * 6); rx(-ny * 5); lift(-8);
-                skx(-nx * 10); sky(-ny * 8); bx(nx * 8); by(ny * 6);
+                skx(-nx * 7); sky(-ny * 5); bx(nx * 4); by(ny * 3);
                 inn.style.setProperty("--mx", `${(nx / 2 + 0.5) * 100}%`);
                 inn.style.setProperty("--my", `${(ny / 2 + 0.5) * 100}%`);
               };
-              const onLeave = () => { ry(0); rx(0); lift(0); skx(0); sky(0); bx(0); by(0); };
+              const onLeave = () => { skx(0); sky(0); bx(0); by(0); };
               card.addEventListener("pointermove", onMove);
               card.addEventListener("pointerleave", onLeave);
               cleanups.push(() => { card.removeEventListener("pointermove", onMove); card.removeEventListener("pointerleave", onLeave); });
@@ -1038,7 +1190,7 @@ export default function ProjectsSections() {
             <b>{pad2(PROJECTS.length)}</b><strong>{HERO.chips[0].t}</strong><em>{HERO.chips[0].e}</em>
           </button>
           <button type="button" className="pj-stat" onClick={() => jump("#cases")} data-cursor="Go" aria-label="Jump to case studies">
-            <b><span className="pj-cnt-h" data-to="5856">5,856</span>+</b><strong>{HERO.chips[1].t}</strong><em>{HERO.chips[1].e}</em>
+            <b><span className="pj-cnt-h" data-to="11456">11,456</span>+</b><strong>{HERO.chips[1].t}</strong><em>{HERO.chips[1].e}</em>
           </button>
         </div>
       </header>

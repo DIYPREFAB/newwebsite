@@ -7,6 +7,7 @@
 export const RESPECT_REDUCED_MOTION = false; // same switch as the other 3D pages
 
 const AB = (n) => `/images/ab/${n}.webp`;
+const ZM = (n) => `/images/zambia/${n}.webp`; // Zambia site photos
 
 export const NAV_SECTIONS = [
   { id: "projects", n: "01", label: "Featured projects" },
@@ -25,8 +26,8 @@ export const HERO = {
     "From prefabricated steel structures to large-scale industrial PEB facilities, our project experience reflects a commitment to engineering, quality and reliable execution.",
   sub: "Explore our work across industrial buildings, structural steel fabrication, supply and installation.",
   chips: [
-    { b: "03", t: "Featured projects", e: "Rajasthan & Gujarat" },
-    { b: "5,856+", t: "Sq. m documented", e: "Across delivered buildings" },
+    { b: "04", t: "Featured projects", e: "Rajasthan, Gujarat & Zambia" },
+    { b: "11,456+", t: "Sq. m documented", e: "Across our featured buildings" },
   ],
 };
 
@@ -156,6 +157,49 @@ export const PROJECTS = [
     ],
     meta: [["Client", "Assure Buildcon Private Limited"], ["Purchase Order", "17 April 2025"]],
   },
+  {
+    id: "zambia",
+    cover: { src: ZM("cover"), alt: "Pre-engineered steel building frame under erection in Zambia" },
+    kpi: { big: "5,600", unit: "Sq. Mtr.", label: "Main building area" },
+    specMode: "plan",
+    plan: { w: 70, l: 80 },
+    gallery: [
+      { src: ZM("gallery-1"), alt: "Long column line of the Zambia PEB with foundation plinths and frames under erection", cap: "Frame line & foundations" },
+      { src: ZM("gallery-2"), alt: "Primary steel column with rafters and roof purlins in place", cap: "Primary columns & purlins" },
+      { src: ZM("gallery-3"), alt: "Telehandler lifting a crew to the roof framing during erection", cap: "Roof framing erection" },
+      { src: ZM("gallery-4"), alt: "Interior bays of the steel frame under erection with site works below", cap: "Interior bays under erection" },
+    ],
+    galleryWide: true, // all four photos shown landscape (3:2)
+    galleryNote: "A look at the building on site, from foundations to primary frames and roof framing.",
+    n: "04",
+    client: "Tyre Technocrats (India) Pvt. Ltd.",
+    title: "PEB Supply & Erection, Zambia",
+    location: "Zambia, Africa",
+    badge: "Contract dated 4 December 2025",
+    area: "5,600 Sq. Mtr.",
+    overview:
+      "Complete pre-engineered building package for Tyre Technocrats (India) Pvt. Ltd. in Zambia: a 70 m by 80 m rigid-frame building with one interior column line and an additional mezzanine, covering design, fabrication, supply and erection.",
+    scope: [
+      "Structural design and detailing.",
+      "Fabrication and supply of primary structural steel.",
+      "Secondary structural components, purlins, girts and bracing.",
+      "Roof and wall sheeting, skylights and louvers.",
+      "Gutters, downspouts, anchor bolts and connection systems.",
+      "Engineering and technical supervision.",
+      "Installation and commissioning.",
+    ],
+    outcome:
+      "Material delivery is planned within 6 to 8 weeks, with erection and commissioning in 8 to 10 weeks after the material reaches site. Design follows AISC 360-2016 (ASD), AISI-12, IS 875 (Part 3), IS 1893 (Part 1):2016, AWS D1.1 and MBMA guidelines.",
+    specs: [
+      ["Length", "80 m"],
+      ["Width", "70 m"],
+      ["Eave Height", "8.25 m"],
+      ["Main Building Area", "5,600 Sq. Mtr."],
+      ["Mezzanine Area", "510 Sq. Mtr."],
+      ["Total Building Weight", "2,72,047 kg"],
+    ],
+    meta: [["Client", "Tyre Technocrats (India) Pvt. Ltd."], ["Contract Date", "4 December 2025"]],
+  },
 ];
 
 export const CASES_HEAD = {
@@ -206,6 +250,20 @@ export const CASES = [
       { k: "Engineering & fabrication", d: "Pre-engineered building components prepared to the project’s requirements." },
       { k: "Supply & installation", d: "Components supplied to site and the PEB structures installed." },
       { k: "Outcome", d: "Project completed on 30 March 2026." },
+    ],
+  },
+  {
+    n: "04",
+    client: "Tyre Technocrats (India) Pvt. Ltd.",
+    title: "A 5,600 Sq. Mtr. PEB, supplied and erected in Zambia",
+    place: "Zambia, Africa",
+    metric: { big: "5,600", unit: "Sq. Mtr.", cap: "Main building, plus a 510 Sq. Mtr. mezzanine" },
+    timeline: ["Contract · 4 Dec 2025", "Erection · 8–10 weeks after delivery"],
+    stages: [
+      { k: "Brief", d: "A 70 m by 80 m rigid-frame building with one interior column line and 8.25 m eave height, for Tyre Technocrats (India) Pvt. Ltd. in Zambia." },
+      { k: "Engineering & fabrication", d: "Structural design and detailing to AISC 360-2016, AISI-12, IS 875 and IS 1893, with primary and secondary steel, purlins, girts and bracing fabricated in-house." },
+      { k: "Supply & erection", d: "Roof and wall sheeting, skylights, louvers, gutters and anchor bolts supplied with the steel. Material delivery in 6 to 8 weeks, then erection and commissioning in 8 to 10 weeks." },
+      { k: "Site supervision", d: "Engineering and technical supervision through installation and commissioning, about 2,72,047 kg of building in total." },
     ],
   },
 ];

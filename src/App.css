@@ -3043,14 +3043,11 @@ thead tr th {
   opacity: 1 !important;
 }
 
-.scroll-to-top:active,
-.contact-action-button,
-.contact-action-button:active {
+.scroll-to-top:active {
   transform: translateY(0);
 }
 
-.scroll-to-top:focus,
-.contact-action-button:focus {
+.scroll-to-top:focus {
   outline: #ffffff solid 2px;
   outline-offset: 2px;
   opacity: 1 !important;
@@ -3069,67 +3066,6 @@ thead tr th {
   }
 }
 
-.contact-floating-buttons {
-  position: fixed;
-  bottom: 20px;
-  left: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  z-index: 9998;
-  pointer-events: auto;
-  animation: 0.3s forwards fadeInUp;
-}
-
-.contact-action-button {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
-  color: #001524;
-  opacity: 1;
-}
-
-.contact-action-button:hover {
-  transform: translateY(-2px);
-  opacity: 1 !important;
-}
-
-.meeting-button {
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 21, 36, 0.15);
-}
-
-.meeting-button:hover {
-  box-shadow: 0 6px 20px rgba(0, 21, 36, 0.25);
-}
-
-.meeting-icon {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
-}
-
-.whatsapp-button {
-  background-color: #25d366;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-}
-
-.whatsapp-button:hover {
-  background-color: #128c7e;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-}
-
 @media (max-width: 768px) {
   .scroll-to-top {
     bottom: 90px;
@@ -3139,16 +3075,6 @@ thead tr th {
     z-index: 9999;
   }
 
-  .contact-floating-buttons {
-    bottom: 20px;
-    left: 20px;
-    gap: 10px;
-  }
-
-  .contact-action-button {
-    width: 55px;
-    height: 55px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -3160,13 +3086,6 @@ thead tr th {
     z-index: 9999;
   }
 
-  .whatsapp-button {
-    bottom: 20px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
-    z-index: 9998;
-  }
 }
 /* ===== Hall of Fame Section ===== */
 .hall-of-fame {
@@ -4352,18 +4271,7 @@ thead tr th {
   }
 }
 
-/* ===== Floating contact actions: collapse into one small toggle on phones/tablets so they never cover content ===== */
-.contact-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.contact-actions[hidden] { display: none; }
-.contact-toggle { display: none; }
+/* floating contact actions live in src/common/floatingActions.css; keep the scroll-to-top button clear of them on phones */
 @media (max-width: 768px) {
-  .contact-floating-buttons.is-compact { bottom: 14px; left: 12px; gap: 10px; flex-direction: column-reverse; }
-  .contact-floating-buttons.is-compact .contact-action-button { width: 46px; height: 46px; }
-  .contact-floating-buttons.is-compact .contact-actions { flex-direction: column; gap: 10px; }
-  .contact-toggle { display: grid; place-items: center; position: relative; width: 40px; height: 40px; padding: 0; border: 1px solid rgba(168, 218, 220, .5); border-radius: 50%; background: #001524; color: #a8dadc; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .35); opacity: .92; }
-  .contact-toggle i, .contact-toggle i::before { position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px; border-radius: 2px; background: currentColor; transition: transform .3s; }
-  .contact-toggle i::before { content: ""; left: 0; top: 0; margin: 0; transform: rotate(90deg); }
-  .is-expanded .contact-toggle i { transform: rotate(45deg); }
-  .contact-toggle:focus-visible { outline: 2px solid #2fd4c0; outline-offset: 2px; }
   .scroll-to-top { bottom: 14px !important; right: 12px !important; width: 40px !important; height: 40px !important; }
 }
