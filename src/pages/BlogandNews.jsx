@@ -72,13 +72,39 @@ const FeedPage = () => {
   const counts = { all: all.length, guide: all.filter((p) => p.kind === "guide").length, briefing: all.filter((p) => p.kind === "briefing").length };
   const tabs = [["all", "All posts"], ["guide", KINDS.guide.plural], ["briefing", KINDS.briefing.plural]];
 
-  const jump = (slug) => {
+  // Latest 3 posts overall (not affected by the tab filter or search)
+  const topThreads = useMemo(
+    () => [...all].sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)).slice(0, 3),
+    [all]
+  );
+
+  const flash = (slug) => {
     const el = document.getElementById(`post-${slug}`);
-    if (!el) return;
+    if (!el) return false;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     el.classList.add("is-flash");
     setTimeout(() => el.classList.remove("is-flash"), 1400);
+    return true;
   };
+
+  // If the post is hidden by the current tab/search, clear the filters first, then scroll to it
+  const jump = (slug) => {
+    if (flash(slug)) return;
+    setQuery("");
+    setKind("all");
+    setTimeout(() => flash(slug), 350);
+  };
+
+  // Rendered twice: in the controls row on small screens, and at the top of the sticky sidebar on desktop (CSS shows one)
+  const renderSearch = (cls) => (
+    <label className={`bt-search ${cls}`}>
+      <IconSearch width={18} height={18} />
+      <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search posts" aria-label="Search posts" />
+      {query && (
+        <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><IconClose width={14} height={14} /></button>
+      )}
+    </label>
+  );
 
   return (
     <div className="bt-root bt-page">
@@ -120,13 +146,7 @@ const FeedPage = () => {
               ))}
             </div>
           </LayoutGroup>
-          <label className="bt-search">
-            <IconSearch width={18} height={18} />
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search posts" aria-label="Search posts" />
-            {query && (
-              <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><IconClose width={14} height={14} /></button>
-            )}
-          </label>
+          {renderSearch("bt-search--top")}
         </div>
       </div>
 
@@ -147,10 +167,11 @@ const FeedPage = () => {
         </section>
 
         <aside className="bt-side" aria-label="Sidebar">
+          {renderSearch("bt-search--side")}
           <div className="bt-rail-card">
-            <h3>In this thread</h3>
+            <h3>Top threads</h3>
             <ol className="bt-index">
-              {posts.map((p) => (
+              {topThreads.map((p) => (
                 <li key={p.id}>
                   <button type="button" onClick={() => jump(p.slug)}>
                     <time dateTime={p.publishedAt}>{formatDay(p.publishedAt)}</time>
@@ -158,12 +179,8 @@ const FeedPage = () => {
                   </button>
                 </li>
               ))}
-              {posts.length === 0 && <li className="bt-index-empty">Nothing to show</li>}
+              {topThreads.length === 0 && <li className="bt-index-empty">Nothing to show</li>}
             </ol>
-          </div>
-          <div className="bt-rail-card bt-rail-card--quiet">
-            <h3>How to read this page</h3>
-            <p>Guides are original working methods. Briefings summarise a dated primary source and say what it does not show. Neither replaces engineering design, testing or professional advice.</p>
           </div>
           <div className="bt-rail-card bt-cta">
             <h3>Planning a project?</h3>
