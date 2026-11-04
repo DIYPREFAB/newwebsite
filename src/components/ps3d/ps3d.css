@@ -5,8 +5,10 @@
    even if scripts are slow or motion is switched off.
    ===================================================================== */
 .ps-root { --nav: 96px; --mint: #86cfc3; --acc: #6fc4b4; --teal: #2fd4c0; --ink: #001524; --ink2: #04182a; --mute: #a9c3cb; position: relative; font-family: Lato, Arial, sans-serif; background: #001524; color: #fff; overflow-x: hidden; }
-.brand-diy { color: var(--mint); }
-.brand-va { color: #f4c542; }
+.brand-diy { color: #4b5560; }
+.brand-va { color: #5fb8aa; }
+.ps-win-bar .brand-diy, .ps-lab-top .brand-diy { color: #fff; }
+.ps-btn .brand-diy { color: #fff; }
 @supports (overflow: clip) { .ps-root { overflow-x: clip; } }
 :where(.ps-root) :where(h1, h2, h3, h4, p, ol, ul, figure) { margin: 0; text-shadow: none; }
 .ps-root ol, .ps-root ul { padding: 0; list-style: none; }

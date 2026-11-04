@@ -3,8 +3,8 @@
    (ct-* base classes) with cr-* additions. navy #001524, teal #2fd4c0 / #a8dadc.
    ===================================================================== */
 .cr-root .ct-sec, .cr-root .ct-hero { isolation: isolate; }
-.cr-root .brand-diy { color: #0f7f73; }
-.cr-root .brand-va { color: #d58b00; }
+.cr-root .brand-diy { color: #3f474d; }
+.cr-root .brand-va { color: #25b09f; }
 
 /* ---------------- Hero: steel portal frame ---------------- */
 .cr-stage { position: absolute; z-index: 2; right: 4vw; top: 50%; width: min(64vh, 44vw, 620px); aspect-ratio: 1; transform: translateY(-46%); }
