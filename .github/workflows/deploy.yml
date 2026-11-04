@@ -131,10 +131,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-    # Fails early and names the exact secret(s) that are empty. Without this the SSH action only says "missing server host".
-    # The names must match Settings > Secrets and variables > Actions exactly (they are case-sensitive). If the secrets
-    # were saved as ENVIRONMENT secrets, this job must also declare `environment: <that environment's name>` or it sees nothing.
+    # If the VPS secrets are not set, SKIP the deploy instead of failing the workflow (the site may be hosted
+    # elsewhere, e.g. Vercel). Once VPS_HOST, VPS_USER and VPS_SSH_KEY are added under
+    # Settings > Secrets and variables > Actions, the deploy runs automatically.
+    # (If they were saved as ENVIRONMENT secrets, add `environment: <name>` to this job.)
     - name: Check deployment secrets
+      id: secrets
       env:
         VPS_HOST: ${{ secrets.VPS_HOST }}
         VPS_USER: ${{ secrets.VPS_USER }}
@@ -145,11 +147,14 @@ jobs:
           if [ -z "${!name}" ]; then missing="$missing $name"; fi
         done
         if [ -n "$missing" ]; then
-          echo "::error title=Deployment secrets missing::Not set or not visible to this job:$missing"
-          exit 1
+          echo "::notice title=VPS deploy skipped::Secrets not set:$missing"
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "ready=true" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Deploy to VPS via SSH + PM2
+      if: steps.secrets.outputs.ready == 'true'
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -190,6 +195,6 @@ jobs:
           echo "=== Deployment complete ==="
           
     - name: Notify deployment status
-      if: always()
+      if: steps.secrets.outputs.ready == 'true'
       run: |
         echo "Deployment status: ${{ job.status }}"
