@@ -154,7 +154,7 @@ function SceneAlt() {
   const totalTop = yRow(ALT_PARAMS.length - 1) + RH + 8;
   const grads = [["psAltA", "#1fb8a4", "#8ff0da"], ["psAltB", "#3b82f6", "#8cc8ff"], ["psAltC", "#8b6cf0", "#c8b4ff"], ["psAltL", "#f2a43a", "#ff7d7d"]];
   return (
-    <svg viewBox="0 0 620 500" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 620 520" preserveAspectRatio="xMidYMid meet">
       <defs>
         {grads.map(([id, a, b]) => (
           <linearGradient key={id} id={id} x1="0" y1="0" x2="1" y2="0">
@@ -165,7 +165,7 @@ function SceneAlt() {
       </defs>
 
       <g className="lb-p" style={v({ "--dl": "0s" })}>
-        <text className="lb-eyebrow" x="24" y="16">CONCEPT SELECTION</text>
+        <text className="lb-eyebrow" x="24" y="16">EXAMPLE · CONCEPT SELECTION</text>
       </g>
       <g className="lb-p" style={v({ "--dl": ".15s" })}>
         <rect x="346" y="8" width="8" height="8" rx="2" fill="url(#psAltA)" />
@@ -244,11 +244,7 @@ function SceneAlt() {
             <text className="lb-a-of" x={cx + CW - 12} y={totalTop + 46} textAnchor="end">/ {ALT_OUT}</text>
             <rect className="lb-track" x={cx + 12} y={totalTop + 56} width={CW - 24} height="4" rx="2" />
             <rect className="lb-g" x={cx + 12} y={totalTop + 56} width={((CW - 24) * tot) / ALT_OUT} height="4" rx="2" fill={best ? "url(#psAltA)" : "rgba(168,218,220,.5)"} style={v({ "--dl": `${2.1 + j * 0.15}s`, "--t": ".9s" })} />
-            <g transform={`translate(${cx + 12} ${totalTop + 68})`}>
-              <circle cx="5" cy="5" r="5" className="lb-a-okdot" />
-              <path className="lb-tick" d="M2.6 5.2 4.4 7 7.6 3.4" style={{ strokeWidth: 1.5 }} />
-              <text className="lb-a-pass" x="15" y="8.6">Engineering passed</text>
-            </g>
+            <text className="lb-a-ex" x={cx + 12} y={totalTop + 77}>Example score</text>
           </g>
           </g>
         );
@@ -256,6 +252,7 @@ function SceneAlt() {
 
       <g className="lb-p" style={v({ "--dl": "2.6s" })}>
         <text className="lb-a-foot" x="24" y="490">Schedule and Cost are scored as load: every extra point lowers the total (counted as 5 − score).</text>
+        <text className="lb-a-foot lb-a-foot-ex" x="24" y="508">Example values for illustration only. Not validated engineering results or a project recommendation.</text>
       </g>
     </svg>
   );
@@ -350,6 +347,54 @@ function SceneExec() {
   );
 }
 
+// Text equivalent of the animated concept scorecard (the SVG is aria-hidden). Built from the same ALT_* data, so the numbers,
+// totals and ranking can never differ from what is drawn. Visually hidden (.ps-lab-sr) but read by screen readers.
+function AltScorecardSummary() {
+  const fmt = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+  return (
+    <section className="ps-lab-sr" aria-labelledby="ps-alt-sr-h">
+      <h3 id="ps-alt-sr-h">Concept selection scorecard (illustrative example)</h3>
+      <p>
+        Example values for illustration only. These are not validated engineering results or a project recommendation. Each factor is scored from 0 to {ALT_MAX}.
+        Schedule and Cost are loads, so a lower score is better and each counts toward the total as {ALT_MAX} minus the score.
+      </p>
+      <table>
+        <caption>Illustrative scores for three example concepts</caption>
+        <thead>
+          <tr>
+            <th scope="col">Factor</th>
+            <th scope="col">Type</th>
+            {ALT_CONCEPTS.map((c) => <th scope="col" key={c.k}>Concept {c.k}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {ALT_PARAMS.map((p) => (
+            <tr key={p.label}>
+              <th scope="row">{p.label}{p.w && p.w !== 1 ? ` (weight ${p.w})` : ""}</th>
+              <td>{p.dir === "down" ? "Load, lower is better" : "Benefit, higher is better"}</td>
+              {p.s.map((sc, j) => <td key={ALT_CONCEPTS[j].k}>{sc.toFixed(1)} out of {ALT_MAX}</td>)}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">Total score</th>
+            <td>Out of {fmt(ALT_OUT)}</td>
+            {ALT_TOTALS.map((t, j) => <td key={ALT_CONCEPTS[j].k}>{t.toFixed(1)} out of {fmt(ALT_OUT)}</td>)}
+          </tr>
+          <tr>
+            <th scope="row">Example ranking</th>
+            <td>By total score</td>
+            {ALT_RANK.map((r, j) => (
+              <td key={ALT_CONCEPTS[j].k}>Rank {r + 1} of {ALT_CONCEPTS.length}: {ALT_VERDICT[Math.min(r, 2)].text.toLowerCase()} in this example</td>
+            ))}
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+  );
+}
+
 export default function CapabilityLab({ items, icons, bd }) {
   const scenes = [<SceneDocs />, <SceneModel bd={bd} />, <SceneAlt />, <SceneImpact />, <SceneBoq />, <SceneExec />];
   const N = items.length;
@@ -397,6 +442,7 @@ export default function CapabilityLab({ items, icons, bd }) {
           </div>
         </div>
       </div>
+      <AltScorecardSummary />
     </div>
   );
 }

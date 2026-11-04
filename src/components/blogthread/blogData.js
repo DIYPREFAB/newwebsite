@@ -13,6 +13,180 @@ export const KINDS = {
 };
 
 const posts = [
+  /* ------------------------------------------------------------------ 28 Oct: PEB condensation operating cycle ------------ */
+  {
+    id: "peb-condensation-operating-cycle",
+    slug: "peb-condensation-operating-cycle-sheet",
+    kind: "guide",
+    title: "Map the operating cycle before a PEB condensation review",
+    seoTitle: "PEB Condensation Review: Map the Operating Cycle",
+    seoDescription:
+      "Map dispatch, cleaning and closed hours for a PEB condensation review. Capture zone activities, door routines, moisture evidence and reviewer questions.",
+    dek: "A label such as “warehouse” leaves dispatch, cleaning and closed-hour conditions unanswered. An operating-cycle sheet turns them into questions the envelope and mechanical-system reviewers can assess together.",
+    publishedAt: "2026-10-28T09:00:00+05:30",
+    sourceLine: "US EPA (December 2013); ASHRAE Handbook Fundamentals 2025, Chapter 37",
+    tags: ["Condensation", "Operating cycle", "PEB", "Moisture evidence"],
+    cover: "/images/blog/peb-condensation-operating-cycle.svg",
+    coverAlt:
+      "Illustrative PEB operating-cycle sheet linking dispatch, cleaning and closed hours to zone activities, door and system routines, moisture evidence and designer questions.",
+    blocks: [
+      {
+        t: "p",
+        text: "A building-use label such as “warehouse” leaves important questions unanswered. Will the space be washed down? Do loading doors stay open between deliveries? Will cooling operate during the night shift? For PEB consultants, the useful next step is to turn those answers into an operating evidence sheet that the envelope and mechanical-system reviewers can assess together.",
+      },
+      {
+        t: "p",
+        text: "Condensation can occur when a surface is colder than the dew point of the air reaching it. Relative humidity alone does not establish whether that will happen. These principles are explained in the US EPA’s December 2013 Moisture Control Guidance for Building Design, Construction and Maintenance.[1] They are a reason to document conditions carefully, not a substitute for project-specific assessment.",
+      },
+      { t: "h2", id: "one-row-per-period", text: "Build one row for each operating period" },
+      {
+        t: "p",
+        text: "Use an operating-cycle sheet rather than a single description of normal use. Start with dispatch, cleaning and closed hours, then add any genuinely different operating state. This is a proposed coordination method, not a design standard. Give each row six fields:",
+      },
+      {
+        t: "ul",
+        items: [
+          "**Time or period:** Record when the state begins and ends, including planned shutdowns. Use the operator’s actual routine rather than inventing a standard shift.",
+          "**Zone:** Identify the affected location; a loading bay and a separate cooled room should not inherit one another’s assumptions.",
+          "**Activity:** Describe what people, goods or processes are doing during that period, including cleaning and drying activities.",
+          "**Door and system routine:** Note expected door openings and the schedules of extraction, ventilation, cooling or humidity-control equipment. Identify any behaviour still awaiting confirmation.",
+          "**Moisture-source evidence:** Record the operator’s account of wet processes, cleaning or incoming wet goods. Attach available readings with their location and time; keep measurements separate from requested conditions.",
+          "**Designer question:** State what the appointed envelope or mechanical reviewer needs to resolve about that operating state, and who will supply missing information.",
+        ],
+      },
+      {
+        t: "p",
+        text: "ASHRAE’s 2025 Fundamentals chapter on moisture management explains that expected indoor humidity matters to envelope and HVAC assessment, with both outdoor air and building use contributing to the moisture balance.[2] The sheet makes those inputs easier to discuss without prescribing the answer.",
+      },
+      { t: "h2", id: "dispatch-cleaning-closed-hours", text: "Work through dispatch cleaning and closed hours" },
+      {
+        t: "p",
+        text: "Consider an illustrative warehouse, not a DIYPREFAB project or a diagnosed defect. Its initial brief says “dry storage, daytime operation.” The consultant expands that label into three operating rows.",
+      },
+      {
+        t: "p",
+        text: "During dispatch, the loading-zone row records goods movement and the operator’s account that doors may remain open. The reviewer question is whether that door routine is represented in the proposed assessment.",
+      },
+      {
+        t: "p",
+        text: "During post-dispatch cleaning, the storage-floor row records planned washing. Door and system operation during cleaning are still unanswered. The consultant asks which cleaning and drying information the reviewers need.",
+      },
+      {
+        t: "p",
+        text: "During closed hours, the packing-zone row records a proposed cooling shutdown. No corresponding condition readings are available. The question becomes which unoccupied operating state and evidence the reviewers need to assess, rather than assuming daytime conditions continue overnight.",
+      },
+      {
+        t: "p",
+        text: "The result is a traceable question set, rather than an unsupported conclusion that a different panel or more ventilation will solve the issue. EPA guidance notes that ventilation’s drying effect depends on the moisture conditions of the incoming air; more outside air is not automatically a moisture-control remedy.[1]",
+      },
+      { t: "h2", id: "keep-the-sheet-useful", text: "Keep the sheet useful after the first review" },
+      {
+        t: "p",
+        text: "Agree which changes trigger another discussion, such as a new wet process, a future cooled room, altered door routine or different system operating hours. Retain the reviewed version with the project brief so the facilities team can see the assumptions it inherited.",
+      },
+      {
+        t: "p",
+        text: "The consultant’s deliverable is a clear record of operating evidence and unresolved questions. Climate assessment, moisture analysis, assembly details and equipment decisions remain with the appropriately qualified project professionals under the applicable project requirements.",
+      },
+      { t: "figure", id: "operating-cycle-sheet" },
+    ],
+    sources: [
+      {
+        n: 1,
+        title: "US EPA: Moisture Control Guidance for Building Design, Construction and Maintenance",
+        meta: "December 2013. Cited for foundational condensation and ventilation principles only. Accessed 28 October 2026.",
+        url: "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100HF07.TXT",
+      },
+      {
+        n: 2,
+        title: "ASHRAE: 2025 Handbook Fundamentals, Chapter 37, Moisture Management in Buildings",
+        meta: "2025 edition. Cited for expected operating conditions and system interaction background. Accessed 28 October 2026.",
+        url: "https://handbook.ashrae.org/Handbooks/F25/SI/F25_Ch37/F25_Ch37_si.aspx",
+      },
+    ],
+    sourceNote:
+      "The operating-cycle sheet and the warehouse example are our own editorial coordination method and are illustrative only: not a design standard, a reported customer case, a diagnosis or a technical approval. EPA and ASHRAE material is general background, not an Indian code requirement or a project acceptance criterion. Sources are paraphrased.",
+    cta: { label: "Discuss your project", to: "/contact-us" },
+    next: "september-2026-steel-output-month-year-to-date",
+  },
+
+  /* ------------------------------------------------------------------ 28 Oct: September steel output ------------ */
+  {
+    id: "september-2026-steel-output",
+    slug: "september-2026-steel-output-month-year-to-date",
+    kind: "briefing",
+    title: "September steel output needs two clearly labelled time windows",
+    seoTitle: "September Steel Output: Read Month and Year to Date Separately",
+    seoDescription:
+      "worldsteel’s 23 October release reports September and year-to-date crude steel output. Keep each period and comparison clear in a project market note.",
+    dek: "worldsteel’s 23 October release reports September 2026 output of 142.4 million tonnes and a January–September total of 1,367.5 million tonnes. Why each figure needs its own period and comparison.",
+    publishedAt: "2026-10-28T09:30:00+05:30",
+    sourceLine: "World Steel Association, crude steel production release (23 October 2026)",
+    tags: ["Steel output", "worldsteel", "India", "Market note"],
+    cover: "/images/blog/september-2026-steel-output.svg",
+    coverAlt:
+      "Two labelled time windows for steel output: the month measured, September 2026, and the cumulative period, January to September 2026. Released 23 October 2026. Reported output, not forecast.",
+    blocks: [
+      {
+        t: "note",
+        title: "Dates and scope",
+        text: "Released: 23 Oct 2026 · Month measured: Sep 2026 · Cumulative: Jan–Sep 2026 · Reported output, not forecast.",
+      },
+      {
+        t: "p",
+        text: "worldsteel’s 23 October 2026 crude steel production release reports September output of 142.4 million tonnes across 70 reporting countries, down 0.2% against September 2025. For January–September 2026, the same table records 1,367.5 million tonnes, down 0.7% against the equivalent nine months of 2025.[1]",
+      },
+      {
+        t: "p",
+        text: "This is a dated briefing on reported production, not a new demand forecast. It should be read separately from worldsteel’s October Short Range Outlook.[2]",
+      },
+      { t: "h2", id: "india-monthly-cumulative", text: "Keep India’s monthly and cumulative figures separate" },
+      {
+        t: "p",
+        text: "The release records India’s September production at 13.9 million tonnes, up 1.9% year on year. Its January–September total is 130.0 million tonnes, up 5.6% against the same period in 2025. The monthly and cumulative comparisons answer different questions; neither percentage should be presented without its period.[1]",
+      },
+      {
+        t: "p",
+        text: "worldsteel says the 70-country group accounted for approximately 98% of global crude steel production in 2025. That coverage statement concerns the reporting group and its reference year.[1]",
+      },
+      { t: "h2", id: "audit-a-market-note", text: "Make a market note easy to audit" },
+      {
+        t: "p",
+        text: "**DIYPREFAB editorial interpretation:** Give each statistic four labels before it enters a client update: measure, geography, observation period and comparison period. For example, India’s 1.9% figure belongs beside “crude steel production,” “September 2026” and “versus September 2025.”",
+      },
+      {
+        t: "p",
+        text: "Keep the release date separate from the month measured. This prevents an October publication from being described as October output, or a nine-month comparison from being presented as a single-month change.",
+      },
+      {
+        t: "p",
+        text: "These aggregates do not establish a project’s material price, stock availability, grade availability or delivery date. Those questions need current, item-specific supplier evidence; this article makes no prediction about them.",
+      },
+      {
+        t: "p",
+        text: "Related reading: [worldsteel’s October Outlook: Demand Context, Not a PEB Price Forecast](/blog/october-2026-steel-demand-outlook-peb-context).",
+      },
+    ],
+    sources: [
+      {
+        n: 1,
+        title: "World Steel Association: September 2026 crude steel production",
+        meta: "Released 23 October 2026. Observation periods: September 2026 and January–September 2026. Accessed 28 October 2026.",
+        url: "https://worldsteel.org/media/press-releases/2026/september-2026-crude-steel-production/",
+      },
+      {
+        n: 2,
+        title: "World Steel Association: Short Range Outlook, October 2026",
+        meta: "12 October 2026. Cited for comparison context only; no forecast values reused. Accessed 28 October 2026.",
+        url: "https://worldsteel.org/media/press-releases/2026/worldsteel-short-range-outlook-october-2026/",
+      },
+    ],
+    sourceNote:
+      "All figures are worldsteel’s reported historical crude steel output, not a forecast, price, finished-product availability or lead time. The four-label method is our own editorial interpretation. Sources are paraphrased.",
+    cta: { label: "Discuss your project", to: "/contact-us" },
+    next: "peb-condensation-operating-cycle-sheet",
+  },
+
   /* ------------------------------------------------------------------ 27 Oct: NHAI design checks ------------ */
   {
     "id": "nhai-design-checks",

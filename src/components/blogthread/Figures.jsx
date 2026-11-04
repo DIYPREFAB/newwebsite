@@ -137,10 +137,47 @@ export const ForecastTable = () => (
   </figure>
 );
 
+export const OperatingCycleSheet = () => {
+  const [ref, inView] = useReveal();
+  const fields = ["Time or period", "Zone", "Activity", "Door and system routine", "Moisture-source evidence", "Designer question"];
+  const states = [
+    ["Dispatch", "Loading zone", "Goods movement", "Operator reports doors may remain open", "Confirm incoming-goods condition and any relevant available readings", "Does the assessment represent this door routine?"],
+    ["Post-dispatch cleaning", "Storage floor", "Planned floor washing", "Door and system operation not yet stated", "Obtain the proposed cleaning and drying routine", "What cleaning and drying information is needed?"],
+    ["Closed hours", "Packing zone", "No planned production activity", "Cooling shutdown proposed; confirm door routine", "No corresponding condition readings available", "Which unoccupied state and evidence need assessment?"],
+  ];
+  return (
+    <figure className="bt-fig" aria-label="Illustrative PEB operating-cycle sheet linking dispatch, cleaning and closed hours to zone activities, door and system routines, moisture evidence and designer questions.">
+      <div className="bt-ops" ref={ref}>
+        {states.map((row, i) => (
+          <motion.section
+            key={row[0]}
+            className="bt-ops-state"
+            initial={{ opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+            transition={{ delay: i * 0.12, duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
+          >
+            <p className="bt-ops-head">Operating state {i + 1}</p>
+            <dl>
+              {fields.map((f, j) => (
+                <React.Fragment key={f}>
+                  <dt>{f}</dt>
+                  <dd>{row[j]}</dd>
+                </React.Fragment>
+              ))}
+            </dl>
+          </motion.section>
+        ))}
+      </div>
+      <figcaption>Illustrative warehouse operating cycle. Each row frames a question for qualified project reviewers; it is not a diagnosis, moisture calculation or design solution.</figcaption>
+    </figure>
+  );
+};
+
 export const FIGURES = {
   "evidence-flow": EvidenceFlow,
   "drainage-map": DrainageMap,
   "status-panel": StatusPanel,
   "retrofit-register": RetrofitRegister,
   "forecast-table": ForecastTable,
+  "operating-cycle-sheet": OperatingCycleSheet,
 };

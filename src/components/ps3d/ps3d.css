@@ -686,4 +686,8 @@ body.ps-reduce .ps-con-floor { animation: none; }
 .ps-lab-scene text.lb-a-of { font-size: 11px; font-weight: 700; fill: #8fb0b8; }
 .ps-lab-scene text.lb-a-pass { font-size: 9.5px; font-weight: 700; fill: #8fd9bd; }
 .ps-lab-scene text.lb-a-foot { font-size: 10px; font-weight: 600; letter-spacing: .01em; fill: #9ab9c0; }
+.ps-lab-scene text.lb-a-foot-ex { fill: #f2b867; font-weight: 700; }
+.ps-lab-scene text.lb-a-ex { font-size: 9px; font-weight: 700; letter-spacing: .04em; fill: #9ab9c0; }
+/* text equivalent of the scorecard: invisible, but read by screen readers (the animated panel is aria-hidden) */
+.ps-lab-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
 .lb-a-okdot { fill: #3ddc97; }

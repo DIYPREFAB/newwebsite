@@ -20,26 +20,31 @@ export const sharePost = async (post, toast) => {
   }
 };
 
-const PostCard = ({ post, index }) => {
-  const { toast, openQuery } = useThread();
+// The timeline dot tracks scroll position. It owns that state so the card (and its Read button) is not
+// re-rendered every time the dot changes while the page scrolls.
+const TimelineNode = () => {
   const nodeRef = useRef(null);
   const reached = useInView(nodeRef, { margin: "-45% 0px -45% 0px" });
   const passed = useInView(nodeRef, { margin: "0px 0px -45% 0px" });
+  return <span ref={nodeRef} className={`bt-node${passed ? " is-passed" : ""}${reached ? " is-current" : ""}`} aria-hidden="true" />;
+};
+
+const PostCard = ({ post, index }) => {
+  const { toast, openQuery } = useThread();
   const kind = KINDS[post.kind];
   const href = `/blog/${post.slug}`;
 
   return (
     <motion.article
-      layout="position"
       className="bt-post"
       id={`post-${post.slug}`}
       initial={{ opacity: 0, y: 44, scale: 0.97 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: false, amount: 0.12 }}
+      viewport={{ once: true, amount: 0.12 }}
       exit={{ opacity: 0, y: -12, transition: { duration: 0.18 } }}
       transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
     >
-      <span ref={nodeRef} className={`bt-node${passed ? " is-passed" : ""}${reached ? " is-current" : ""}`} aria-hidden="true" />
+      <TimelineNode />
       <div className="bt-card">
         <header className="bt-post-head">
           <div className="bt-author">

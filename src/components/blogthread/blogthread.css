@@ -27,6 +27,12 @@ body.has-hn.bt-3d:not(.home-3d) { padding-top: 0 !important; background: #f3f6f5
 /* the site sets overflow-x:hidden on body, which stops position:sticky; clip keeps the same behaviour without that side effect */
 body.bt-3d { overflow-x: clip !important; }
 
+/* Flicker fix: the floating nav uses backdrop-filter, which re-blurs whatever scrolls under it on every frame. The dark
+   "Read" pill (and the cards that fade/scale in behind it) made that blur shimmer where they crossed the bar. On this page
+   the bar gets a near-opaque fill instead of the live blur, so nothing shows through it and there is nothing to re-sample.
+   Same approach perf.css already uses on touch screens. The open-menu state is untouched. */
+body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
 .bt-root { position: relative; background: var(--bg); color: var(--ink); overflow-x: clip; }
 .bt-root *, .bt-root *::before, .bt-root *::after { box-sizing: border-box; }
 .bt-root a { text-decoration: none; }
@@ -244,6 +250,15 @@ body.bt-3d { overflow-x: clip !important; }
 .bt-table thead th { background: #f0f6f4; font-size: 14px; }
 .bt-table tbody th { font-size: 16px; }
 
+/* operating-cycle evidence sheet: one full-width labelled record per operating state */
+.bt-ops { display: flex; flex-direction: column; gap: 14px; }
+.bt-ops-state { padding: 16px 18px; border: 1px solid var(--line); border-left: 4px solid var(--teal); border-radius: 0 12px 12px 0; background: #fbfdfc; }
+.bt-ops-head { margin: 0 0 10px; font-size: 12.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-d); }
+.bt-ops-state dl { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 8px 18px; margin: 0; }
+.bt-ops-state dt { font-size: 14px; font-weight: 800; color: var(--navy); }
+.bt-ops-state dd { margin: 0; font-size: 15px; line-height: 1.55; color: var(--body); }
+.bt-sources li strong a { color: inherit; text-decoration: underline; text-decoration-color: #9fc3bc; text-underline-offset: 3px; }
+.bt-sources li strong a:hover { text-decoration-color: var(--teal); }
 .bt-sources h2 { margin: 0 0 12px; font-family: var(--serif); font-size: 24px; color: var(--navy); scroll-margin-top: 112px; }
 .bt-sources ol { margin: 0; padding-left: 22px; }
 .bt-sources li { margin: 10px 0; scroll-margin-top: 112px; }
@@ -298,6 +313,8 @@ body.bt-3d { overflow-x: clip !important; }
   .bt-status-row { flex-direction: column; gap: 8px; }
   .bt-status-tag { min-width: 0; align-self: flex-start; }
   .bt-example dl { grid-template-columns: 1fr; gap: 2px; }
+  .bt-ops-state dl { grid-template-columns: 1fr; gap: 2px; }
+  .bt-ops-state dd { margin-bottom: 10px; }
   .bt-example dd { margin-bottom: 10px; }
   .bt-more-grid { grid-template-columns: 1fr; }
 }

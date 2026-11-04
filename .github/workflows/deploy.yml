@@ -131,6 +131,24 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
+    # Fails early and names the exact secret(s) that are empty. Without this the SSH action only says "missing server host".
+    # The names must match Settings > Secrets and variables > Actions exactly (they are case-sensitive). If the secrets
+    # were saved as ENVIRONMENT secrets, this job must also declare `environment: <that environment's name>` or it sees nothing.
+    - name: Check deployment secrets
+      env:
+        VPS_HOST: ${{ secrets.VPS_HOST }}
+        VPS_USER: ${{ secrets.VPS_USER }}
+        VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      run: |
+        missing=""
+        for name in VPS_HOST VPS_USER VPS_SSH_KEY; do
+          if [ -z "${!name}" ]; then missing="$missing $name"; fi
+        done
+        if [ -n "$missing" ]; then
+          echo "::error title=Deployment secrets missing::Not set or not visible to this job:$missing"
+          exit 1
+        fi
+
     - name: Deploy to VPS via SSH + PM2
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -138,6 +156,7 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         port: ${{ secrets.VPS_PORT || '22' }}
+        script_stop: true
         script: |
           echo "=== Starting deployment ==="
           
@@ -154,11 +173,11 @@ jobs:
           
           # Build project with environment variables
           echo "Building project..."
-          export VITE_HUBSPOT_ACCESS_TOKEN=${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}
-          export VITE_HUBSPOT_PORTAL_ID=${{ secrets.VITE_HUBSPOT_PORTAL_ID }}
-          export VITE_LINKEDIN_PARTNER_ID=${{ secrets.VITE_LINKEDIN_PARTNER_ID }}
-          export VITE_GA_MEASUREMENT_ID=${{ secrets.VITE_GA_MEASUREMENT_ID }}
-          export VITE_CAL_NAMESPACE=${{ secrets.VITE_CAL_NAMESPACE || '45min' }}
+          export VITE_HUBSPOT_ACCESS_TOKEN='${{ secrets.VITE_HUBSPOT_ACCESS_TOKEN }}'
+          export VITE_HUBSPOT_PORTAL_ID='${{ secrets.VITE_HUBSPOT_PORTAL_ID }}'
+          export VITE_LINKEDIN_PARTNER_ID='${{ secrets.VITE_LINKEDIN_PARTNER_ID }}'
+          export VITE_GA_MEASUREMENT_ID='${{ secrets.VITE_GA_MEASUREMENT_ID }}'
+          export VITE_CAL_NAMESPACE='${{ secrets.VITE_CAL_NAMESPACE || '45min' }}'
           npm run build
           
           # Restart PM2 process

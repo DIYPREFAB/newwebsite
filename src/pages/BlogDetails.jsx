@@ -115,7 +115,7 @@ const ArticlePage = ({ post }) => {
             <ol>
               {post.sources.map((s) => (
                 <li key={s.n} id={`source-${s.n}`}>
-                  <strong>{s.title}</strong>
+                  <strong>{s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a> : s.title}</strong>
                   <span>{s.meta}</span>
                 </li>
               ))}
