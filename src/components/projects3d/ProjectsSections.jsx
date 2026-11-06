@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { lenisOptions, lenisTick } from "../../utils/lenisTick";
-import { FaArrowDown, FaArrowRight, FaCheck, FaChevronLeft, FaChevronRight, FaClipboardCheck, FaDraftingCompass, FaFileSignature, FaHardHat, FaIndustry, FaLayerGroup, FaMapMarkerAlt, FaTimes, FaTools, FaTruck, FaWarehouse } from "react-icons/fa";
+import { FaArrowDown, FaArrowRight, FaCheck, FaChevronLeft, FaChevronRight, FaClipboardCheck, FaDraftingCompass, FaExternalLinkAlt, FaFileSignature, FaHardHat, FaIndustry, FaLayerGroup, FaMapMarkerAlt, FaTimes, FaTools, FaTruck, FaWarehouse } from "react-icons/fa";
 import { navItems } from "../../Constants";
 import SteelBits from "../home3d/SteelBits";
 import BimHero from "./BimHero";
@@ -43,6 +43,8 @@ const tiltLeave = (e) => { e.currentTarget.style.transform = ""; };
 // Testimonials sit on one circular orbit (a tilted ellipse seen from the front). T is the card that is in front,
 // as a continuous number, so every card travels along the same circle: front -> side -> behind -> other side.
 // At rest (T a whole number) it is the 3-card coverflow: left card, front card, right card.
+const TM = TESTIMONIALS.filter((t) => t.carousel !== false); // what the carousel shows
+const cover = (client) => (PROJECTS.find((p) => p.client === client) || PROJECTS[0]).cover;
 const RING = { xr: 73.75, zr: 173, tilt: 46 };
 const placeRing = (cards, T) => {
   const n = cards.length || 1;
@@ -62,6 +64,17 @@ const placeRing = (cards, T) => {
     });
   });
 };
+
+// Client logo on a white tile; if the file is missing, a monogram keeps the layout intact.
+function ClientLogo({ src, name }) {
+  const [bad, setBad] = useState(!src);
+  const mono = name.split(/\s+/).filter((w) => !/^(limited|private|pvt|ltd)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  return (
+    <span className="pj-tc-logo">
+      {bad ? <b aria-hidden="true">{mono}</b> : <img src={src} alt={`${name} logo`} loading="lazy" decoding="async" draggable="false" onError={() => setBad(true)} />}
+    </span>
+  );
+}
 
 const reducedNow = () => RESPECT_REDUCED_MOTION && typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -684,7 +697,7 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
               {rec && (
                 <div className="pj-sh-doc">
                   <span className="pj-doc-ic" aria-hidden="true"><FaFileSignature /></span>
-                  <span className="pj-doc-t"><small>Completion record</small><span>{rec.doc}</span></span>
+                  <span className="pj-doc-t"><small>{rec.docLabel || "Completion record"}</small><span>{rec.doc}</span></span>
                   <b>{rec.date}</b>
                 </div>
               )}
@@ -795,13 +808,57 @@ export default function ProjectsSections() {
     else el.scrollIntoView({ behavior: "smooth" });
   };
 
+  /* ---- browser back / forward: every opened project detail is its own history entry (#project-<id>) */
+  const cleanUrl = () => `${window.location.pathname}${window.location.search}`;
+  const pushProject = (id) => {
+    const st = window.history.state || {};
+    window.history.pushState(
+      { ...st, key: Math.random().toString(36).slice(2, 10), idx: (typeof st.idx === "number" ? st.idx : 0) + 1, pj: id, pjd: (st.pjd || 0) + 1 },
+      "",
+      `${cleanUrl()}#project-${id}`
+    );
+  };
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    const idxOf = () => {
+      const m = /^#project-([\w-]+)$/.exec(window.location.hash);
+      return m ? PROJECTS.findIndex((p) => p.id === m[1]) : -1;
+    };
+    // browser Back / Forward: show whatever project (or none) the address now points to
+    const sync = () => {
+      const i = idxOf();
+      setOpen((cur) => (i < 0 ? null : cur && cur.i === i ? cur : { i, rect: null }));
+    };
+    window.addEventListener("popstate", sync);
+    // page opened (or reloaded) on a #project-<id> address: put a clean page entry underneath, then open it
+    if (!deepLinked.current) {
+      deepLinked.current = true;
+      const i = idxOf();
+      if (i >= 0) {
+        const { pj, pjd, ...rest } = window.history.state || {};
+        window.history.replaceState(rest, "", cleanUrl());
+        setOpen({ i, rect: null });
+        pushProject(PROJECTS[i].id);
+      }
+    }
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+
   const openProject = (i, btn) => {
-    const box = btn?.closest(".pj-card-in")?.getBoundingClientRect();
+    const box = (btn?.closest(".pj-card-in") || btn)?.getBoundingClientRect();
     setOpen({ i, rect: box ? { top: box.top, left: box.left, right: box.right, bottom: box.bottom } : null });
+    pushProject(PROJECTS[i].id);
+  };
+  const switchProject = (i) => {
+    setOpen({ i, rect: null });
+    pushProject(PROJECTS[i].id);
   };
   const closeProject = () => {
     const id = open ? PROJECTS[open.i].id : null;
     setOpen(null);
+    const d = window.history.state?.pjd;
+    if (d) window.history.go(-d); // step back over every project entry we added
+    else if (/^#project-/.test(window.location.hash)) window.history.replaceState(window.history.state, "", cleanUrl());
     if (id) requestAnimationFrame(() => document.querySelector(`#pj-card-${id} .pj-card-open`)?.focus({ preventScroll: true }));
   };
 
@@ -1052,10 +1109,8 @@ export default function ProjectsSections() {
           // the cards are dealt out of a stack as the block scrolls into view (scrubbed, so it follows the scroll both ways)
           gsap.fromTo(".pj-tc-in", { y: 90 * k, rotationX: -24, scale: 0.9 }, { y: 0, rotationX: 0, scale: 1, stagger: 0.12, ease: "none", scrollTrigger: { trigger: ".pj-tm-stage", start: "top 98%", end: "top 40%", scrub: 0.7 } });
           // layers inside each card drift at their own speed while the block passes
-          gsap.fromTo(".pj-tc-q", { y: -34 * k, rotation: -10 }, { y: 34 * k, rotation: 10, ease: "none", scrollTrigger: par(".pj-tm-pin", 0.8) });
-          gsap.fromTo(".pj-tc blockquote", { y: 22 * k }, { y: -22 * k, ease: "none", scrollTrigger: par(".pj-tm-pin", 0.8) });
-          gsap.fromTo(".pj-tc figcaption", { y: 30 * k }, { y: -12 * k, ease: "none", scrollTrigger: par(".pj-tm-pin", 0.8) });
-          gsap.fromTo(".pj-tc-doc", { x: 40 * k, opacity: 0.3 }, { x: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: ".pj-tm-stage", start: "top 92%", end: "top 38%", scrub: 0.6 } });
+          gsap.fromTo(".pj-tc-photo img", { yPercent: -5, scale: 1.15 }, { yPercent: 5, scale: 1.15, ease: "none", scrollTrigger: par(".pj-tm-pin", 0.8) });
+          gsap.fromTo(".pj-tc-act", { y: 24 * k, opacity: 0.3 }, { y: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: ".pj-tm-stage", start: "top 92%", end: "top 38%", scrub: 0.6 } });
           // controls come in as one group (the buttons themselves are never animated, so they cannot drift out of line)
           gsap.from(".pj-tm-ctrl", { y: 30, opacity: 0, duration: 0.7, clearProps: "opacity,transform", scrollTrigger: io(".pj-tm-ctrl", "top 96%") });
           if (pin) {
@@ -1074,7 +1129,7 @@ export default function ProjectsSections() {
               if (i === cur) return;
               cur = i;
               tmCur.current = i;
-              cardsEl.forEach((el, j) => { el.classList.toggle("front", j === i); el.setAttribute("aria-hidden", String(j !== i)); });
+              cardsEl.forEach((el, j) => { el.classList.toggle("front", j === i); el.setAttribute("aria-hidden", String(j !== i)); el.querySelectorAll("a, button").forEach((a) => { a.tabIndex = j === i ? 0 : -1; }); });
               dotsEl.forEach((d, j) => { d.classList.toggle("on", j === i); d.setAttribute("aria-current", String(j === i)); });
             };
             const dwell = (x) => { const f = Math.floor(x), fr = x - f; const e = fr < 0.3 ? 0 : fr > 0.7 ? 1 : (fr - 0.3) / 0.4; return f + e * e * (3 - 2 * e); };
@@ -1133,7 +1188,7 @@ export default function ProjectsSections() {
   }, []);
 
   /* ---- testimonial coverflow position */
-  const nT = TESTIMONIALS.length;
+  const nT = TM.length;
   const half = Math.floor(nT / 2);
   const offOf = (i) => ((i - ti + nT + half) % nT) - half;
   // pinned: move the page to that card's stretch of scroll; otherwise just switch the card
@@ -1255,6 +1310,9 @@ export default function ProjectsSections() {
             <span className="pj-cs-bar"><i /></span>
             <span className="pj-cs-dots">{CASES.map((c) => <i key={c.n} />)}</span>
           </div>
+          <button type="button" className="pj-cs-skip" onClick={() => jump("#approach")} aria-label="Skip the case studies and jump to the next section" data-cursor="Skip" data-cursor-size="sm">
+            <span>Jump to next</span><FaArrowDown aria-hidden="true" />
+          </button>
         </div>
       </section>
 
@@ -1311,8 +1369,9 @@ export default function ProjectsSections() {
             if (Math.abs(dx) > 50) goT(dx < 0 ? 1 : -1);
           }}
         >
-          {TESTIMONIALS.map((t, i) => {
+          {TM.map((t, i) => {
             const o = offOf(i);
+            const pi = PROJECTS.findIndex((p) => p.client === t.client);
             return (
               <figure
                 className={`pj-tc${o === 0 ? " front" : ""}`}
@@ -1320,21 +1379,40 @@ export default function ProjectsSections() {
                 aria-hidden={o !== 0}
               >
                 <div className="pj-tc-in">
-                  <span className="pj-tc-q" aria-hidden="true">“</span>
-                  {t.words ? (
-                    <blockquote>{t.words}</blockquote>
-                  ) : (
-                    <>
-                      <span className="pj-tc-l">Documented client confirmation</span>
-                      <blockquote>{t.confirm}</blockquote>
-                    </>
-                  )}
-                  <figcaption>
-                    <strong>{t.by || t.client}</strong>
-                    <span>{t.project}</span>
-                    <span>{t.place}</span>
-                  </figcaption>
-                  <div className="pj-tc-doc"><FaFileSignature aria-hidden="true" /><span>{t.doc}</span><b>{t.date}</b></div>
+                  <div className="pj-tc-photo">
+                    <img src={(t.photo || cover(t.client)).src} alt={(t.photo || cover(t.client)).alt || t.project} loading="lazy" decoding="async" draggable="false" />
+                    <span className="pj-tc-l">{t.tag || "Documented client confirmation"}</span>
+                  </div>
+                  <div className="pj-tc-body">
+                    <div className="pj-tc-top">
+                      <ClientLogo src={t.logo} name={t.client} />
+                      <div className="pj-tc-who">
+                        <strong>{t.by || t.client}</strong>
+                        <span className="pj-tc-pr">{t.project}</span>
+                        <span className="pj-tc-pl"><FaMapMarkerAlt aria-hidden="true" />{t.place}</span>
+                      </div>
+                    </div>
+                    <blockquote>{t.words || t.confirm}</blockquote>
+                  <div className="pj-tc-act">
+                    {pi >= 0 && (
+                      <button type="button" className="pj-tc-btn" tabIndex={o === 0 ? 0 : -1} aria-haspopup="dialog" onClick={(e) => { e.stopPropagation(); openProject(pi, e.currentTarget); }}>
+                        <span>View project details</span><FaArrowRight aria-hidden="true" />
+                      </button>
+                    )}
+                    {t.letter ? (
+                      <a className="pj-tc-doc" href={t.letter} target="_blank" rel="noopener noreferrer" tabIndex={o === 0 ? 0 : -1} aria-label={`Open ${t.doc} from ${t.client} (${t.date}) in a new tab`}>
+                        <FaFileSignature aria-hidden="true" />
+                        <span className="pj-tc-doc-t"><small>{t.date}</small>{t.doc}</span>
+                        <FaExternalLinkAlt className="pj-tc-go" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <div className="pj-tc-doc is-static">
+                        <FaFileSignature aria-hidden="true" />
+                        <span className="pj-tc-doc-t"><small>{t.date}</small>{t.doc}</span>
+                      </div>
+                    )}
+                  </div>
+                  </div>
                 </div>
               </figure>
             );
@@ -1344,7 +1422,7 @@ export default function ProjectsSections() {
         <div className="pj-tm-ctrl">
           <button type="button" onClick={() => goT(-1)} aria-label="Previous testimonial"><FaChevronLeft aria-hidden="true" /></button>
           <span className="pj-tm-dots">
-            {TESTIMONIALS.map((t, i) => <button type="button" key={t.client} className={i === ti ? "on" : ""} onClick={() => goTo(i)} aria-label={`Show testimonial ${i + 1}`} aria-current={i === ti} />)}
+            {TM.map((t, i) => <button type="button" key={t.client} className={i === ti ? "on" : ""} onClick={() => goTo(i)} aria-label={`Show testimonial ${i + 1}`} aria-current={i === ti} />)}
           </span>
           <button type="button" onClick={() => goT(1)} aria-label="Next testimonial"><FaChevronRight aria-hidden="true" /></button>
         </div>
@@ -1375,7 +1453,7 @@ export default function ProjectsSections() {
           index={open.i}
           fromRect={open.rect}
           onClose={closeProject}
-          onSwitch={(i) => setOpen({ i, rect: null })}
+          onSwitch={switchProject}
           onTalk={talk}
           lenisRef={lenisRef}
         />

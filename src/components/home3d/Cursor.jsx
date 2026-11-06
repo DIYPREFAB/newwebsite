@@ -20,7 +20,7 @@ export default function Cursor() {
 
     const COL = ["47,212,192", "168,218,220", "244,197,66", "255,255,255"];
     const sparks = [], trail = [];
-    let mx = W / 2, my = H / 2, x = mx, y = my, rot = 0, tsc = 1, hot = false, mag = null, magC = null, label = "", raf;
+    let mx = W / 2, my = H / 2, x = mx, y = my, rot = 0, tsc = 1, hot = false, mag = null, magC = null, label = "", small = false, raf;
 
     let running = true, cleared = false;
     const wake = () => { if (!running) { running = true; cleared = false; raf = requestAnimationFrame(loop); } };
@@ -39,6 +39,8 @@ export default function Cursor() {
       const t = e.target.closest?.("a,button,[data-cursor]");
       hot = !!t;
       const l = t?.dataset?.cursor || "";
+      small = t?.dataset?.cursorSize === "sm"; // data-cursor-size="sm" -> smaller labelled disc
+      lab.current.classList.toggle("sm", small);
       if (l !== label) { label = l; lab.current.textContent = l; lab.current.classList.toggle("on", !!l); }
       const m = e.target.closest?.("[data-mag],.sh-btn,.hn-talk,.hn-signup,.sh-pill") || null;
       if (m !== mag) {
@@ -65,7 +67,7 @@ export default function Cursor() {
       const sp = Math.hypot(x - px, y - py);
       if (fine) {
         rot += 1.1 + sp * 0.9;
-        tsc += ((hot ? 1.5 : 1) - tsc) * 0.15;
+        tsc += ((hot ? (small ? 0.9 : 1.5) : 1) - tsc) * 0.15;
         dot.current.style.transform = `translate3d(${mx}px,${my}px,0)`;
         ret.current.style.transform = `translate3d(${x}px,${y}px,0) rotate(${rot}deg) scale(${tsc})`;
         lab.current.style.transform = `translate3d(${x}px,${y}px,0)`;

@@ -290,6 +290,11 @@ export const TESTIMONIALS_HEAD = {
 };
 
 // `words` (optional): a written quote from the client, e.g. words: "…", by: "Name, Designation".
+// `logo`   : client logo (falls back to a monogram tile if the file is missing).
+// `photo`  : landscape project photo { src, alt } (falls back to the matching project cover).
+// `tag`    : optional eyebrow text on the photo (default "Documented client confirmation").
+// `carousel: false` hides an entry from the carousel (its project sheet still uses it).
+// `letter` : URL of the scanned completion letter / certificate (PDF or image). Opens in a new tab; leave "" to show it as a plain, non-clickable row.
 export const TESTIMONIALS = [
   {
     client: "Wonder Cement Limited",
@@ -298,14 +303,31 @@ export const TESTIMONIALS = [
     confirm: "The complete parking shed was successfully executed and handed over.",
     doc: "Work Completion Certificate",
     date: "29 March 2026",
+    logo: "/images/clients/wonder-cement.png",
+    letter: "/docs/completion/wonder-cement-work-completion-certificate.pdf",
+  },
+  {
+    client: "Tyre Technocrats (India) Pvt. Ltd.",
+    project: "PEB Supply & Erection, Zambia",
+    place: "Zambia, Africa",
+    tag: "Documented client contract",
+    confirm: "Awarded the complete package for a 70 m by 80 m pre-engineered building in Zambia: design, fabrication, supply and erection.",
+    doc: "Contract",
+    docLabel: "Contract record",
+    date: "4 December 2025",
+    logo: "/images/clients/tyre-technocrats.png",
+    letter: "",
   },
   {
     client: "Banswara Syntex Limited",
     project: "Multi-Facility PEB Project",
     place: "Banswara, Rajasthan",
+    carousel: false, // not shown in the testimonial carousel; still feeds its project sheet
     confirm: "The facilities are officially in use, and the pending work list is confirmed as completed.",
     doc: "Work Completion Letter",
     date: "19 February 2025",
+    logo: "/images/clients/banswara-syntex.png",
+    letter: "/docs/completion/banswara-syntex-work-completion-letter.pdf",
   },
   {
     client: "Assure Buildcon Private Limited",
@@ -314,6 +336,8 @@ export const TESTIMONIALS = [
     confirm: "Supply and installation of the pre-engineered building structures was completed.",
     doc: "Project completion",
     date: "30 March 2026",
+    logo: "/images/clients/assure-buildcon.png",
+    letter: "/docs/completion/assure-buildcon-project-completion.pdf",
   },
 ];
 
