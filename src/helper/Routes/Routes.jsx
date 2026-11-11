@@ -45,6 +45,7 @@ const P = {
   HealthcareFacilities: page(() => import("../../pages/HealthcareFacilities")),
 
   ProjectCaseandStudies: page(() => import("../../pages/ProjectCaseandStudies")),
+  ProjectDetail: page(() => import("../../pages/ProjectDetail")),
 
   BlogandNews: page(() => import("../../pages/BlogandNews")),
   BlogDetails: page(() => import("../../pages/BlogDetails")),
@@ -127,6 +128,7 @@ const ROUTES = [
   [ROUTE_PATHS.HEALTHCARE_FACILITIES, P.HealthcareFacilities],
 
   [ROUTE_PATHS.PROJECT_CASE_STUDIES, P.ProjectCaseandStudies, "blank"],
+  [`${ROUTE_PATHS.PROJECT_CASE_STUDIES}/:projectId`, P.ProjectDetail, "blank"],
 
   [ROUTE_PATHS.BLOG_NEWS, P.BlogandNews],
   [ROUTE_PATHS.BLOG_DETAILS, P.BlogDetails],

@@ -97,6 +97,7 @@ export const normalizePath = (p = "/") => {
 // Dynamic routes keep their own metadata (blog posts come from the API); they only get safe defaults here.
 const DYNAMIC = [
   { pattern: /^\/blog\/[^/]+$/, meta: { title: "Blog | DIY PreFab", description: "Read this article from DIY PreFab on prefab and steel construction." } },
+  { pattern: /^\/project-case-studies\/[^/]+$/, meta: { title: "Project Details | DIY PreFab", description: "Scope, specifications, gallery and completion record of a DIY PreFab pre-engineered steel building project." } },
   { pattern: /^\/details\/[^/]+$/, meta: { title: "Details | DIY PreFab", description: "Details of this DIY PreFab offering.", robots: "noindex, follow" } },
 ];
 

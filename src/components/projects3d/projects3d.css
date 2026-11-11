@@ -74,11 +74,12 @@ html:has(body.pj-3d), body.pj-3d, body.pj-3d .pj-page { background: #001524; }
 
 /* =====================================================================  01 PROJECT CARDS */
 
-/* =====================================================================  PROJECT SHEET (opens out of a card) */
-.pj-sheet { position: fixed; inset: 0; z-index: 10050; background: #001524; color: #fff; font-family: Lato, Arial, sans-serif; }
+/* =====================================================================  PROJECT PAGE (/project-case-studies/<id>): normal page flow, the browser scroll bar is the only scroll bar */
+.pj-sheet { position: relative; min-height: 100vh; background: #001524; color: #fff; font-family: Lato, Arial, sans-serif; }
 .pj-sheet img { display: block; max-width: none; }
-.pj-sh-scroll { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(134, 207, 195, .5) transparent; outline: none; }
-.pj-sh-bar { position: absolute; z-index: 6; left: 0; right: 0; top: 0; display: flex; align-items: center; gap: 18px; height: 64px; padding: 0 clamp(16px, 3vw, 36px); background: rgba(0, 21, 36, .72); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(134, 207, 195, .16); }
+.pj-sh-scroll { position: relative; outline: none; }
+.pj-detail { min-height: 100vh; }
+.pj-sh-bar { position: fixed; z-index: 50; left: 0; right: 0; top: 0; display: flex; align-items: center; gap: 18px; height: 64px; padding: 0 clamp(16px, 3vw, 36px); background: rgba(0, 21, 36, .72); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(134, 207, 195, .16); }
 .pj-sh-cnt { font-size: 13px; font-weight: 700; color: #9dbcc4; white-space: nowrap; }
 .pj-sh-cnt b { color: var(--mint); font-weight: 900; }
 .pj-sh-who { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 800; color: #fff; }
@@ -314,7 +315,7 @@ body.pj-reduce .pj-gf-in, body.pj-reduce .pj-gf-in img, body.pj-reduce .pj-gf-ca
 .pj-sheet .pj-btn--ghost:hover { background: rgba(143, 224, 212, .12); border-color: #86cfc3; }
 
 /* photo viewer (inside the sheet) */
-.pj-lb { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 76px 84px; background: rgba(0, 10, 18, .95); animation: pjFade .3s both; }
+.pj-lb { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 76px 84px; background: rgba(0, 10, 18, .95); animation: pjFade .3s both; }
 .pj-lb figure { display: grid; gap: 14px; justify-items: center; max-width: 100%; margin: 0; animation: pjZoom .5s both; }
 .pj-lb img.go-n { animation: pjSlideN .55s cubic-bezier(.2, .7, .2, 1) both; }
 .pj-lb img.go-p { animation: pjSlideP .55s cubic-bezier(.2, .7, .2, 1) both; }
@@ -346,7 +347,7 @@ body.pj-reduce .pj-gf-in, body.pj-reduce .pj-gf-in img, body.pj-reduce .pj-gf-ca
 /* =====================================================================  02 CASE STUDIES */
 .pj-cs-stage { position: relative; margin-top: clamp(40px, 7vh, 80px); }
 .pj-cs-ghost { position: absolute !important; left: 0; top: 50%; z-index: 0 !important; translate: 0 -50%; font-size: clamp(200px, 34vw, 560px); font-weight: 900; line-height: .8; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px rgba(31, 159, 144, .22); pointer-events: none; user-select: none; display: none; }
-.pj-cs-tilt { position: relative; z-index: 2; display: grid; gap: 34px; max-width: 1320px; margin: 0 auto; }
+.pj-cs-tilt { position: relative; z-index: 2; display: grid; gap: 34px; max-width: 1320px; margin: 0 auto; transform: none; }
 .pj-slide { position: relative; display: grid; gap: 22px; padding: clamp(20px, 3vw, 34px); border-radius: 28px; background: linear-gradient(150deg, rgba(255, 255, 255, .85), rgba(255, 255, 255, .55)); border: 1px solid rgba(31, 159, 144, .28); box-shadow: 0 50px 90px -50px rgba(0, 21, 36, .55); }
 .pj-slide-l { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .pj-cs-tag { display: inline-block; padding: 7px 14px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: #fff; background: #0f2d47; }
@@ -361,7 +362,13 @@ body.pj-reduce .pj-gf-in, body.pj-reduce .pj-gf-in img, body.pj-reduce .pj-gf-ca
 .pj-tline i::before, .pj-tline i::after { content: ""; position: absolute; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #1f9f90; }
 .pj-tline i::before { left: 0; }
 .pj-tline i::after { right: 0; box-shadow: 0 0 0 5px rgba(31, 159, 144, .22); }
-.pj-slide-r { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: center; }
+.pj-slide-r { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; align-items: stretch; gap: 14px; align-content: center; }
+.pj-st { height: 100%; box-sizing: border-box; }
+.pj-slide.is-link { cursor: pointer; transition: border-color .3s, box-shadow .4s; }
+.pj-slide.is-link:hover { border-color: #1f9f90; box-shadow: 0 50px 90px -46px rgba(31, 159, 144, .55); }
+.pj-slide-link { color: inherit; text-decoration: none; }
+.pj-slide-link:hover { color: #1f7f70; }
+.pj-slide-link:focus-visible { outline: 2px solid #1f9f90; outline-offset: 4px; border-radius: 6px; }
 .pj-st { position: relative; padding: clamp(16px, 1.8vw, 22px); border-radius: 18px; background: #fff; border: 1px solid rgba(31, 159, 144, .24); box-shadow: 0 22px 44px -28px rgba(0, 21, 36, .5); transition: transform .25s ease-out, border-color .3s; }
 .pj-st:hover { border-color: #1f9f90; }
 .pj-st em { display: block; margin-bottom: 8px; font-style: normal; font-size: 12px; font-weight: 900; letter-spacing: .2em; color: #1f9f90; }
@@ -391,6 +398,8 @@ body.pj-reduce .pj-gf-in, body.pj-reduce .pj-gf-in img, body.pj-reduce .pj-gf-ca
 .pj-tc { position: absolute; left: calc(50% - var(--cw) / 2); top: 0; width: var(--cw); height: 100%; margin: 0; will-change: transform, opacity; }
 .pj-tc-in { position: relative; display: flex; flex-direction: column; height: 100%; padding: 0; border-radius: 24px; color: #fff; background: linear-gradient(165deg, #0e2b45 0%, #061a2c 60%, #04121f 100%); border: 1px solid rgba(168, 218, 220, .16); box-shadow: 0 40px 80px -42px rgba(0, 21, 36, .85), inset 0 1px 0 rgba(255, 255, 255, .06); overflow: hidden; }
 .pj-tc.front .pj-tc-in { border-color: rgba(134, 207, 195, .4); }
+.pj-tc-in.is-link { cursor: pointer; transition: border-color .3s, box-shadow .4s; }
+.pj-tc.front .pj-tc-in.is-link:hover { border-color: #86cfc3; box-shadow: 0 40px 80px -36px rgba(47, 212, 192, .35), inset 0 1px 0 rgba(255, 255, 255, .06); }
 
 /* full-width landscape photo */
 .pj-tc-photo { position: relative; flex: none; width: 100%; aspect-ratio: 16 / 6; overflow: hidden; background: #0a3a5e; }
@@ -489,8 +498,9 @@ a.pj-tc-doc:hover .pj-tc-go { transform: translate(2px, -2px); }
   /* case studies: one slide at a time, turning in 3D */
   .pj-cs-stage { min-height: 100vh; min-height: 100svh; margin-top: 0; padding: calc(var(--nav) + 6px) 0 70px; }
   .pj-cs-ghost { display: block; }
-  .pj-cs-tilt { display: block; height: calc(100vh - var(--nav) - 90px); height: calc(100svh - var(--nav) - 90px); transform-style: preserve-3d; }
-  .pj-slide { position: absolute; inset: 0; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); align-items: center; gap: clamp(20px, 3vw, 50px); padding: clamp(18px, 2.4vw, 34px); transform-style: preserve-3d; will-change: transform, opacity; }
+  .pj-cs-tilt { display: block; height: calc(100vh - var(--nav) - 90px); height: calc(100svh - var(--nav) - 90px); }
+  .pj-slide { position: absolute; inset: 0; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); align-items: center; gap: clamp(20px, 3vw, 50px); padding: clamp(18px, 2.4vw, 34px); will-change: transform, opacity; pointer-events: none; }
+  .pj-slide.on { pointer-events: auto; }
   .pj-slide-r { gap: clamp(10px, 1.4vw, 16px); }
   .pj-cs-foot { position: absolute; left: 0; right: 0; bottom: 18px; z-index: 3; display: flex; align-items: center; justify-content: center; gap: 18px; max-width: 1320px; margin: 0 auto; font-size: 13px; font-weight: 800; letter-spacing: .14em; color: #1d3557; }
   .pj-cs-count b { font-size: 20px; color: #1f7f70; }

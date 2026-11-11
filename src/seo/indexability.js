@@ -17,4 +17,4 @@ export const STATIC_PATHS = [
 ];
 
 // Parameterised routes, as regular expressions (same shapes as the <Route path> patterns).
-export const PATTERN_PATHS = [/^\/blog\/[^/]+$/, /^\/details\/[^/]+$/];
+export const PATTERN_PATHS = [/^\/blog\/[^/]+$/, /^\/details\/[^/]+$/, /^\/project-case-studies\/[^/]+$/];

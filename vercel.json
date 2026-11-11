@@ -262,6 +262,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/project-case-studies/:projectId",
+      "destination": "/index.html"
+    },
+    {
       "source": "/details/:name",
       "destination": "/index.html"
     }

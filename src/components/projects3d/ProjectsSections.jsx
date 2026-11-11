@@ -1,5 +1,6 @@
 import { createElement, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useNavigationType } from "react-router-dom";
+import ROUTE_PATHS from "../../routes/RoutePath";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -106,23 +107,6 @@ const FigN = ({ raw }) => {
 };
 const fmtNum = (n, dec) => n.toLocaleString("en-IN", { minimumFractionDigits: dec, maximumFractionDigits: dec });
 
-// the card's on-screen box, used to grow the project sheet out of it and shrink it back
-const cardRect = (id) => {
-  const el = document.getElementById(`pj-card-${id}`)?.querySelector(".pj-card-in");
-  if (!el) return null;
-  const r = el.getBoundingClientRect();
-  const W = document.documentElement.clientWidth;
-  const H = document.documentElement.clientHeight;
-  if (r.bottom < 0 || r.top > H || r.right < 0 || r.left > W) return null;
-  return { top: r.top, left: r.left, right: r.right, bottom: r.bottom };
-};
-const insetOf = (r, rad = 26) => {
-  const W = document.documentElement.clientWidth;
-  const H = document.documentElement.clientHeight;
-  return `inset(${Math.max(0, r.top)}px ${Math.max(0, W - r.right)}px ${Math.max(0, H - r.bottom)}px ${Math.max(0, r.left)}px round ${rad}px)`;
-};
-const OPEN_INSET = "inset(0px 0px 0px 0px round 0px)";
-
 function Words({ text, hl = [] }) {
   const set = new Set(hl);
   return text.split(" ").map((w, i) => (
@@ -221,7 +205,7 @@ function ProjectCard({ p, i, onOpen }) {
     <article className="pj-card" id={`pj-card-${p.id}`}>
       <div className="pj-card-drift">
         <div className="pj-card-tilt">
-          <div className="pj-card-in" onClick={(e) => onOpen(i, e.currentTarget.querySelector(".pj-card-open"))} data-cursor="Open">
+          <div className="pj-card-in" onClick={() => onOpen(i)} data-cursor="Open">
             <div className="pj-card-viz" aria-hidden="true">
               <i className="pj-card-grid" />
               <CardSketch p={p} />
@@ -231,7 +215,7 @@ function ProjectCard({ p, i, onOpen }) {
             <div className="pj-card-body">
               <span className="pj-client">{p.client}</span>
               <h3 className="pj-card-t">
-                <button type="button" className="pj-card-open" aria-haspopup="dialog" onClick={(e) => { e.stopPropagation(); onOpen(i, e.currentTarget); }}>{p.title}</button>
+                <button type="button" className="pj-card-open" onClick={(e) => { e.stopPropagation(); onOpen(i); }}>{p.title}</button>
               </h3>
               <span className="pj-place"><FaMapMarkerAlt aria-hidden="true" />{p.location}</span>
               <dl className="pj-card-stats">
@@ -275,14 +259,12 @@ function PlanSketch({ plan, area }) {
 /* =====================================================================
    Project sheet: opens out of the card, then every detail scrolls in parallax.
    ===================================================================== */
-function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
+function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
   const p = PROJECTS[index];
   const nextI = (index + 1) % PROJECTS.length;
   const next = PROJECTS[nextI];
   const rec = TESTIMONIALS.find((t) => t.client === p.client);
   const sheet = useRef(null);
-  const scr = useRef(null);
-  const closeBtn = useRef(null);
   const lbEl = useRef(null);
   const closing = useRef(false);
   const latest = useRef({});
@@ -305,30 +287,21 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
     closing.current = true;
     const el = sheet.current;
     if (!el || reducedNow()) { onClose(); return; }
-    const r = cardRect(p.id);
-    gsap.to(scr.current, { opacity: 0, duration: 0.3, ease: "power1.out" });
-    if (r) gsap.fromTo(el, { clipPath: OPEN_INSET }, { clipPath: insetOf(r), duration: 0.85, ease: "power4.inOut", onComplete: onClose });
-    else gsap.to(el, { opacity: 0, duration: 0.4, onComplete: onClose });
+    gsap.to(el, { opacity: 0, duration: 0.25, ease: "power1.out", onComplete: onClose });
   };
   const stepLb = (d) => { lbDir.current = d; setLb((v) => (v === null ? v : (v + d + p.gallery.length) % p.gallery.length)); };
   latest.current = { lb, requestClose, stepLb };
 
-  /* ---- scroll lock, focus, keys (Escape, arrows, focus trap) */
+  /* ---- keys (Escape, arrows, focus trap inside the photo viewer only). The page scrolls with the browser scroll bar. */
   useEffect(() => {
-    const body = document.body;
-    const prev = { o: body.style.overflow, p: body.style.paddingRight };
-    const sbw = window.innerWidth - document.documentElement.clientWidth;
-    body.style.overflow = "hidden";
-    if (sbw > 0) body.style.paddingRight = `${sbw}px`;
-    lenisRef.current?.stop();
-    closeBtn.current?.focus({ preventScroll: true });
     const onKey = (e) => {
       const { lb: open, requestClose: close, stepLb: step } = latest.current;
       if (e.key === "Escape") { e.preventDefault(); if (open !== null) setLb(null); else close(); return; }
-      if (open !== null && e.key === "ArrowRight") step(1);
-      if (open !== null && e.key === "ArrowLeft") step(-1);
+      if (open === null) return;
+      if (e.key === "ArrowRight") step(1);
+      if (e.key === "ArrowLeft") step(-1);
       if (e.key !== "Tab") return;
-      const scope = open !== null ? lbEl.current : sheet.current;
+      const scope = lbEl.current;
       if (!scope) return;
       const f = [...scope.querySelectorAll("button, a[href], [tabindex]:not([tabindex='-1'])")].filter((n) => !n.disabled && n.getClientRects().length);
       if (!f.length) return;
@@ -338,23 +311,33 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
       else if (!e.shiftKey && (document.activeElement === last || !scope.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
     };
     document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ---- while the full-screen photo viewer is open the page behind it must not scroll */
+  useEffect(() => {
+    if (lb === null) return undefined;
+    const body = document.body;
+    const prev = { o: body.style.overflow, p: body.style.paddingRight };
+    const sbw = window.innerWidth - document.documentElement.clientWidth;
+    body.style.overflow = "hidden";
+    if (sbw > 0) body.style.paddingRight = `${sbw}px`;
+    lenisRef.current?.stop();
     return () => {
-      document.removeEventListener("keydown", onKey);
       body.style.overflow = prev.o;
       body.style.paddingRight = prev.p;
       lenisRef.current?.start();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lb === null]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ---- entrance + every parallax layer inside the sheet (the sheet's own scroller drives them) */
   useLayoutEffect(() => {
     const el = sheet.current;
-    const sc = scr.current;
-    if (!el || !sc || reducedNow()) return undefined;
+    if (!el || reducedNow()) return undefined;
     const k = window.innerWidth > 1000 ? 1 : window.innerWidth > 600 ? 0.8 : 0.6;
     const q = (s) => gsap.utils.toArray(s, el);
     const Q = (s) => el.querySelector(s);
-    const S = (trigger, extra = {}) => ({ trigger, scroller: sc, ...extra });
+    const S = (trigger, extra = {}) => ({ trigger, ...extra });
     const par = (trigger, scrub = 0.6, start = "top bottom", end = "bottom top") => S(trigger, { start, end, scrub });
     const on = (trigger, start = "top 88%") => S(trigger, { start, toggleActions: "play none none reverse" });
     const count = (c, trg, start) => {
@@ -367,14 +350,9 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
 
     const pointerOff = [];
     const ctx = gsap.context(() => {
-      /* entrance: the card grows into the full sheet */
+      /* entrance */
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      if (fromRect) {
-        tl.fromTo(el, { clipPath: insetOf(fromRect) }, { clipPath: OPEN_INSET, duration: 1.05, ease: "power4.inOut", clearProps: "clipPath" }, 0)
-          .from(Q(".pj-sh-cv-img"), { scale: 1.3, duration: 1.6, ease: "power2.out" }, 0);
-      } else {
-        tl.from(el, { opacity: 0, duration: 0.5 }, 0).from(Q(".pj-sh-cv-img"), { scale: 1.15, duration: 1.2, ease: "power2.out" }, 0);
-      }
+      tl.from(el, { opacity: 0, duration: 0.5 }, 0).from(Q(".pj-sh-cv-img"), { scale: 1.15, duration: 1.2, ease: "power2.out" }, 0);
       tl.from(q(".pj-sh-bar > :not(.pj-sh-prog)"), { y: -28, opacity: 0, stagger: 0.08, duration: 0.6 }, 0.7)
         .from(q(".pj-sh-cv .pj-c"), { yPercent: 115, rotationX: -80, opacity: 0, stagger: 0.02, duration: 0.9, transformOrigin: "50% 100%" }, 0.6)
         .from(q(".pj-sh-cv-fade"), { y: 34, opacity: 0, stagger: 0.09, duration: 0.8 }, 0.95)
@@ -383,7 +361,7 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
         .add(() => gsap.set(q(".pj-sh-cv .pj-m"), { overflow: "visible" }));
 
       /* progress through the sheet */
-      gsap.to(Q(".pj-sh-prog"), { scaleX: 1, ease: "none", scrollTrigger: { scroller: sc, start: 0, end: "max", scrub: 0.2 } });
+      gsap.to(Q(".pj-sh-prog"), { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.2 } });
 
       /* cover: the photo drifts slower than the page, the copy lifts and fades as you leave it */
       const cv = Q(".pj-sh-cv");
@@ -540,22 +518,24 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
 
   const cvDate = p.meta.find(([l]) => /purchase|contract/i.test(l)) || null;
   const goOverview = () => {
-    const sc = scr.current;
-    const ov = sc && sc.querySelector(".pj-sh-ov");
-    if (sc && ov) sc.scrollTo({ top: ov.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 64, behavior: "smooth" });
+    const ov = sheet.current && sheet.current.querySelector(".pj-sh-ov");
+    if (!ov) return;
+    const y = ov.getBoundingClientRect().top + window.scrollY - 64;
+    if (lenisRef.current) lenisRef.current.scrollTo(y, { duration: 1.4 });
+    else window.scrollTo({ top: y, behavior: "smooth" });
   };
   const figs = p.specs.map(([label, value]) => ({ label, value, parts: splitNum(value) }));
 
   return (
-    <div className="pj-sheet" ref={sheet} role="dialog" aria-modal="true" aria-labelledby="pj-sh-title" data-lenis-prevent>
+    <div className="pj-sheet" ref={sheet} role="main" aria-labelledby="pj-sh-title">
       <div className="pj-sh-bar">
         <span className="pj-sh-cnt"><b>{pad2(index + 1)}</b> / {pad2(PROJECTS.length)}</span>
         <span className="pj-sh-who">{p.client}</span>
-        <button ref={closeBtn} type="button" className="pj-sh-x" onClick={requestClose} data-mag><span>Close</span><FaTimes aria-hidden="true" /></button>
+        <button type="button" className="pj-sh-x" onClick={requestClose} data-mag><span>Close</span><FaTimes aria-hidden="true" /></button>
         <i className="pj-sh-prog" aria-hidden="true" />
       </div>
 
-      <div className="pj-sh-scroll" ref={scr} tabIndex={-1}>
+      <div className="pj-sh-scroll">
         {/* ---- cover */}
         <header className="pj-sh-cv">
           <div className="pj-sh-cv-img" aria-hidden="true"><img src={p.cover.src} alt="" /></div>
@@ -785,11 +765,79 @@ function Sheet({ index, fromRect, onClose, onSwitch, onTalk, lenisRef }) {
   );
 }
 
+/* =====================================================================
+   A project's own page (/project-case-studies/<id>). It uses the window scroll (one browser scroll bar) with smooth
+   scrolling, and every parallax layer in the Sheet is driven by that window scroll.
+   ===================================================================== */
+export function ProjectDetailView({ projectId }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const lenisRef = useRef(null);
+  const index = PROJECTS.findIndex((p) => p.id === projectId);
+  const listPath = ROUTE_PATHS.PROJECT_CASE_STUDIES;
+  const contactLink = navItems.find((n) => n.title === "Contact Us")?.link || "/contact-us";
+
+  useEffect(() => {
+    const reduce = reducedNow();
+    document.body.classList.add("pj-3d");
+    document.body.classList.toggle("pj-reduce", reduce);
+    let lenis;
+    let tick;
+    if (!reduce) {
+      lenis = new Lenis(lenisOptions);
+      lenisRef.current = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      tick = lenisTick(lenis);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(100, 33);
+    }
+    const t = setTimeout(() => ScrollTrigger.refresh(), 600);
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", onLoad);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("load", onLoad);
+      document.body.classList.remove("pj-3d", "pj-reduce");
+      if (lenis) {
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+        lenisRef.current = null;
+      }
+    };
+  }, []);
+
+  // opening another project (Next project) starts at its top
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    lenisRef.current?.scrollTo(0, { immediate: true, force: true });
+  }, [index]);
+
+  if (index < 0) return <Navigate to={listPath} replace />;
+
+  // Close: step back to the list when we came from it (the list restores its scroll position), else go to the list
+  const close = () => {
+    if (location.state?.fromList) navigate(-1);
+    else navigate(listPath);
+  };
+  const switchTo = (i) => navigate(`${listPath}/${PROJECTS[i].id}`, { replace: true, state: location.state });
+  const talk = (e) => {
+    e?.preventDefault?.();
+    bookCall(() => navigate(contactLink), e);
+  };
+
+  return (
+    <div className="pj-root pj-detail">
+      <Cursor />
+      <Sheet key={projectId} index={index} onClose={close} onSwitch={switchTo} onTalk={talk} lenisRef={lenisRef} />
+    </div>
+  );
+}
+
 export default function ProjectsSections() {
   const root = useRef(null);
   const lenisRef = useRef(null);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(null); // { i: project index, rect: card box it grows out of }
+  const navType = useNavigationType();
   const [ti, setTi] = useState(0); // testimonial in front (small screens; on large screens scrolling drives it)
   const tmST = useRef(null); // the pinned testimonial ScrollTrigger, when active
   const tmCur = useRef(0);
@@ -808,59 +856,17 @@ export default function ProjectsSections() {
     else el.scrollIntoView({ behavior: "smooth" });
   };
 
-  /* ---- browser back / forward: every opened project detail is its own history entry (#project-<id>) */
-  const cleanUrl = () => `${window.location.pathname}${window.location.search}`;
-  const pushProject = (id) => {
-    const st = window.history.state || {};
-    window.history.pushState(
-      { ...st, key: Math.random().toString(36).slice(2, 10), idx: (typeof st.idx === "number" ? st.idx : 0) + 1, pj: id, pjd: (st.pjd || 0) + 1 },
-      "",
-      `${cleanUrl()}#project-${id}`
-    );
+  /* ---- a project opens on its own page (/project-case-studies/<id>); the list remembers where it was scrolled to */
+  const projectPath = (i) => `${ROUTE_PATHS.PROJECT_CASE_STUDIES}/${PROJECTS[i].id}`;
+  const openProject = (i) => {
+    try { sessionStorage.setItem("pj-scroll", String(Math.round(window.scrollY))); } catch { /* storage unavailable */ }
+    navigate(projectPath(i), { state: { fromList: true } });
   };
-  const deepLinked = useRef(false);
+  // old links of the form /project-case-studies#project-<id> go to the project's page
   useEffect(() => {
-    const idxOf = () => {
-      const m = /^#project-([\w-]+)$/.exec(window.location.hash);
-      return m ? PROJECTS.findIndex((p) => p.id === m[1]) : -1;
-    };
-    // browser Back / Forward: show whatever project (or none) the address now points to
-    const sync = () => {
-      const i = idxOf();
-      setOpen((cur) => (i < 0 ? null : cur && cur.i === i ? cur : { i, rect: null }));
-    };
-    window.addEventListener("popstate", sync);
-    // page opened (or reloaded) on a #project-<id> address: put a clean page entry underneath, then open it
-    if (!deepLinked.current) {
-      deepLinked.current = true;
-      const i = idxOf();
-      if (i >= 0) {
-        const { pj, pjd, ...rest } = window.history.state || {};
-        window.history.replaceState(rest, "", cleanUrl());
-        setOpen({ i, rect: null });
-        pushProject(PROJECTS[i].id);
-      }
-    }
-    return () => window.removeEventListener("popstate", sync);
-  }, []);
-
-  const openProject = (i, btn) => {
-    const box = (btn?.closest(".pj-card-in") || btn)?.getBoundingClientRect();
-    setOpen({ i, rect: box ? { top: box.top, left: box.left, right: box.right, bottom: box.bottom } : null });
-    pushProject(PROJECTS[i].id);
-  };
-  const switchProject = (i) => {
-    setOpen({ i, rect: null });
-    pushProject(PROJECTS[i].id);
-  };
-  const closeProject = () => {
-    const id = open ? PROJECTS[open.i].id : null;
-    setOpen(null);
-    const d = window.history.state?.pjd;
-    if (d) window.history.go(-d); // step back over every project entry we added
-    else if (/^#project-/.test(window.location.hash)) window.history.replaceState(window.history.state, "", cleanUrl());
-    if (id) requestAnimationFrame(() => document.querySelector(`#pj-card-${id} .pj-card-open`)?.focus({ preventScroll: true }));
-  };
+    const m = /^#project-([\w-]+)$/.exec(window.location.hash);
+    if (m && PROJECTS.some((p) => p.id === m[1])) navigate(`${ROUTE_PATHS.PROJECT_CASE_STUDIES}/${m[1]}`, { replace: true });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ---- first placement of the testimonial orbit (before paint) */
   useLayoutEffect(() => {
@@ -1036,13 +1042,13 @@ export default function ProjectsSections() {
             const dots = $(".pj-cs-dots i");
             if (pin) {
               const dur = () => vh() * 4.4;
-              gsap.set(slides, { opacity: 0, x: "30%", z: -420 * k, rotationY: 62 });
-              gsap.set(slides[0], { opacity: 1, x: "0%", z: 0, rotationY: 0 });
+              gsap.set(slides, { opacity: 0, x: "30%" });
+              gsap.set(slides[0], { opacity: 1, x: "0%" });
               let cur = -1;
               const setSlide = (i) => {
                 if (i === cur || !rootEl.isConnected) return;
                 cur = i;
-                slides.forEach((s, j) => s.classList.toggle("on", j === i));
+                slides.forEach((s, j) => { s.classList.toggle("on", j === i); const a = s.querySelector(".pj-slide-link"); if (a) a.tabIndex = j === i ? 0 : -1; });
                 dots.forEach((d, j) => { d.classList.toggle("on", j === i); d.classList.toggle("done", j < i); });
                 const cn = rootEl.querySelector(".pj-cs-count b");
                 if (cn) cn.textContent = pad2(i + 1);
@@ -1055,16 +1061,15 @@ export default function ProjectsSections() {
               });
               tl.to(".pj-cs-bar i", { scaleX: 1, duration: NS - 1 }, 0);
               for (let i = 1; i < NS; i++) {
-                tl.to(slides[i - 1], { opacity: 0, x: "-32%", z: -420 * k, rotationY: -62, duration: 0.55, ease: "power2.in" }, i - 0.6)
-                  .fromTo(slides[i], { opacity: 0, x: "32%", z: -420 * k, rotationY: 62 }, { opacity: 1, x: "0%", z: 0, rotationY: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, i - 0.45);
+                tl.to(slides[i - 1], { opacity: 0, x: "-32%", duration: 0.55, ease: "power2.in" }, i - 0.6)
+                  .fromTo(slides[i], { opacity: 0, x: "32%" }, { opacity: 1, x: "0%", duration: 0.6, ease: "power2.out", immediateRender: false }, i - 0.45);
               }
               tl.to({}, { duration: 0.0001 }, NS - 1 + 0.4);
-              gsap.fromTo(".pj-cs-tilt", { rotationX: 7, rotationZ: -1.5, transformPerspective: 1400 }, { rotationX: -5, rotationZ: 1.5, ease: "none", scrollTrigger: { trigger: stage, start: "top top", end: () => `+=${dur()}`, scrub: true } });
               gsap.fromTo(".pj-cs-ghost", { xPercent: 8 }, { xPercent: -26, ease: "none", scrollTrigger: { trigger: stage, start: "top top", end: () => `+=${dur()}`, scrub: true } });
             } else {
               slides.forEach((s) => s.classList.add("on"));
-              flyIn(".pj-slide");
-              $(".pj-slide .pj-st").forEach((el, i) => gsap.from(el, { y: 60, opacity: 0, rotationX: -40, transformPerspective: 800, duration: 0.8, delay: (i % 4) * 0.06, scrollTrigger: io(el, "top 95%", "bottom 5%") }));
+              $(".pj-slide").forEach((el) => gsap.from(el, { y: 60 * k, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: io(el, "top 93%", "bottom 5%") }));
+              $(".pj-slide .pj-st").forEach((el, i) => gsap.from(el, { y: 40, opacity: 0, duration: 0.8, delay: (i % 4) * 0.06, ease: "power3.out", scrollTrigger: io(el, "top 95%", "bottom 5%") }));
             }
           }
 
@@ -1169,6 +1174,25 @@ export default function ProjectsSections() {
       );
     }
 
+    // back from a project page: return to where the list was (the global scroll-to-top runs a few frames after mount, so apply again)
+    let savedY = 0;
+    try { savedY = Number(sessionStorage.getItem("pj-scroll")) || 0; sessionStorage.removeItem("pj-scroll"); } catch { /* storage unavailable */ }
+    const restoreTimers = [];
+    const stopRestore = () => restoreTimers.forEach(clearTimeout);
+    if (navType === "POP" && savedY > 0) {
+      let userMoved = false;
+      const mark = () => { userMoved = true; };
+      ["wheel", "touchstart", "keydown", "pointerdown"].forEach((ev) => window.addEventListener(ev, mark, { passive: true, once: true }));
+      const apply = () => {
+        if (userMoved) return;
+        if (lenis) lenis.scrollTo(savedY, { immediate: true, force: true });
+        else window.scrollTo(0, savedY);
+        ScrollTrigger.update();
+      };
+      apply();
+      [60, 250, 700, 1300].forEach((ms) => restoreTimers.push(setTimeout(apply, ms)));
+    }
+
     const t = setTimeout(() => ScrollTrigger.refresh(), 600);
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", onLoad);
@@ -1176,6 +1200,7 @@ export default function ProjectsSections() {
 
     return () => {
       clearTimeout(t);
+      stopRestore();
       window.removeEventListener("load", onLoad);
       mm.revert();
       document.body.classList.remove("pj-3d", "pj-reduce");
@@ -1212,6 +1237,7 @@ export default function ProjectsSections() {
   };
   const goT = (dir) => goTo((tmST.current ? tmCur.current : ti) + dir);
   const drag = useRef(null);
+  const dragMoved = useRef(false); // a swipe on the carousel must not count as a click on the card
 
   return (
     <div className="pj-root" ref={root}>
@@ -1276,12 +1302,16 @@ export default function ProjectsSections() {
         <div className="pj-cs-stage">
           <div className="pj-cs-ghost" aria-hidden="true">CASE</div>
           <div className="pj-cs-tilt">
-            {CASES.map((c) => (
-              <article className="pj-slide" key={c.n} aria-label={`Case study ${c.n}: ${c.client}`}>
+            {CASES.map((c) => {
+              const pi = PROJECTS.findIndex((p) => p.client === c.client);
+              return (
+              <article className={`pj-slide${pi >= 0 ? " is-link" : ""}`} key={c.n} aria-label={`Case study ${c.n}: ${c.client}`} onClick={pi >= 0 ? () => openProject(pi) : undefined} data-cursor={pi >= 0 ? "Open" : undefined}>
                 <div className="pj-slide-l">
                   <span className="pj-cs-tag">Case study {c.n}</span>
                   <span className="pj-client">{c.client}</span>
-                  <h3 className="pj-h3">{c.title}</h3>
+                  <h3 className="pj-h3">
+                    {pi >= 0 ? <a className="pj-slide-link" href={projectPath(pi)} onClick={(e) => { e.preventDefault(); e.stopPropagation(); openProject(pi); }}>{c.title}</a> : c.title}
+                  </h3>
                   <span className="pj-place"><FaMapMarkerAlt aria-hidden="true" />{c.place}</span>
                   <div className="pj-metric">
                     <strong>{c.metric.big}<small>{c.metric.unit}</small></strong>
@@ -1295,7 +1325,7 @@ export default function ProjectsSections() {
                 </div>
                 <div className="pj-slide-r">
                   {c.stages.map((s, i) => (
-                    <div className="pj-st" key={s.k} onPointerMove={tiltMove} onPointerLeave={tiltLeave}>
+                    <div className="pj-st" key={s.k}>
                       <em>{pad2(i + 1)}</em>
                       <h4>{s.k}</h4>
                       <p>{s.d}</p>
@@ -1303,7 +1333,8 @@ export default function ProjectsSections() {
                   ))}
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
           <div className="pj-cs-foot" aria-hidden="true">
             <span className="pj-cs-count"><b>01</b> / {pad2(CASES.length)}</span>
@@ -1361,11 +1392,12 @@ export default function ProjectsSections() {
         <div className="pj-tm-tilt">
         <div
           className="pj-tm-stage"
-          onPointerDown={(e) => { drag.current = e.clientX; }}
+          onPointerDown={(e) => { drag.current = e.clientX; dragMoved.current = false; }}
           onPointerUp={(e) => {
             if (drag.current === null) return;
             const dx = e.clientX - drag.current;
             drag.current = null;
+            dragMoved.current = Math.abs(dx) > 8;
             if (Math.abs(dx) > 50) goT(dx < 0 ? 1 : -1);
           }}
         >
@@ -1378,7 +1410,11 @@ export default function ProjectsSections() {
                 key={t.client}
                 aria-hidden={o !== 0}
               >
-                <div className="pj-tc-in">
+                <div
+                  className={`pj-tc-in${pi >= 0 ? " is-link" : ""}`}
+                  onClick={pi >= 0 ? (e) => { if (dragMoved.current || e.target.closest("a, button")) return; openProject(pi); } : undefined}
+                  data-cursor={pi >= 0 ? "Open" : undefined}
+                >
                   <div className="pj-tc-photo">
                     <img src={(t.photo || cover(t.client)).src} alt={(t.photo || cover(t.client)).alt || t.project} loading="lazy" decoding="async" draggable="false" />
                     <span className="pj-tc-l">{t.tag || "Documented client confirmation"}</span>
@@ -1395,7 +1431,7 @@ export default function ProjectsSections() {
                     <blockquote>{t.words || t.confirm}</blockquote>
                   <div className="pj-tc-act">
                     {pi >= 0 && (
-                      <button type="button" className="pj-tc-btn" tabIndex={o === 0 ? 0 : -1} aria-haspopup="dialog" onClick={(e) => { e.stopPropagation(); openProject(pi, e.currentTarget); }}>
+                      <button type="button" className="pj-tc-btn" tabIndex={o === 0 ? 0 : -1} onClick={(e) => { e.stopPropagation(); openProject(pi); }}>
                         <span>View project details</span><FaArrowRight aria-hidden="true" />
                       </button>
                     )}
@@ -1444,20 +1480,6 @@ export default function ProjectsSections() {
           <a className="pj-btn" href={contactLink} onClick={talk} data-mag>{CTA.btn}<i><FaArrowRight aria-hidden="true" /></i></a>
         </div>
       </section>
-
-
-      {/* ============ Project sheet ============ */}
-      {open && (
-        <Sheet
-          key={open.i}
-          index={open.i}
-          fromRect={open.rect}
-          onClose={closeProject}
-          onSwitch={switchProject}
-          onTalk={talk}
-          lenisRef={lenisRef}
-        />
-      )}
     </div>
   );
 }
