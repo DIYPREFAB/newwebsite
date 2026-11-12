@@ -8,6 +8,8 @@ export const RESPECT_REDUCED_MOTION = false; // same switch as the other 3D page
 
 const AB = (n) => `/images/ab/${n}.webp`;
 const ZM = (n) => `/images/zambia/${n}.webp`; // Zambia site photos
+const BS = (n) => `/images/banswara/${n}.webp`; // Banswara Syntex site photos
+const AS = (n) => `/images/assure/${n}.webp`; // Assure Buildcon site photos
 
 export const NAV_SECTIONS = [
   { id: "projects", n: "01", label: "Featured projects" },
@@ -49,10 +51,12 @@ export const PROJECTS_HEAD = {
 export const PROJECTS = [
   {
     id: "wonder",
+    logo: "/images/clients/wonder-cement.png",
+    logoBg: "#ffffff",
     cover: { src: AB("scaffold"), alt: "Steel frame of a prefabricated shed" },
-    kpi: { big: "291.60", unit: "Sq. Mtr.", label: "Covered area" },
+    kpi: { big: "2,196", unit: "Sq. Mtr.", label: "Covered area" },
     specMode: "plan",
-    plan: { w: 18, l: 16.2 },
+    plan: { w: 48.8, l: 45 },
     gallery: [
       { src: AB("scaffold"), alt: "Primary steel frame standing", cap: "Primary frame" },
       { src: AB("fittup"), alt: "Fit-up section with structural members", cap: "Fit-up & check before dispatch" },
@@ -64,7 +68,7 @@ export const PROJECTS = [
     title: "Prefabricated Steel Parking Shed",
     location: "R.K. Nagar, Nimbahera, Chittorgarh, Rajasthan",
     badge: "Completed 29 March 2026",
-    area: "291.60 Sq. Mtr.",
+    area: "2,196 Sq. Mtr.",
     overview:
       "Design, engineering, fabrication, supply and installation of a prefabricated steel parking shed at Wonder Cement’s Nimbahera plant.",
     scope: [
@@ -77,23 +81,26 @@ export const PROJECTS = [
     outcome:
       "The complete parking shed was successfully executed and handed over. Completion was confirmed through the Work Completion Certificate dated 29 March 2026.",
     specs: [
-      ["Length", "16.2 m"],
-      ["Width", "18 m"],
-      ["Side Clear Height", "5 m"],
-      ["Covered Area", "291.60 Sq. Mtr."],
+      ["Length", "45 m"],
+      ["Width", "48.8 m"],
+      ["Side Clear Height", "10 m"],
+      ["Covered Area", "2,196 Sq. Mtr."],
     ],
     meta: [["Client", "Wonder Cement Limited"], ["Purchase Order", "27 January 2026"]],
   },
   {
     id: "banswara",
-    cover: { src: AB("a-primo"), alt: "Automatic beam processing line" },
+    logo: "/images/clients/banswara-syntex.png",
+    logoBg: "#ffffff",
+    cover: { src: BS("cover-structure"), alt: "Completed pre-engineered steel structure against a clear sky" },
     kpi: { big: "5,565", unit: "Sq. Mtr.", label: "Across 3 facilities" },
     specMode: "bars",
+    galleryNote: "A look at the Banswara Syntex structures: roof framing, decking and the finished interior bays.",
     gallery: [
-      { src: AB("a-primo"), alt: "Automatic beam processing line", cap: "Beam processing" },
-      { src: AB("r-drill"), alt: "Radial drilling machines with operators", cap: "Bolt holes for site assembly" },
-      { src: AB("welding"), alt: "Fully automatic beam welding machine", cap: "Submerged arc welding" },
-      { src: AB("a-robot"), alt: "Robotic arm on the assembly line", cap: "Robotic assembly" },
+      { src: BS("roof-framing"), alt: "Steel roof framing with purlins and skylights seen from below", cap: "Roof framing and purlins" },
+      { src: BS("deck-sheeting"), alt: "Steel frame with bracing and deck sheeting on the upper floor", cap: "Bracing and deck sheeting" },
+      { src: BS("interior-bay"), alt: "Interior bay with steel columns, bracing and a mezzanine stair", cap: "Interior bay and mezzanine access" },
+      { src: BS("clear-span"), alt: "Clear-span interior with portal frames and a polished floor", cap: "Finished clear-span interior" },
     ],
     n: "02",
     client: "Banswara Syntex Limited",
@@ -129,14 +136,17 @@ export const PROJECTS = [
   },
   {
     id: "assure",
-    cover: { src: AB("s-fit"), alt: "Steel members laid out ready for fabrication" },
+    logo: "/images/clients/assure-buildcon.svg",
+    logoBg: "#16181b",
+    cover: { src: AS("cover-aerial"), alt: "Aerial view of the pre-engineered steel frame on site" },
     kpi: { big: "PEB", unit: "", label: "Supply & installation" },
     specMode: "rows",
+    galleryNote: "A look at the Assure Buildcon site: the steel frame under erection, from the air and from inside.",
     gallery: [
-      { src: AB("s-fit"), alt: "Steel members laid out ready for fabrication", cap: "Members laid out" },
-      { src: AB("a-laser"), alt: "Laser cutting steel plate", cap: "Plate profiled to drawings" },
-      { src: AB("r-blast"), alt: "Shot blasting machine", cap: "Surface preparation" },
-      { src: AB("a-truss"), alt: "Steel truss structure", cap: "Truss ready for erection" },
+      { src: AS("aerial-angle"), alt: "Aerial view of the steel frame with materials laid out on site", cap: "Steel frame and site layout" },
+      { src: AS("frames-equipment"), alt: "Steel frame bays with process equipment in place", cap: "Frame bays with equipment" },
+      { src: AS("frames-sun"), alt: "Portal frames and roof purlins under erection with workers below", cap: "Portal frames under erection" },
+      { src: AS("site-plan-view"), alt: "Top-down view of the building footprint and surrounding site", cap: "Building footprint from above" },
     ],
     n: "03",
     client: "Assure Buildcon Private Limited",
@@ -159,6 +169,8 @@ export const PROJECTS = [
   },
   {
     id: "zambia",
+    logo: "/images/clients/tyre-technocrats.png",
+    logoBg: "#ffffff",
     cover: { src: ZM("cover"), alt: "Pre-engineered steel building frame under erection in Zambia" },
     kpi: { big: "5,600", unit: "Sq. Mtr.", label: "Main building area" },
     specMode: "plan",
@@ -218,7 +230,7 @@ export const CASES = [
     metric: { big: "61", unit: "days", cap: "From purchase order to the Work Completion Certificate" },
     timeline: ["Purchase Order · 27 Jan 2026", "Completed · 29 Mar 2026"],
     stages: [
-      { k: "Brief", d: "A 291.60 Sq. Mtr. covered parking shed, 16.2 m by 18 m with a 5 m side clear height, inside Wonder Cement’s Nimbahera plant." },
+      { k: "Brief", d: "A 2,196 Sq. Mtr. covered parking shed, 45 m by 48.8 m with a 10 m side clear height, inside Wonder Cement’s Nimbahera plant." },
       { k: "Engineering & fabrication", d: "Structural design, engineering and steel fabrication handled in-house as one scope, so the drawings and the steel stayed in step." },
       { k: "Supply & installation", d: "Structural steel and sheeting supplied by us, followed by on-site erection and installation." },
       { k: "Outcome", d: "Handed over complete. A Work Completion Certificate dated 29 March 2026 confirms it." },
@@ -336,7 +348,8 @@ export const TESTIMONIALS = [
     confirm: "Supply and installation of the pre-engineered building structures was completed.",
     doc: "Project completion",
     date: "30 March 2026",
-    logo: "/images/clients/assure-buildcon.png",
+    logo: "/images/clients/assure-buildcon.svg",
+    logoBg: "#16181b",
     letter: "/docs/completion/assure-buildcon-project-completion.pdf",
   },
 ];

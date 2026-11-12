@@ -154,6 +154,21 @@ body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-ba
 .bt-none strong { font-size: 18px; color: var(--navy); }
 .bt-end { margin: 6px 0 0; font-size: 14px; color: var(--mute); }
 
+/* ---------- pagination ---------- */
+.bt-pager { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 14px 0 6px; padding-top: 26px; border-top: 1px solid var(--line); }
+.bt-pager-info { margin: 0; font-size: 14px; color: var(--mute); }
+.bt-pager-list { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.bt-pg { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 42px; height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--navy); font-size: 14.5px; font-weight: 800; line-height: 1; cursor: pointer; transition: background .25s, color .25s, border-color .25s, transform .25s; }
+.bt-pg:hover:not(:disabled):not(.is-on) { background: #eaf1ef; border-color: #c4d4cf; transform: translateY(-1px); }
+.bt-pg.is-on { background: var(--navy); border-color: var(--navy); color: #fff; cursor: default; }
+.bt-pg:disabled { opacity: .4; cursor: not-allowed; }
+.bt-pg--nav { padding: 0 18px; }
+.bt-pg-gap { padding: 0 4px; color: var(--mute); font-weight: 800; user-select: none; }
+@media (max-width: 480px) {
+  .bt-pg { min-width: 38px; height: 38px; padding: 0 10px; font-size: 14px; }
+  .bt-pg--nav { padding: 0 14px; }
+}
+
 /* ---------- sidebar ---------- */
 .bt-side { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 16px; }
 .bt-rail-card { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }

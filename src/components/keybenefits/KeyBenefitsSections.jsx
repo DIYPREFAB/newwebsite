@@ -23,7 +23,7 @@ gsap.registerPlugin(ScrollTrigger);
 // phones: ignore the address-bar resize so pinned sections do not jump
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const HL_WORDS = new Set(["Visionary", "Engineering", "Excellence"]);
+const HL_WORDS = new Set(["Yourself."]);
 const pad2 = (n) => String(n).padStart(2, "0");
 // chapters for the side dots + progress (selector, label)
 const CHAPTERS = [
@@ -585,7 +585,7 @@ export default function KeyBenefitsSections() {
         </div>
 
         <div className="kb-hero-copy">
-          <span className="kb-tag">Key benefits of prefab construction</span>
+          <span className="kb-tag">Your trusted and visionary partner in AI-powered engineering intelligence</span>
           <h1 className="kb-h1" aria-label={TITLE}>
             {TITLE.split(" ").map((w, i) => (
               <span className="kb-h1-m" key={i} aria-hidden="true">
@@ -594,11 +594,12 @@ export default function KeyBenefitsSections() {
             ))}
           </h1>
           <p className="kb-hero-p">
-            High-quality PEB and modular structures that go up faster, cost less and last longer, backed by expert
-            engineers who stay with you from first sketch to final bolt.
+            Design your own PEB or modular structure with our AI-powered 3D Smart Building Planner, where intelligent
+            modelling settles layouts, spans and material use before fabrication. Our engineers then build and deliver it
+            faster, at a fixed and transparent cost, from first sketch to final bolt.
           </p>
           <div className="kb-hero-cta">
-            <button className="kb-btn" onClick={talk}>Let&apos;s talk<i><FaArrowRight /></i></button>
+            <button className="kb-btn" onClick={talk}>Start your design<i><FaArrowRight /></i></button>
             <button className="kb-btn kb-btn--ghost" onClick={explore}>Explore the benefits</button>
           </div>
           <div className="kb-hero-stats">

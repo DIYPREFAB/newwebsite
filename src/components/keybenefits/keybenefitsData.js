@@ -3,7 +3,7 @@ import {
   FaWarehouse, FaBuilding, FaHardHat, FaHospital, FaHome,
 } from "react-icons/fa";
 
-export const TITLE = "Your Trusted and Visionary Partner in Engineering Excellence";
+export const TITLE = "Design It Yourself.";
 
 export const HERO_STATS = [
   ["80%", "Built in the factory"],

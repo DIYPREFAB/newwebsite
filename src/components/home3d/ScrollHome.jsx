@@ -25,11 +25,12 @@ ScrollTrigger.config({ ignoreMobileResize: true });
 const HEADER = 0; // nav floats over the page
 
 const PLANT = [
-  ["Plasma cutting", "plasma-3-maxpro-200.jpeg"],
-  ["CNC shearing", "cnc-shearing-machine.jpeg"],
-  ["Automated welding", "fully-automatic-ptw.jpeg"],
-  ["Fit-up & tacking", "fittup-section.jpeg"],
-  ["Shot blasting", "automatic-shot-blasting-machine.jpeg"],
+  ["Plasma cutting", "plant-plasma-cutting.jpg"],
+  ["Gas cutting", "plant-gas-cutting.jpg"],
+  ["Radial drilling", "plant-radial-drilling.jpg"],
+  ["Automated welding", "plant-automated-welding.jpg"],
+  ["Shot blasting", "plant-shot-blasting.jpg"],
+  ["Blasting controls", "plant-blasting-controls.jpg"],
 ];
 const ACCENTS = [["#2fd4c0", "#a8dadc"], ["#6cb6ff", "#bfe0ff"], ["#f4c542", "#ffe39a"], ["#ff8a7a", "#ffc4bb"], ["#9b8cff", "#d3ccff"], ["#5fe0a0", "#b8f2d4"]];
 

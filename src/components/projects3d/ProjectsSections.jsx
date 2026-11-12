@@ -67,11 +67,11 @@ const placeRing = (cards, T) => {
 };
 
 // Client logo on a white tile; if the file is missing, a monogram keeps the layout intact.
-function ClientLogo({ src, name }) {
+function ClientLogo({ src, name, bg }) {
   const [bad, setBad] = useState(!src);
   const mono = name.split(/\s+/).filter((w) => !/^(limited|private|pvt|ltd)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
   return (
-    <span className="pj-tc-logo">
+    <span className="pj-tc-logo" style={bg ? { background: bg } : undefined}>
       {bad ? <b aria-hidden="true">{mono}</b> : <img src={src} alt={`${name} logo`} loading="lazy" decoding="async" draggable="false" onError={() => setBad(true)} />}
     </span>
   );
@@ -125,78 +125,19 @@ function Split({ text, hl, className, tag = "span" }) {
    Featured project card: a blueprint drawn from the project's own data on top, the facts underneath.
    The whole card opens the project sheet (the title is the real button).
    ===================================================================== */
-const shortName = (n) => n.replace(/\s*\(.*\)/, "").split(" ")[0];
-const numOf = (v) => parseFloat(String(v).replace(/,/g, "")) || 0;
-
-// portal-frame elevation as one path (x0,y0 = left foot on the ground)
-const frameD = (x0, y0, W, H, R) => `M${x0} ${y0} V${y0 - H} L${x0 + W / 2} ${y0 - H - R} L${x0 + W} ${y0 - H} V${y0}`;
-
-function CardSketch({ p }) {
-  const eave = numOf(p.specs.find((s) => /clear height|eave height/i.test(s[0]))?.[1]) || 5;
-  const T = (x, y, t, anchor = "middle") => <text className="tx" x={x} y={y} textAnchor={anchor}>{t}</text>;
-  const L = (d, cls = "") => <path className={`ln ${cls}`} d={d} pathLength="1" />;
-  let body;
-  if (p.specMode === "plan" && p.plan) {
-    const s = 168 / Math.max(p.plan.w, p.plan.l);
-    const w = p.plan.w * s, h = p.plan.l * s, x = 44, y = 56;
-    const es = 8.2, ew = p.plan.w * es, eh = eave * es, er = eh * 0.18, ex = 296, ey = y + h;
-    body = (
-      <>
-        <rect className="fillh" x={x} y={y} width={w} height={h} />
-        {L(`M${x} ${y} H${x + w} V${y + h} H${x} Z`)}
-        {L(`M${x} ${y - 14} H${x + w} M${x} ${y - 19} V${y - 9} M${x + w} ${y - 19} V${y - 9}`, "dim")}
-        {T(x + w / 2, y - 24, `${p.plan.w} m`)}
-        {L(`M${x + w + 14} ${y} V${y + h} M${x + w + 9} ${y} H${x + w + 19} M${x + w + 9} ${y + h} H${x + w + 19}`, "dim")}
-        {T(x + w + 24, y + h / 2 + 4, `${p.plan.l} m`, "start")}
-        {[1, 2, 3].map((i) => <g key={i}>{L(`M${x + (w * i) / 4} ${y} V${y + h}`, "thin")}</g>)}
-        {L(frameD(ex, ey, ew, eh, er))}
-        {L(`M${ex - 12} ${ey} H${ex + ew + 12}`, "dim")}
-        {[0.25, 0.5, 0.75].map((t) => <circle key={t} className="nd" cx={ex + (ew / 2) * t} cy={ey - eh - er * t} r="2.6" />)}
-        {L(`M${ex - 18} ${ey} V${ey - eh} M${ex - 23} ${ey} H${ex - 13} M${ex - 23} ${ey - eh} H${ex - 13}`, "dim")}
-        {T(ex - 26, ey - eh / 2 + 4, `${eave} m`, "end")}
-        {T(x + w / 2, ey + 32, "PLAN, TO SCALE")}
-        {T(ex + ew / 2, ey + 32, "ELEVATION")}
-      </>
-    );
-  } else if (p.buildings?.length) {
-    const tot = p.buildings.reduce((a, b) => a + numOf(b.area), 0) || 1;
-    const gap = 14, avail = 400 - gap * (p.buildings.length - 1);
-    let cx = 40;
-    body = (
-      <>
-        {L("M40 70 H440 M40 64 V76 M440 64 V76", "dim")}
-        {T(240, 58, p.area || `${tot.toLocaleString("en-IN")} Sq. Mtr.`)}
-        {p.buildings.map((b, i) => {
-          const w = (avail * numOf(b.area)) / tot, x = cx;
-          cx += w + gap;
-          return (
-            <g key={b.name}>
-              <rect className="fillh" x={x} y={96} width={w} height={104} />
-              {L(`M${x} 96 H${x + w} V200 H${x} Z`)}
-              {L(`M${x} 96 L${x + w / 2} 84 L${x + w} 96`, "thin")}
-              {T(x + w / 2, 222 + (i % 2) * 24, shortName(b.name))}
-              {T(x + w / 2, 235 + (i % 2) * 24, numOf(b.area).toLocaleString("en-IN"))}
-            </g>
-          );
-        })}
-        {T(240, 282, "AREAS DRAWN IN PROPORTION")}
-      </>
-    );
-  } else {
-    const x0 = 60, y0 = 218, W = 280, H = 96, R = 26, dx = 34, dy = -24;
-    body = (
-      <>
-        {L(frameD(x0 + dx, y0 + dy, W, H, R), "thin")}
-        {L(`M${x0} ${y0 - H} L${x0 + dx} ${y0 + dy - H} M${x0 + W / 2} ${y0 - H - R} L${x0 + W / 2 + dx} ${y0 + dy - H - R} M${x0 + W} ${y0 - H} L${x0 + W + dx} ${y0 + dy - H}`, "thin")}
-        {L(frameD(x0, y0, W, H, R))}
-        {L(`M${x0 - 14} ${y0} H${x0 + W + dx + 14}`, "dim")}
-        {[0.2, 0.4, 0.6, 0.8].map((t) => <circle key={t} className="nd" cx={x0 + (W / 2) * t} cy={y0 - H - R * t} r="2.6" />)}
-        {[0.2, 0.4, 0.6, 0.8].map((t) => <circle key={`r${t}`} className="nd" cx={x0 + W - (W / 2) * t} cy={y0 - H - R * t} r="2.6" />)}
-        {T(x0 + W / 2, y0 + 34, `${p.kpi.big} · ${p.kpi.label}`.toUpperCase())}
-      </>
-    );
-  }
-  return <svg className="pj-sk" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">{body}</svg>;
+// Card cover: the client's logo fills the whole cover on its own background (monogram if the file is missing).
+function CardLogo({ p }) {
+  const [bad, setBad] = useState(!p.logo);
+  const mono = p.client.split(/\s+/).filter((w) => !/^(limited|private|pvt|ltd\.?)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  const bg = p.logoBg || "#ffffff";
+  const dark = bg.toLowerCase() !== "#ffffff";
+  return (
+    <span className={`pj-card-logo${dark ? "" : " is-light"}`} style={{ background: bg }}>
+      <span className="pj-sk pj-card-logo-img">
+        {bad ? <b>{mono}</b> : <img src={p.logo} alt="" loading="lazy" decoding="async" draggable="false" onError={() => setBad(true)} />}
+      </span>
+    </span>
+  );
 }
 
 function ProjectCard({ p, i, onOpen }) {
@@ -208,7 +149,7 @@ function ProjectCard({ p, i, onOpen }) {
           <div className="pj-card-in" onClick={() => onOpen(i)} data-cursor="Open">
             <div className="pj-card-viz" aria-hidden="true">
               <i className="pj-card-grid" />
-              <CardSketch p={p} />
+              <CardLogo p={p} />
               <span className="pj-card-badge">{p.badge}</span>
               <span className="pj-card-no">{String(i + 1).padStart(2, "0")}</span>
             </div>
@@ -231,7 +172,7 @@ function ProjectCard({ p, i, onOpen }) {
   );
 }
 
-/* Wonder Cement: the footprint drawn to scale from the two real dimensions (18 m x 16.2 m) */
+/* Wonder Cement: the footprint drawn to scale from the two real dimensions (48.8 m x 45 m) */
 function PlanSketch({ plan, area }) {
   const SX = 250 / plan.w;
   const w = plan.w * SX;
@@ -276,6 +217,12 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
     if (!el || !el.naturalWidth || !el.naturalHeight) return;
     const r = el.naturalWidth / el.naturalHeight;
     setRatios((o) => (Math.abs((o[src] || 0) - r) < 0.001 ? o : { ...o, [src]: r }));
+  };
+  // the cover photo's real ratio drives the height of the cover picture box (see .pj-sh-cv-img in the CSS)
+  const setCvRatio = (el) => {
+    if (!el || !el.naturalWidth || !el.naturalHeight) return;
+    const box = el.closest(".pj-sh-cv");
+    if (box) box.style.setProperty("--cv-r", String(el.naturalWidth / el.naturalHeight));
   };
 
   const facts = [...p.meta, ["Location", p.location], ...(rec ? [["Completion record", `${rec.doc}, ${rec.date}`]] : [])];
@@ -353,11 +300,11 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
       /* entrance */
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.from(el, { opacity: 0, duration: 0.5 }, 0).from(Q(".pj-sh-cv-img"), { scale: 1.15, duration: 1.2, ease: "power2.out" }, 0);
-      tl.from(q(".pj-sh-bar > :not(.pj-sh-prog)"), { y: -28, opacity: 0, stagger: 0.08, duration: 0.6 }, 0.7)
-        .from(q(".pj-sh-cv .pj-c"), { yPercent: 115, rotationX: -80, opacity: 0, stagger: 0.02, duration: 0.9, transformOrigin: "50% 100%" }, 0.6)
-        .from(q(".pj-sh-cv-fade"), { y: 34, opacity: 0, stagger: 0.09, duration: 0.8 }, 0.95)
-        .from(q(".pj-cvf"), { y: 22, opacity: 0, stagger: 0.1, duration: 0.7 }, 1.35)
-        .fromTo(Q(".pj-sh-cv-facts"), { "--ln": 0 }, { "--ln": 1, duration: 1.2, ease: "power3.inOut" }, 1.2)
+      tl.from(q(".pj-sh-bar > :not(.pj-sh-prog)"), { y: -28, opacity: 0, stagger: 0.08, duration: 0.5 }, 0.3)
+        .from(q(".pj-sh-cv .pj-c"), { yPercent: 115, rotationX: -80, opacity: 0, stagger: 0.015, duration: 0.7, transformOrigin: "50% 100%" }, 0.2)
+        .from(q(".pj-sh-cv-fade"), { y: 34, opacity: 0, stagger: 0.07, duration: 0.6 }, 0.35)
+        .from(q(".pj-cvf"), { y: 22, opacity: 0, stagger: 0.08, duration: 0.55 }, 0.7)
+        .fromTo(Q(".pj-sh-cv-facts"), { "--ln": 0 }, { "--ln": 1, duration: 1, ease: "power3.inOut" }, 0.6)
         .add(() => gsap.set(q(".pj-sh-cv .pj-m"), { overflow: "visible" }));
 
       /* progress through the sheet */
@@ -365,7 +312,7 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
 
       /* cover: the photo drifts slower than the page, the copy lifts and fades as you leave it */
       const cv = Q(".pj-sh-cv");
-      gsap.to(Q(".pj-sh-cv-img img"), { yPercent: 7, ease: "none", scrollTrigger: par(cv, 0.6, "top top") });
+      gsap.to(Q(".pj-sh-cv-img img"), { yPercent: 4, ease: "none", scrollTrigger: par(cv, 0.6, "top top") });
       gsap.to(Q(".pj-sh-cv-copy"), { y: -120 * k, opacity: 0.05, ease: "none", scrollTrigger: par(cv, 0.6, "top top", "bottom 25%") });
       { const kc = Q(".pj-sh-cv .pj-cnt"); if (kc) count(kc, kc, "top 98%"); }
 
@@ -538,7 +485,7 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
       <div className="pj-sh-scroll">
         {/* ---- cover */}
         <header className="pj-sh-cv">
-          <div className="pj-sh-cv-img" aria-hidden="true"><img src={p.cover.src} alt="" /></div>
+          <div className="pj-sh-cv-img" aria-hidden="true"><img src={p.cover.src} alt="" ref={(el) => { if (el && el.complete && el.naturalWidth) setCvRatio(el); }} onLoad={(e) => setCvRatio(e.currentTarget)} /></div>
           <i className="pj-sh-cv-shade" aria-hidden="true" />
           <i className="pj-sh-cv-grid" aria-hidden="true" />
           <div className="pj-sh-cv-copy">
@@ -779,7 +726,7 @@ export function ProjectDetailView({ projectId }) {
 
   useEffect(() => {
     const reduce = reducedNow();
-    document.body.classList.add("pj-3d");
+    document.body.classList.add("pj-3d", "pj-detail-page");
     document.body.classList.toggle("pj-reduce", reduce);
     let lenis;
     let tick;
@@ -797,7 +744,7 @@ export function ProjectDetailView({ projectId }) {
     return () => {
       clearTimeout(t);
       window.removeEventListener("load", onLoad);
-      document.body.classList.remove("pj-3d", "pj-reduce");
+      document.body.classList.remove("pj-3d", "pj-reduce", "pj-detail-page");
       if (lenis) {
         gsap.ticker.remove(tick);
         lenis.destroy();
@@ -1421,7 +1368,7 @@ export default function ProjectsSections() {
                   </div>
                   <div className="pj-tc-body">
                     <div className="pj-tc-top">
-                      <ClientLogo src={t.logo} name={t.client} />
+                      <ClientLogo src={t.logo} name={t.client} bg={t.logoBg} />
                       <div className="pj-tc-who">
                         <strong>{t.by || t.client}</strong>
                         <span className="pj-tc-pr">{t.project}</span>

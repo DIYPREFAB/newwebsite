@@ -13,6 +13,8 @@ import { IconArrow, IconSearch, IconClose } from "../components/blogthread/icons
 import { formatDay } from "../components/blogthread/utils";
 import "../components/blogthread/blogthread.css";
 
+const PAGE_SIZE = 10;
+
 const TITLE = "Blog & News | Prefab and Steel Construction Insights | DIY PreFab";
 const DESC =
   "Original guides and sourced industry briefings from DIY PreFab for consultants and PEB project teams: material evidence, roof drainage, steel market context and industrial development.";
@@ -38,12 +40,29 @@ const Truss = () => {
   );
 };
 
+/* 1 … 4 5 6 … 12 style page list */
+const pageItems = (cur, total) => {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const keep = new Set([1, total, cur - 1, cur, cur + 1]);
+  if (cur <= 3) [2, 3, 4].forEach((n) => keep.add(n));
+  if (cur >= total - 2) [total - 3, total - 2, total - 1].forEach((n) => keep.add(n));
+  const nums = [...keep].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+  const out = [];
+  nums.forEach((n, i) => {
+    if (i > 0 && n - nums[i - 1] > 1) out.push(n - nums[i - 1] === 2 ? n - 1 : "gap" + n);
+    out.push(n);
+  });
+  return out;
+};
+
 const FeedPage = () => {
   useBlogBody();
   const [params, setParams] = useSearchParams();
   const kind = params.get("type") === "guide" || params.get("type") === "briefing" ? params.get("type") : "all";
   const [query, setQuery] = useState(params.get("q") || "");
   const feedRef = useRef(null);
+  const prevQuery = useRef(params.get("q") || "");
+  const keepPage = useRef(false);
   const all = useMemo(() => getPosts(), []);
 
   const posts = useMemo(() => {
@@ -51,10 +70,27 @@ const FeedPage = () => {
     return all.filter((p) => (kind === "all" || p.kind === kind) && (!q || [p.title, p.dek, p.tags.join(" "), p.sourceLine].join(" ").toLowerCase().includes(q)));
   }, [all, kind, query]);
 
+  // Pagination: PAGE_SIZE posts per page, current page lives in the URL (?page=2) so back/forward and shared links work
+  const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+  const page = Math.min(Math.max(parseInt(params.get("page"), 10) || 1, 1), totalPages);
+  const pageStart = (page - 1) * PAGE_SIZE;
+  const visible = posts.slice(pageStart, pageStart + PAGE_SIZE);
+
+  const goPage = (n) => {
+    if (n < 1 || n > totalPages || n === page) return;
+    const next = new URLSearchParams(params);
+    if (n === 1) next.delete("page");
+    else next.set("page", String(n));
+    setParams(next);
+    const top = feedRef.current ? feedRef.current.getBoundingClientRect().top + window.scrollY - 150 : 0;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
   const setKind = (k) => {
     const next = new URLSearchParams(params);
     if (k === "all") next.delete("type");
     else next.set("type", k);
+    next.delete("page");
     setParams(next, { replace: true });
   };
 
@@ -62,6 +98,11 @@ const FeedPage = () => {
     const next = new URLSearchParams(params);
     if (query.trim()) next.set("q", query.trim());
     else next.delete("q");
+    if (prevQuery.current !== query) {
+      if (!keepPage.current) next.delete("page");
+      keepPage.current = false;
+      prevQuery.current = query;
+    }
     if (next.toString() !== params.toString()) setParams(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
@@ -87,12 +128,20 @@ const FeedPage = () => {
     return true;
   };
 
-  // If the post is hidden by the current tab/search, clear the filters first, then scroll to it
+  // If the post is hidden by the current tab/search/page, clear the filters, open the page it lives on, then scroll to it
   const jump = (slug) => {
     if (flash(slug)) return;
+    const idx = all.findIndex((p) => p.slug === slug);
+    const target = idx < 0 ? 1 : Math.floor(idx / PAGE_SIZE) + 1;
+    if (query !== "") keepPage.current = true;
     setQuery("");
-    setKind("all");
-    setTimeout(() => flash(slug), 350);
+    const next = new URLSearchParams(params);
+    next.delete("type");
+    next.delete("q");
+    if (target > 1) next.set("page", String(target));
+    else next.delete("page");
+    setParams(next, { replace: true });
+    setTimeout(() => flash(slug), 450);
   };
 
   // Rendered twice: in the controls row on small screens, and at the top of the sticky sidebar on desktop (CSS shows one)
@@ -154,7 +203,7 @@ const FeedPage = () => {
         <section className="bt-feed" ref={feedRef} aria-label="Posts">
           <span className="bt-rail" aria-hidden="true"><motion.span className="bt-rail-fill" style={{ scaleY: fill }} /></span>
           <AnimatePresence initial>
-            {posts.map((p, i) => <PostCard key={p.id} post={p} index={i} />)}
+            {visible.map((p, i) => <PostCard key={p.id} post={p} index={i} />)}
           </AnimatePresence>
           {posts.length === 0 && (
             <motion.div className="bt-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -163,7 +212,35 @@ const FeedPage = () => {
               <button type="button" className="bt-btn bt-btn--solid" onClick={() => { setQuery(""); setKind("all"); }}>Show all posts</button>
             </motion.div>
           )}
-          {posts.length > 0 && <p className="bt-end">You are up to date. New posts appear at the top of the thread.</p>}
+          {totalPages > 1 && (
+            <nav className="bt-pager" aria-label="Pagination">
+              <p className="bt-pager-info">Showing {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, posts.length)} of {posts.length} posts</p>
+              <ul className="bt-pager-list">
+                <li>
+                  <button type="button" className="bt-pg bt-pg--nav" onClick={() => goPage(page - 1)} disabled={page === 1} aria-label="Previous page">
+                    <span aria-hidden="true">&lsaquo;</span> Previous
+                  </button>
+                </li>
+                {pageItems(page, totalPages).map((n) =>
+                  typeof n === "number" ? (
+                    <li key={n}>
+                      <button type="button" className={`bt-pg${n === page ? " is-on" : ""}`} onClick={() => goPage(n)} aria-label={`Page ${n}`} aria-current={n === page ? "page" : undefined}>
+                        {n}
+                      </button>
+                    </li>
+                  ) : (
+                    <li key={n} className="bt-pg-gap" aria-hidden="true">&hellip;</li>
+                  )
+                )}
+                <li>
+                  <button type="button" className="bt-pg bt-pg--nav" onClick={() => goPage(page + 1)} disabled={page === totalPages} aria-label="Next page">
+                    Next <span aria-hidden="true">&rsaquo;</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
+          {posts.length > 0 && page === totalPages && <p className="bt-end">You are up to date. New posts appear at the top of the thread.</p>}
         </section>
 
         <aside className="bt-side" aria-label="Sidebar">
