@@ -200,18 +200,22 @@ body.has-hn:not(.home-3d) { padding-top:96px !important; }
 /* ---------- Cursor ---------- */
 .sh-cspark { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:99997; }
 .sh-ret, .sh-clab, .sh-cdot { position:fixed; left:0; top:0; pointer-events:none; z-index:99999; will-change:transform; }
-.sh-ret { width:60px; height:60px; margin:-30px 0 0 -30px; transition:filter .3s; filter:drop-shadow(0 0 3px rgba(0,21,36,.55)); }
+.sh-ret { width:60px; height:60px; margin:-30px 0 0 -30px; } /* no CSS filter here: a filter on a rotating, moving layer is re-rasterised every frame and made the cursor lag */
 .sh-ret svg { width:100%; height:100%; overflow:visible; }
 .sh-ret circle { fill:none; }
 .sh-ret .r1 { stroke:rgba(0,21,36,.65); stroke-width:1.2; }
 .sh-ret .r2 { stroke:#2fd4c0; stroke-width:2.2; stroke-dasharray:10 9; }
 .sh-ret .r3 { stroke:#2fd4c0; stroke-width:2; stroke-linecap:round; }
-.sh-ret.press { filter:drop-shadow(0 0 8px #2fd4c0); }
+.sh-ret .r2, .sh-ret .r3 { transition:stroke-width .2s, stroke .2s; }
+.sh-ret.press .r2 { stroke:#fff; stroke-width:3.4; }
+.sh-ret.press .r3 { stroke:#fff; stroke-width:3; }
 .sh-cdot { width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:#2fd4c0; border:1.5px solid #001524; z-index:100000; }
 .sh-clab { width:92px; height:92px; margin:-46px 0 0 -46px; border-radius:50%; background:radial-gradient(circle at 30% 25%, #a8dadc, #2fd4c0); color:#001524; display:flex; align-items:center; justify-content:center; font:800 12px Lato,Arial,sans-serif; letter-spacing:.14em; text-transform:uppercase; opacity:0; z-index:99998; box-shadow:0 0 30px rgba(47,212,192,.55); }
 .sh-clab.on { opacity:1; }
 .sh-clab.sm { width:50px; height:50px; margin:-25px 0 0 -25px; font-size:9px; letter-spacing:.1em; box-shadow:0 0 14px rgba(47,212,192,.45); }
 body.sh-cursor, body.sh-cursor * { cursor:none !important; }
+/* Cal.com popup / iframes: the custom cursor steps aside so only the one normal system cursor is visible */
+body.sh-native .sh-ret, body.sh-native .sh-clab, body.sh-native .sh-cdot, body.sh-native .sh-cspark { visibility:hidden !important; }
 @media (pointer:coarse) { .sh-ret, .sh-clab, .sh-cdot { display:none; } }
 
 /* ---------- Floating steel parts (replaces the confetti dots) ---------- */

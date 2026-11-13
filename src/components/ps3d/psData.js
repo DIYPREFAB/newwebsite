@@ -141,10 +141,10 @@ export const PROCESS = {
   text:
     "From planning and material coordination to fabrication and installation, we focus on practical solutions and a coordinated construction process.",
   steps: [
-    { title: "Planning", text: "Engineering coordination shaped around your project requirements.", img: IMG("plan"), alt: "Engineers planning a project" },
-    { title: "Material coordination", text: "Materials and quantities lined up ahead of fabrication.", img: IMG("steel"), alt: "Steel members ready for coordination" },
-    { title: "Fabrication", text: "Steel components made from approved drawings and specifications.", img: IMG("sparks"), alt: "Steel being cut with sparks flying" },
-    { title: "Installation", text: "On-site erection, assembly and construction as defined by the project scope.", img: IMG("site"), alt: "Engineer on a construction site" },
+    { title: "Planning", text: "Engineering coordination shaped around your project requirements.", img: "/images/ps-how-planning.jpg", alt: "Engineer pointing at steel building blueprints beside a 3D model on a laptop" },
+    { title: "Material coordination", text: "Materials and quantities lined up ahead of fabrication.", img: "/images/ps-how-material.jpg", alt: "Two engineers checking stacked steel sections and drawings on site" },
+    { title: "Fabrication", text: "Steel components made from approved drawings and specifications.", img: "/images/ps-how-fabrication.jpg", alt: "Welder fabricating a steel girder in the plant" },
+    { title: "Installation", text: "On-site erection, assembly and construction as defined by the project scope.", img: "/images/ps-how-installation.jpg", alt: "Crane lifting a steel beam into place while crews erect the frame" },
   ],
 };
 

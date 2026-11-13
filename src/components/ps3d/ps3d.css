@@ -691,3 +691,8 @@ body.ps-reduce .ps-con-floor { animation: none; }
 /* text equivalent of the scorecard: invisible, but read by screen readers (the animated panel is aria-hidden) */
 .ps-lab-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
 .lb-a-okdot { fill: #3ddc97; }
+
+/* ---- How we build: smaller image block, framed 4:3 to match the photos */
+@media (min-width: 1001px) and (min-height: 521px) {
+  .ps-proc-art { height: auto; aspect-ratio: 4 / 3; width: min(100%, calc(min(52svh, 460px) * 1.3333)); justify-self: center; }
+}

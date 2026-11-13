@@ -8,9 +8,7 @@ import { bookCall } from "./booking";
 import "./home3d.css";
 import "./homenav-menu.css";
 
-const SIGNUP = "https://dashboard.diyprefab.com/auth/signup";
 const KEY_BENEFITS = "/key-benefits-of-prefab-construction";
-const LOGIN = "https://dashboard.diyprefab.com/auth/signin";
 const LINKEDIN = "https://www.linkedin.com/company/diyprefab";
 
 // One compact nav, fixed on every page (never hides). Hamburger only appears on small screens.
@@ -180,10 +178,6 @@ export default function HomeNav({ onCta }) {
         </nav>
         <aside className="hnm-aside" style={{ "--i": items.length }}>
           <a className="hnm-cta" href={contactLink} onClick={talk} tabIndex={tab}>Let&apos;s talk<i><FaArrowRight /></i></a>
-          <div className="hnm-auth">
-            <a href={LOGIN} target="_blank" rel="noopener noreferrer" tabIndex={tab}>Login</a>
-            <a href={SIGNUP} target="_blank" rel="noopener noreferrer" tabIndex={tab}>Sign up</a>
-          </div>
           <div className="hnm-foot">
             <div className="hnm-contact">
               <a href="mailto:info@diyprefab.com" tabIndex={tab}>info@diyprefab.com</a>
@@ -235,9 +229,7 @@ export default function HomeNav({ onCta }) {
           })}
         </nav>
         <div className="hn-right">
-          <a className="hn-login" href={LOGIN} target="_blank" rel="noopener noreferrer">Login</a>
           <a className="hn-talk" href={contactLink} onClick={talk}>Let&apos;s talk</a>
-          <a className="hn-signup" href={SIGNUP} target="_blank" rel="noopener noreferrer">Sign up</a>
           <button ref={burgerRef} className="hn-burger" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"}>
             <i /><i />
           </button>
