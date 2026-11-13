@@ -188,7 +188,7 @@ export const GREEN = {
     ],
   },
   photos: [
-    { src: AB("bay"), alt: "Recyclable steel sections in the plant bay" },
+    { src: "/images/green-recyclable-steel.jpg", alt: "Recyclable steel pipes and base plates stacked in the plant" },
     { src: AB("scaffold"), alt: "Steel structure frame" },
   ],
 };

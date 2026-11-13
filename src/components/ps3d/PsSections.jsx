@@ -773,7 +773,7 @@ export default function PsSections() {
       {/* ============ 4. Chapter 02 — Prefabricated Construction & Execution ============ */}
       <section className="ps-sec ps-ch ps-build" id="build" aria-label={BUILD.name}>
         <div className="ps-build-hero">
-          <div className="ps-build-bg" aria-hidden="true"><img src="/images/ps/steel.webp" alt="" loading="lazy" decoding="async" width="1600" height="900" /></div>
+          <div className="ps-build-bg" aria-hidden="true"><img src="/images/ps-build-hero.jpg" alt="" loading="lazy" decoding="async" width="1674" height="940" /></div>
           <i className="ps-scrim" aria-hidden="true" />
           <SteelBits n={10} />
           {SHOW_EPC && <div className="ps-ghost" aria-hidden="true">{BUILD.n}</div>}

@@ -119,10 +119,10 @@ export const BUILD = {
   items: [
     { title: "Pre-Engineered Buildings (PEB)", text: "Steel building solutions for industrial, commercial, and storage applications.", img: IMG("hall"), alt: "Pre-engineered steel building interior" },
     { title: "Industrial Sheds & Warehouses", text: "Functional structures designed around your space and operational needs.", img: IMG("warehouse"), alt: "Warehouse floor with packed steel components" },
-    { title: "Structural Steel Fabrication", text: "Fabrication of steel components based on approved drawings and specifications.", img: IMG("fabrication"), alt: "Steel sections being fabricated" },
-    { title: "Prefabricated Metal Structures", text: "Engineered building systems designed for coordinated fabrication and assembly.", img: IMG("steel"), alt: "Stacks of fabricated steel members" },
-    { title: "Modular Construction", text: "Prefabricated structural solutions for suitable modular building applications.", img: IMG("robotic"), alt: "Robotic assembly of structural components" },
-    { title: "Installation & Site Execution", text: "On-site erection, assembly, and construction as defined by the project scope.", img: IMG("site"), alt: "Engineer supervising on-site erection" },
+    { title: "Structural Steel Fabrication", text: "Fabrication of steel components based on approved drawings and specifications.", img: "/images/ps-fabrication.jpg", alt: "Steel girders being fabricated in the plant under a 10-ton crane" },
+    { title: "Prefabricated Metal Structures", text: "Engineered building systems designed for coordinated fabrication and assembly.", img: "/images/ps-prefab-structures.jpg", alt: "Prefabricated steel frame building with columns, rafters and wall cladding" },
+    { title: "Modular Construction", text: "Prefabricated structural solutions for suitable modular building applications.", img: "/images/ps-modular.jpg", alt: "Modular building units stacked on site with another unit lifted by crane" },
+    { title: "Installation & Site Execution", text: "On-site erection, assembly, and construction as defined by the project scope.", img: "/images/ps-installation.jpg", alt: "Crane lifting a steel beam into place during on-site erection" },
   ],
   idealLabel: "Ideal for",
   ideal:
@@ -130,7 +130,7 @@ export const BUILD = {
   cta: "Get a Construction Quote",
   float: [
     { src: IMG("robotic"), alt: "Robotic arm assembling steel components" },
-    { src: IMG("fabrication"), alt: "Fabricated steel beams in the workshop" },
+    { src: "/images/ps-fabrication.jpg", alt: "Fabricated steel girders on the workshop floor" },
   ],
 };
 
