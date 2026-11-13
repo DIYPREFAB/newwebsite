@@ -22,14 +22,14 @@ export const HERO = {
   ],
   text:
     "Welcome to DIY PreFab — India’s emerging name in pre-engineered building solutions and modular prefab construction. From remote villages to fast-paced industrial hubs, we make high-quality prefab structures accessible, fast, and affordable for all.",
-  // Eight real plant photos mounted on a rotating 3D ring (hero)
+  // Six plant photos mounted on a rotating 3D ring (hero) - files in /public/images
   ring: [
-    { src: AB("r-ptw-a"), alt: "Automatic fabrication machine on the plant floor", t: "Automation" },
-    { src: AB("r-drill"), alt: "Radial drilling machines with operators", t: "Drilling" },
-    { src: AB("a-primo"), alt: "Automatic beam processing line", t: "Machine line" },
-    { src: AB("r-blast"), alt: "Shot blasting machine, wide view", t: "Blasting" },
-    { src: AB("r-weld-logo"), alt: "Welding and fabrication station", t: "Welding" },
-    { src: AB("a-truss"), alt: "Steel truss structure", t: "Structure" },
+    { src: "/images/ring-plasma.jpg", alt: "CNC plasma cutting machine cutting a steel plate", t: "Plasma cutting" },
+    { src: "/images/ring-pressbrake.jpg", alt: "CNC press brake bending sheet metal", t: "Press brake" },
+    { src: "/images/ring-laser.jpg", alt: "Fiber laser cutting machine at work", t: "Laser cutting" },
+    { src: "/images/ring-modules.jpg", alt: "Steel module frames with insulation in the plant", t: "Modules" },
+    { src: "/images/ring-robot-welding.jpg", alt: "Robotic arm welding a steel frame", t: "Robotic welding" },
+    { src: "/images/ring-roller-line.jpg", alt: "Roller conveyor line for steel members", t: "Roller line" },
   ],
   chips: [
     { b: "7+", t: "Years of experience", e: "Cutting-edge expertise" },
@@ -199,12 +199,12 @@ export const PROCESS = {
   hl: ["Speed,", "strength,", "and", "simplicity."],
   text: "Our PEB manufacturing process ensures each structure is crafted to last and built to perform. Here’s how we bring your dream structure to life:",
   steps: [
-    { t: "Project Planning & Design", d: "Requirements gathered on site, usage and load factors, then modelled in 2D/3D CAD and optimized for weight, cost, and environmental efficiency.", img: AB("cad"), alt: "Automated precision machinery" },
-    { t: "Material Procurement", d: "High-grade steel from trusted partners, with quality-verified bolts, fasteners, cladding, panels and trims aligned to design specs.", img: AB("s-fit"), alt: "Steel members laid out ready for fabrication" },
-    { t: "Cutting & Fabrication", d: "Plasma + oxyfuel cutting, CNC shearing, submerged arc welding and threading — every piece made to exact BIM specifications.", img: AB("s-cut"), alt: "CNC cutting table at work" },
-    { t: "Surface Treatment", d: "8-wheel automatic shot blasting, hot-dip galvanizing (80–120 microns) and color-coated finishing for corrosion and weather resistance.", img: AB("s-blast"), alt: "Automatic shot blasting machine" },
-    { t: "Fit-up & Quality Check", d: "Mock assembly under EOT crane supervision, then dimensional, ultrasonic weld and surface-finish inspection — on-site rework near zero.", img: AB("fittup"), alt: "Fit-up section with structural members" },
-    { t: "Packing & Dispatch", d: "Protective wrapping, QR-coded packages linked to the BIM model, and just-in-time delivery coordinated with your site.", img: AB("s-pack"), alt: "Packed steel components ready for dispatch" },
+    { t: "Project Planning & Design", d: "Requirements gathered on site, usage and load factors, then modelled in 2D/3D CAD and optimized for weight, cost, and environmental efficiency.", img: "/images/proc-planning.jpg", alt: "Project planning and design: 2D/3D CAD models of a steel building on dual monitors" },
+    { t: "Material Procurement", d: "High-grade steel from trusted partners, with quality-verified bolts, fasteners, cladding, panels and trims aligned to design specs.", img: "/images/proc-procurement.jpg", alt: "Material procurement: structural steel, sections, cladding, panels, bolts and fasteners stored on pallets" },
+    { t: "Cutting & Fabrication", d: "Plasma + oxyfuel cutting, CNC shearing, submerged arc welding and threading — every piece made to exact BIM specifications.", img: "/images/proc-cutting.jpg", alt: "Cutting and fabrication: plasma, oxyfuel, CNC shearing, submerged arc welding and threading" },
+    { t: "Surface Treatment", d: "8-wheel automatic shot blasting, hot-dip galvanizing (80–120 microns) and color-coated finishing for corrosion and weather resistance.", img: "/images/proc-surface.jpg", alt: "Surface treatment: shot blasting, hot-dip galvanizing and color-coated finishing" },
+    { t: "Fit-up & Quality Check", d: "Mock assembly under EOT crane supervision, then dimensional, ultrasonic weld and surface-finish inspection — on-site rework near zero.", img: "/images/proc-fitup.jpg", alt: "Fit-up and quality check: mock assembly, dimensional, ultrasonic and surface inspection" },
+    { t: "Packing & Dispatch", d: "Protective wrapping, QR-coded packages linked to the BIM model, and just-in-time delivery coordinated with your site.", img: "/images/proc-dispatch.jpg", alt: "Packing and dispatch: wrapped, QR-coded steel packages and a loaded truck" },
   ],
 };
 
