@@ -21,7 +21,7 @@ const ProjectCaseStudies = () => {
           <title>Projects & Case Studies | DIY PreFab</title>
           <meta
             name="description"
-            content="Featured pre-engineered building and steel projects by DIY PreFab: Wonder Cement, Banswara Syntex and Assure Buildcon, with case studies, a project gallery and client confirmations."
+            content="Featured pre-engineered building and steel projects by DIY PreFab: Wonder Cement, Banswara Syntex, Assure Buildcon, Tyre Technocrats and RSWM, with case studies, a project gallery and client confirmations."
           />
         </Helmet>
       )}

@@ -69,10 +69,11 @@ const placeRing = (cards, T) => {
 // Client logo on a white tile; if the file is missing, a monogram keeps the layout intact.
 function ClientLogo({ src, name, bg }) {
   const [bad, setBad] = useState(!src);
-  const mono = name.split(/\s+/).filter((w) => !/^(limited|private|pvt|ltd)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  const [wide, setWide] = useState(false); // wide wordmark logos get a wider tile so they stay readable
+  const mono = name.replace(/\([^)]*\)/g, " ").split(/\s+/).filter((w) => w && !/^(limited|private|pvt|ltd)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
   return (
-    <span className="pj-tc-logo" style={bg ? { background: bg } : undefined}>
-      {bad ? <b aria-hidden="true">{mono}</b> : <img src={src} alt={`${name} logo`} loading="lazy" decoding="async" draggable="false" onError={() => setBad(true)} />}
+    <span className={`pj-tc-logo${wide ? " is-wide" : ""}`} style={bg ? { background: bg } : undefined}>
+      {bad ? <b aria-hidden="true">{mono}</b> : <img src={src} alt={`${name} logo`} loading="lazy" decoding="async" draggable="false" onError={() => setBad(true)} onLoad={(e) => setWide(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight > 1.4)} />}
     </span>
   );
 }
@@ -128,7 +129,7 @@ function Split({ text, hl, className, tag = "span" }) {
 // Card cover: the client's logo fills the whole cover on its own background (monogram if the file is missing).
 function CardLogo({ p }) {
   const [bad, setBad] = useState(!p.logo);
-  const mono = p.client.split(/\s+/).filter((w) => !/^(limited|private|pvt|ltd\.?)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  const mono = p.client.replace(/\([^)]*\)/g, " ").split(/\s+/).filter((w) => w && !/^(limited|private|pvt|ltd\.?)$/i.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
   const bg = p.logoBg || "#ffffff";
   const dark = bg.toLowerCase() !== "#ffffff";
   return (
@@ -555,6 +556,39 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
               </div>
             )}
 
+            {p.specMode === "share" && (
+              <div className="pj-sp-plan">
+                <div className="pj-bp pj-bp--share">
+                  <i className="pj-bp-c a" aria-hidden="true" /><i className="pj-bp-c b" aria-hidden="true" /><i className="pj-bp-c c" aria-hidden="true" /><i className="pj-bp-c d" aria-hidden="true" />
+                  <span className="pj-bp-tag">Roof replacement</span>
+                  <span className="pj-bp-tag pj-bp-tag--r">Share of {totalSpec ? totalSpec[1] : "total area"}</span>
+                  <i className="pj-bp-scan" aria-hidden="true" />
+                  {p.logo && <img className="pj-bp-logo" src={p.logo} alt={`${p.client} logo`} loading="lazy" decoding="async" draggable="false" />}
+                  <ul className="pj-bars" aria-label="Roof sheet area of each mill, as a share of the total">
+                    {p.buildings.map((b) => {
+                      const a = parseFloat(b.area.replace(/,/g, ""));
+                      return (
+                        <li className="pj-bar" key={b.name}>
+                          <span className="pj-bar-n">{b.name}</span>
+                          <em>{b.area}</em>
+                          <span className="pj-bar-t"><i className="pj-bar-f" style={{ width: `${(a / totalNum) * 100}%` }} /></span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                <div className="pj-figs">
+                  {figs.map((f, i) => (
+                    <div className="pj-fig" key={f.label}>
+                      <span className="pj-fig-i" aria-hidden="true">{pad2(i + 1)}</span>
+                      <span className="pj-fig-l">{f.label}</span>
+                      <FigN raw={f.value} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {p.specMode === "bars" && (
               <div className="pj-sp-bars">
                 {totalSpec && (
@@ -603,7 +637,13 @@ function Sheet({ index, onClose, onSwitch, onTalk, lenisRef }) {
                         <span className="pj-sc-ic" aria-hidden="true"><Ic /></span>
                         <span className="pj-sc-n" aria-hidden="true">{pad2(i + 1)}</span>
                       </div>
-                      <span className="pj-sc-t">{s}</span>
+                      {(() => {
+                        // long items written as "Heading (details): description" are split so the heading and the text line up in every card
+                        const m = s.match(/^([^:]{4,70}):\s+(.+)$/);
+                        return m
+                          ? <span className="pj-sc-t pj-sc-t--split"><strong>{m[1]}</strong><span>{m[2]}</span></span>
+                          : <span className="pj-sc-t">{s}</span>;
+                      })()}
                     </div>
                   </li>
                 );

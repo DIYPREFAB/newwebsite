@@ -40,7 +40,7 @@ const EXPLICIT = {
   },
   [ROUTE_PATHS.PROJECT_CASE_STUDIES]: {
     title: "Projects & Case Studies | DIY PreFab",
-    description: "Featured pre-engineered building and steel projects delivered by DIY PreFab: Wonder Cement, Banswara Syntex and Assure Buildcon, with case studies, a project gallery and client confirmations.",
+    description: "Featured pre-engineered building and steel projects delivered by DIY PreFab: Wonder Cement, Banswara Syntex, Assure Buildcon, Tyre Technocrats and RSWM, with case studies, a project gallery and client confirmations.",
   },
   [ROUTE_PATHS.BLOG_NEWS]: {
     title: "Blog & News | Prefab and Steel Construction Insights | DIY PreFab",

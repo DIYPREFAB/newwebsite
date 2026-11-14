@@ -10,6 +10,7 @@ const AB = (n) => `/images/ab/${n}.webp`;
 const ZM = (n) => `/images/zambia/${n}.webp`; // Zambia site photos
 const BS = (n) => `/images/banswara/${n}.webp`; // Banswara Syntex site photos
 const AS = (n) => `/images/assure/${n}.webp`; // Assure Buildcon site photos
+const RS = (n) => `/images/rswm/${n}.webp`; // RSWM Limited (Lodha) photos
 
 export const NAV_SECTIONS = [
   { id: "projects", n: "01", label: "Featured projects" },
@@ -28,7 +29,7 @@ export const HERO = {
     "From prefabricated steel structures to large-scale industrial PEB facilities, our project experience reflects a commitment to engineering, quality and reliable execution.",
   sub: "Explore our work across industrial buildings, structural steel fabrication, supply and installation.",
   chips: [
-    { b: "04", t: "Featured projects", e: "Rajasthan, Gujarat & Zambia" },
+    { b: "05", t: "Featured projects", e: "Rajasthan, Gujarat & Zambia" },
     { b: "11,456+", t: "Sq. m documented", e: "Across our featured buildings" },
   ],
 };
@@ -212,6 +213,54 @@ export const PROJECTS = [
     ],
     meta: [["Client", "Tyre Technocrats (India) Pvt. Ltd."], ["Contract Date", "4 December 2025"]],
   },
+  {
+    id: "rswm",
+    logo: "/images/clients/rswm-limited.png",
+    logoBg: "#ffffff",
+    cover: { src: RS("plant-aerial"), alt: "Aerial view of the RSWM manufacturing plant with large industrial roofs and a tree-lined internal road" },
+    kpi: { big: "22,750", unit: "Sq. Mtr.", label: "Roof sheet replaced" },
+    specMode: "share",
+    buildings: [
+      { name: "Mill No. 1 & 2", area: "2,750 Sq. Mtr." },
+      { name: "Mill No. 4 & 5", area: "20,000 Sq. Mtr." },
+    ],
+    galleryWide: true, // same gallery treatment as the Zambia project page
+    galleryNote: "A look at RSWM’s sites: the new roofing from above, the Mordi steel erection site, roof sheet fixing and a steel-framed interior bay.",
+    gallery: [
+      { src: RS("new-roof-aerial"), alt: "Aerial view of a building with a new silver roof sheet and skylights beside older roofs", cap: "New roof sheeting from above" },
+      { src: RS("mordi-site-aerial"), alt: "Top-down view of steel erection at RSWM’s Mordi site, with a crane, roof sheeting and stacked steel", cap: "RSWM Mordi site, steel erection" },
+      { src: RS("steel-erection"), alt: "Workers fixing roof sheets on a steel frame above concrete columns", cap: "Roof sheet fixing in progress" },
+      { src: RS("interior-bays"), alt: "Interior of a long steel-framed bay with roof sheeting and skylights", cap: "Steel-framed interior bay" },
+    ],
+    n: "05",
+    client: "RSWM Limited (Lodha)",
+    title: "Roof Replacement, Civil & Structural Works",
+    location: "Banswara, Rajasthan",
+    badge: "Completed 31 March 2025",
+    area: "22,750 Sq. Mtr.",
+    overview:
+      "Roof replacement, associated civil works, GI weldmesh supply and installation, and structural consultancy at RSWM Limited’s manufacturing facility in Banswara, Rajasthan, delivered across five purchase orders between June and October 2024.",
+    scope: [
+      "Mill No. 1 & 2 (PO 32404346, 24 Oct 2024): replacement of existing AC roofing sheets, removal of old sheets and associated civil works over 2,750 Sq. Mtr.",
+      "Mill No. 4 & 5 (PO 32403608, 16 Sep 2024): turnkey roof sheet replacement over 20,000 Sq. Mtr., with bubble insulation over 15,000 Sq. Mtr., GI weldmesh fixing and associated civil works.",
+      "GI weldmesh supply (PO 32404356, 24 Oct 2024): 11,000 Sq. Mtr., about 4.785 MT, hot-dip galvanised, 75 × 75 mm mesh and 1.6 mm wire.",
+      "GI weldmesh installation (PO 32406276): installation of the weldmesh. Quantity and weight are not specified in the available PO documentation.",
+      "Structural audit and solar panel consultancy (PO 32401762, 25 Jun 2024): site survey, steel and concrete testing, stability analysis, additional load assessment for solar panels and engineering recommendations across about 15,000 Sq. Mtr.",
+      "Associated civil and waterproofing works.",
+    ],
+    outcome:
+      "The roof replacement, insulation, weldmesh, civil and structural consultancy scope at RSWM’s Banswara facility was completed on 31 March 2025.",
+    specs: [
+      ["Mill No. 1 & 2 roof sheet area", "2,750 Sq. Mtr."],
+      ["Mill No. 4 & 5 roof sheet area", "20,000 Sq. Mtr."],
+      ["Total roof sheet area", "22,750 Sq. Mtr."],
+      ["Bubble insulation area", "15,000 Sq. Mtr."],
+      ["GI weldmesh supplied", "11,000 Sq. Mtr."],
+      ["GI weldmesh weight (approx.)", "4.785 MT"],
+      ["Structural audit coverage (approx.)", "15,000 Sq. Mtr."],
+    ],
+    meta: [[ "Client", "RSWM Limited (Lodha)" ], [ "Purchase Order", "25 June – 24 October 2024" ]],
+  },
 ];
 
 export const CASES_HEAD = {
@@ -278,6 +327,20 @@ export const CASES = [
       { k: "Site supervision", d: "Engineering and technical supervision through installation and commissioning, about 2,72,047 kg of building in total." },
     ],
   },
+  {
+    n: "05",
+    client: "RSWM Limited (Lodha)",
+    title: "Replacing 22,750 Sq. Mtr. of roof in one programme",
+    place: "Banswara, Rajasthan",
+    metric: { big: "22,750", unit: "Sq. Mtr.", cap: "Roof sheet replaced across Mill No. 1, 2, 4 and 5" },
+    timeline: ["First PO · 25 Jun 2024", "Completed · 31 Mar 2025"],
+    stages: [
+      { k: "Brief", d: "Replace the existing roofing at RSWM’s Banswara mills, with insulation, weldmesh, civil works and a structural check for future solar panels." },
+      { k: "Engineering & fabrication", d: "A structural audit, site survey and steel and concrete testing across about 15,000 Sq. Mtr., with a load assessment for solar panels." },
+      { k: "Supply & installation", d: "AC sheet removal and new roof sheets on 22,750 Sq. Mtr., bubble insulation over 15,000 Sq. Mtr., and 11,000 Sq. Mtr. of hot-dip galvanised weldmesh supplied and installed." },
+      { k: "Outcome", d: "The full scope was completed on 31 March 2025." },
+    ],
+  },
 ];
 
 export const APPROACH = {
@@ -316,7 +379,7 @@ export const TESTIMONIALS = [
     doc: "Work Completion Certificate",
     date: "29 March 2026",
     logo: "/images/clients/wonder-cement.png",
-    // letter: "/docs/completion/wonder-cement-work-completion-certificate.pdf", // re-enable once the approved PDF is published in public/docs/completion/ (was a 404)
+    letter: "/docs/completion/wonder-cement-work-completion-certificate.pdf",
   },
   {
     client: "Tyre Technocrats (India) Pvt. Ltd.",
@@ -334,7 +397,6 @@ export const TESTIMONIALS = [
     client: "Banswara Syntex Limited",
     project: "Multi-Facility PEB Project",
     place: "Banswara, Rajasthan",
-    carousel: false, // not shown in the testimonial carousel; still feeds its project sheet
     confirm: "The facilities are officially in use, and the pending work list is confirmed as completed.",
     doc: "Work Completion Letter",
     date: "19 February 2025",
@@ -350,7 +412,19 @@ export const TESTIMONIALS = [
     date: "30 March 2026",
     logo: "/images/clients/assure-buildcon.svg",
     logoBg: "#16181b",
-    // letter: "/docs/completion/assure-buildcon-project-completion.pdf", // re-enable once the approved PDF is published in public/docs/completion/ (was a 404)
+    letter: "/docs/completion/assure-buildcon-project-completion.pdf",
+  },
+  {
+    client: "RSWM Limited (Lodha)",
+    project: "Roof Replacement, Civil & Structural Works",
+    place: "Banswara, Rajasthan",
+    confirm: "Roof replacement, insulation, GI weldmesh, civil works and structural consultancy at the Banswara facility were completed.",
+    doc: "Project completion",
+    date: "31 March 2025",
+    logo: "/images/clients/rswm-limited.png",
+    logoBg: "#ffffff",
+    photo: { src: RS("new-roof-aerial"), alt: "Aerial view of a new silver roof at the RSWM facility" },
+    letter: "",
   },
 ];
 

@@ -198,6 +198,13 @@ body.pj-reduce .pj-cvf-go svg { animation: none; }
 .pj-bar-f { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1f9f90, #2fd4c0); }
 .pj-bar em { font-style: normal; font-size: .95rem; font-weight: 700; font-variant-numeric: tabular-nums; color: #1d3557; white-space: nowrap; }
 
+/* share mode: client logo + each mill's share of the total roof area, next to the key-figure grid */
+.pj-bp--share { display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: clamp(20px, 3.5vh, 34px); width: 100%; box-sizing: border-box; }
+/* the logo's white background melts into the blueprint grid; the bars below line up with the panel edges like the plan does on the Zambia page */
+.pj-bp-logo { position: relative; z-index: 1; display: block; width: auto; max-width: min(72%, 340px); max-height: clamp(84px, 14vh, 128px); margin: 0 auto; object-fit: contain; mix-blend-mode: multiply; }
+.pj-bp--share .pj-bars { position: relative; z-index: 1; width: 100%; }
+.pj-bp--share .pj-bar { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; padding: 18px 0; }
+.pj-bp--share .pj-bar-t { grid-column: 1 / -1; }
 /* key / value mode */
 .pj-rows { display: grid; margin: 0; border-top: 1px solid var(--line); }
 .pj-row { display: grid; grid-template-columns: minmax(160px, .8fr) minmax(0, 2fr); gap: 8px 32px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); }
@@ -215,7 +222,7 @@ body.pj-reduce .pj-cvf-go svg { animation: none; }
 .pj-sc-list .pj-sc:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
 .pj-sc-list .pj-sc:last-child:nth-child(3n + 2) { grid-column: span 2; }
 .pj-sc { position: relative; list-style: none; }
-.pj-sc-in { --ln: 1; position: relative; display: grid; align-content: space-between; gap: 28px; height: 100%; min-height: clamp(170px, 22vh, 220px); padding: clamp(20px, 2vw, 28px); border-radius: 16px; border: 1px solid rgba(134, 207, 195, .16); background: linear-gradient(160deg, rgba(134, 207, 195, .07), rgba(134, 207, 195, .012) 65%); overflow: hidden; transition: border-color .5s; }
+.pj-sc-in { --ln: 1; position: relative; display: grid; align-content: start; gap: 22px; height: 100%; min-height: clamp(150px, 19vh, 190px); padding: clamp(20px, 2vw, 26px); border-radius: 16px; border: 1px solid rgba(134, 207, 195, .16); background: linear-gradient(160deg, rgba(134, 207, 195, .07), rgba(134, 207, 195, .012) 65%); overflow: hidden; transition: border-color .5s; }
 .pj-sc-in::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--mint), rgba(134, 207, 195, 0) 75%); transform: scaleX(var(--ln)); transform-origin: left; }
 .pj-sc-in::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(134, 207, 195, .09), transparent 70%); }
 .pj-sc-in:hover { border-color: rgba(134, 207, 195, .42); }
@@ -224,7 +231,10 @@ body.pj-reduce .pj-cvf-go svg { animation: none; }
 .pj-sc-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(134, 207, 195, .35); font-size: 16px; color: var(--mint); transition: background .4s, color .4s; }
 .pj-sc-in:hover .pj-sc-ic { background: var(--mint); color: #001524; }
 .pj-sc-n { font-size: 12px; font-weight: 800; letter-spacing: .16em; color: #7fa3ad; font-variant-numeric: tabular-nums; }
-.pj-sc-t { position: relative; z-index: 1; font-size: clamp(1.05rem, 1.45vw, 1.25rem); font-weight: 600; line-height: 1.4; letter-spacing: -.005em; color: #fff; }
+.pj-sc-t { position: relative; z-index: 1; font-size: clamp(.92rem, 1.05vw, 1rem); font-weight: 500; line-height: 1.6; letter-spacing: 0; color: rgba(255, 255, 255, .9); }
+.pj-sc-t--split { display: grid; gap: 8px; }
+.pj-sc-t--split strong { font-size: clamp(.98rem, 1.15vw, 1.08rem); font-weight: 700; line-height: 1.4; color: #fff; }
+.pj-sc-t--split span { font-size: clamp(.86rem, .98vw, .94rem); font-weight: 400; line-height: 1.6; color: rgba(255, 255, 255, .72); }
 @media (max-width: 1000px) {
   .pj-sc-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pj-sc-list .pj-sc:last-child:nth-child(n) { grid-column: auto; }
@@ -413,6 +423,9 @@ body.pj-reduce .pj-gf-in, body.pj-reduce .pj-gf-in img, body.pj-reduce .pj-gf-ca
 .pj-tc-top { display: flex; align-items: center; gap: 16px; }
 .pj-tc-logo { flex: none; display: grid; place-items: center; width: 60px; height: 60px; padding: 8px; border-radius: 14px; background: #fff; box-shadow: 0 10px 22px -10px rgba(0, 0, 0, .6); overflow: hidden; }
 .pj-tc-logo img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.pj-tc-logo.is-wide { width: 196px; height: 84px; padding: 10px 14px; border-radius: 16px; }
+.pj-tc-logo.is-wide { position: relative; display: block; }
+.pj-tc-logo.is-wide img { position: absolute; inset: 12px 16px; width: calc(100% - 32px); height: calc(100% - 24px); max-width: none; max-height: none; object-fit: contain; object-position: center; }
 .pj-tc-logo b { font-size: 1.2rem; font-weight: 900; letter-spacing: -.02em; color: #0f2d47; }
 .pj-tc-who { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
 .pj-tc-who strong { font-size: 1.22rem; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: #fff; }
@@ -446,6 +459,8 @@ a.pj-tc-doc:hover .pj-tc-go { transform: translate(2px, -2px); }
   .pj-tc-l { left: 16px; top: 14px; font-size: 9px; }
   .pj-tc-body { padding: 20px 20px 22px; }
   .pj-tc-logo { width: 50px; height: 50px; padding: 6px; border-radius: 12px; }
+  .pj-tc-logo.is-wide { width: 150px; height: 66px; padding: 8px 10px; }
+  .pj-tc-logo.is-wide img { inset: 8px 10px; width: calc(100% - 20px); height: calc(100% - 16px); }
   .pj-tc-who strong { font-size: 1.08rem; }
   .pj-tc-pr { font-size: 13px; }
   .pj-tc blockquote { margin-top: 18px; padding-top: 16px; font-size: 1.08rem; }
