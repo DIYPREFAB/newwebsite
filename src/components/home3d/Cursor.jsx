@@ -33,6 +33,7 @@ export default function Cursor() {
       if (n === native) return;
       native = n;
       document.body.classList.toggle("sh-native", n);
+      [c, ret.current, lab.current, dot.current].forEach((el) => { if (el) el.style.visibility = n ? "hidden" : ""; });
       if (fine) document.body.classList.toggle("sh-cursor", !n);
       if (n) {
         hot = false; label = ""; small = false;
@@ -42,22 +43,24 @@ export default function Cursor() {
       } else { snap = true; wake(); } // jump straight to the real pointer position instead of sweeping across the screen
     };
     // While Cal's popup is open the whole screen shows the normal system cursor; the designer cursor returns on close.
-    // "Open" = a <cal-modal-box> that is really visible. Self-healing: the popup covers the whole viewport, so if a mouse
-    // event ever reaches our page from OUTSIDE the popup, that box is not covering anything any more and is ignored
-    // until its state changes. This way the designer cursor can never get stuck hidden after the popup is closed.
-    const stale = new WeakMap();
+    // Cal's own embed code drives this: <cal-modal-box state="loading|loaded|reopening|closed|failed|prerendering"> and it
+    // shows/hides the box with host.style.visibility, so "open" = a box that is not closed/prerendering and is visible.
     const isOpen = (b) => {
       const st = b.getAttribute("state");
-      if (st === "closed" || st === "failed" || st === "prerendering") return false;
-      if (stale.has(b) && stale.get(b) === st) return false;
-      const cs = getComputedStyle(b);
-      if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0") return false;
-      return b.getClientRects().length > 0;
+      if (st === "closed" || st === "prerendering") return false;
+      return getComputedStyle(b).visibility !== "hidden";
     };
-    const checkModal = () => { modalOpen = [...document.querySelectorAll("cal-modal-box")].some(isOpen); applyNative(); };
+    const watched = new WeakSet();
+    const checkModal = () => {
+      const boxes = [...document.querySelectorAll("cal-modal-box")];
+      boxes.forEach((b) => { if (!watched.has(b)) { watched.add(b); boxObs.observe(b, { attributes: true, attributeFilter: ["state", "style"] }); } });
+      modalOpen = boxes.some(isOpen);
+      applyNative();
+    };
+    const boxObs = new MutationObserver(checkModal); // reacts the instant Cal opens/closes a box
     const bodyObs = new MutationObserver(checkModal); // the popup is appended straight to <body>
     bodyObs.observe(document.body, { childList: true });
-    const poll = setInterval(checkModal, 250); // also catches the popup hiding itself without a DOM change
+    const poll = setInterval(checkModal, 250); // safety net
     checkModal();
     const burst = (bx, by, n, sp) => {
       if (native) return;
@@ -67,23 +70,14 @@ export default function Cursor() {
         sparks.push({ x: bx, y: by, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, l: 1, d: 0.016 + Math.random() * 0.02, c: COL[(Math.random() * COL.length) | 0], s: 1 + Math.random() * 1.8 });
       }
     };
-    const outside = (e) => {
-      if (!modalOpen) return;
-      const path = e.composedPath?.() || [];
-      if (path.some((n) => n.tagName === "CAL-MODAL-BOX")) return;
-      document.querySelectorAll("cal-modal-box").forEach((b) => stale.set(b, b.getAttribute("state")));
-      checkModal();
-    };
     const move = (e) => {
       mx = e.clientX; my = e.clientY;
-      outside(e);
       if (native) return;
       if (snap) { snap = false; x = mx; y = my; trail.length = 0; }
       dot.current.style.transform = `translate3d(${mx}px,${my}px,0)`; // the dot follows the pointer instantly, no waiting for the next frame
       if (mag && magC) mag.style.transform = `translate(${(mx - magC.x) * 0.22}px,${(my - magC.y) * 0.3}px)`;
     };
     const over = (e) => {
-      outside(e);
       overFrame = e.target?.tagName === "IFRAME";
       applyNative();
       if (native) return;
@@ -157,7 +151,7 @@ export default function Cursor() {
 
     return () => {
       cancelAnimationFrame(raf);
-      clearInterval(poll); bodyObs.disconnect();
+      clearInterval(poll); bodyObs.disconnect(); boxObs.disconnect();
       document.body.classList.remove("sh-cursor", "sh-native");
       removeEventListener("resize", size);
       removeEventListener("mousemove", move); removeEventListener("mouseover", over);

@@ -316,7 +316,7 @@ export const TESTIMONIALS = [
     doc: "Work Completion Certificate",
     date: "29 March 2026",
     logo: "/images/clients/wonder-cement.png",
-    letter: "/docs/completion/wonder-cement-work-completion-certificate.pdf",
+    // letter: "/docs/completion/wonder-cement-work-completion-certificate.pdf", // re-enable once the approved PDF is published in public/docs/completion/ (was a 404)
   },
   {
     client: "Tyre Technocrats (India) Pvt. Ltd.",
@@ -350,7 +350,7 @@ export const TESTIMONIALS = [
     date: "30 March 2026",
     logo: "/images/clients/assure-buildcon.svg",
     logoBg: "#16181b",
-    letter: "/docs/completion/assure-buildcon-project-completion.pdf",
+    // letter: "/docs/completion/assure-buildcon-project-completion.pdf", // re-enable once the approved PDF is published in public/docs/completion/ (was a 404)
   },
 ];
 

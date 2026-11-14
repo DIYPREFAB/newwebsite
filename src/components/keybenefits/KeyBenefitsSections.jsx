@@ -594,12 +594,13 @@ export default function KeyBenefitsSections() {
             ))}
           </h1>
           <p className="kb-hero-p">
-            Design your own PEB or modular structure with our AI-powered 3D Smart Building Planner, where intelligent
-            modelling settles layouts, spans and material use before fabrication. Our engineers then build and deliver it
-            faster, at a fixed and transparent cost, from first sketch to final bolt.
+            Our AI-powered 3D Smart Building Planner settles layouts, spans and material use before fabrication. The
+            planner is not available for self-service yet: book a design consultation and our engineers will walk you
+            through it and scope your PEB or modular structure with you. We then build and deliver it faster, at a fixed
+            and transparent cost, from first sketch to final bolt.
           </p>
           <div className="kb-hero-cta">
-            <button className="kb-btn" onClick={talk}>Start your design<i><FaArrowRight /></i></button>
+            <button className="kb-btn" onClick={talk} aria-label="Book a design consultation (opens a 45-minute meeting calendar)">Book a design consultation<i><FaArrowRight /></i></button>
             <button className="kb-btn kb-btn--ghost" onClick={explore}>Explore the benefits</button>
           </div>
           <div className="kb-hero-stats">
