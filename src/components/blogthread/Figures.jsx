@@ -173,6 +173,87 @@ export const OperatingCycleSheet = () => {
   );
 };
 
+/* ---- Navsari to Vapi post ---------------------------------------------------------------------------- */
+
+/* One approved, understated site photo from the 2025 Assure Buildcon project goes here.
+   Leave as null to show a clearly labelled illustration instead. Only fill in `caption` after the location and year are verified.
+   Example:
+   { src: "/images/blog/navsari-assure-buildcon-2025.jpg",
+     alt: "Descriptive alt text for the site photo",
+     caption: "Kalvach, Gandevi, Navsari, 2025." } */
+const NAVSARI_PHOTO = {
+  src: "/images/assure/aerial-angle.webp",
+  alt: "Aerial view of the steel frame of a pre-engineered building under construction at Kalvach, Gandevi, with cleared ground and trees around the site.",
+  caption: "The Kalvach, Gandevi project in Navsari, 2025.",
+};
+
+export const NavsariSite = () => (
+  <figure className="bt-fig bt-fig--photo">
+    {NAVSARI_PHOTO ? (
+      <img src={NAVSARI_PHOTO.src} alt={NAVSARI_PHOTO.alt} loading="lazy" />
+    ) : (
+      <svg
+        className="bt-illus"
+        viewBox="0 0 400 260"
+        role="img"
+        aria-label="Illustration of a steel portal frame with two columns, sloping rafters and diagonal bracing, representing a pre-engineered building. Not a photograph of the project."
+      >
+        <rect width="400" height="260" fill="#e9f2ef" />
+        <path d="M20 215 H380" stroke="#5a7282" strokeWidth="2" />
+        <path d="M70 215 V105 L200 50 L330 105 V215" fill="none" stroke="#1d3557" strokeWidth="8" strokeLinejoin="round" />
+        <path d="M70 105 H330" stroke="#1d3557" strokeWidth="5" />
+        <path d="M70 215 L200 80 L330 215" fill="none" stroke="#0e9f8f" strokeWidth="3" strokeDasharray="7 6" />
+        <rect x="56" y="215" width="28" height="8" fill="#5a7282" />
+        <rect x="316" y="215" width="28" height="8" fill="#5a7282" />
+        <text x="200" y="246" textAnchor="middle" fontFamily="Lato, Arial, sans-serif" fontSize="13" fontWeight="700" fill="#5a7282">ILLUSTRATION</text>
+      </svg>
+    )}
+    <figcaption>
+      {NAVSARI_PHOTO ? NAVSARI_PHOTO.caption : "Illustration of a pre-engineered steel frame. Not a photograph of the project."}
+    </figcaption>
+  </figure>
+);
+
+export const ProjectFlow = () => (
+  <figure className="bt-fig">
+    <Flow
+      numbered
+      label="The five stages of a PEB project in order: drawing, engineering, procurement, fabrication and erection, each feeding the next."
+      steps={[
+        { title: "Drawing", text: "Approved drawings" },
+        { title: "Engineering", text: "Design and detailing" },
+        { title: "Procurement", text: "Orders and lead times" },
+        { title: "Fabrication", text: "Factory work and inspection" },
+        { title: "Erection", text: "Dispatch, erection, handover" },
+      ]}
+    />
+    <figcaption>How a PEB project flows from drawing to erection. A delay at any stage reaches site as a delay in erection, so each stage needs its own date and owner.</figcaption>
+  </figure>
+);
+
+/* The approved Vapi meeting photo, cropped to a wide 3:2 rectangle. It sits under "Over tea in Vapi".
+   Confirm permission before publishing identifiable photos and names, and do not imply an endorsement or partnership. */
+const VAPI_MEETING_PHOTO = {
+  src: "/images/blog/vapi-meeting-sarang-archibuild.webp",
+  alt: "Two men seated at a table in front of an exposed red-brick wall, one in a green shirt and one in a dark blazer, both looking at the camera.",
+  caption: "Morning tea in Vapi with Sarang ArchiBuild, 19 November 2026.",
+  width: 1000,
+  height: 667,
+};
+
+export const VapiMeeting = () => (
+  <figure className="bt-fig bt-fig--photo bt-fig--wide">
+    <img
+      src={VAPI_MEETING_PHOTO.src}
+      alt={VAPI_MEETING_PHOTO.alt}
+      width={VAPI_MEETING_PHOTO.width}
+      height={VAPI_MEETING_PHOTO.height}
+      loading="lazy"
+    />
+    <figcaption>{VAPI_MEETING_PHOTO.caption}</figcaption>
+  </figure>
+);
+
 export const FIGURES = {
   "evidence-flow": EvidenceFlow,
   "drainage-map": DrainageMap,
@@ -180,4 +261,7 @@ export const FIGURES = {
   "retrofit-register": RetrofitRegister,
   "forecast-table": ForecastTable,
   "operating-cycle-sheet": OperatingCycleSheet,
+  "navsari-site": NavsariSite,
+  "project-flow": ProjectFlow,
+  "vapi-meeting": VapiMeeting,
 };

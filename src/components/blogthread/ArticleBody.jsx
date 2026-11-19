@@ -64,6 +64,17 @@ const ArticleBody = ({ blocks }) => (
               </dl>
             </motion.aside>
           );
+        case "split": {
+          const Fig = FIGURES[b.figure];
+          return (
+            <div key={i} className="bt-split">
+              <div className="bt-split-copy">
+                {b.items.map((it, j) => <motion.p key={j} {...rise}><Inline text={it} /></motion.p>)}
+              </div>
+              {Fig ? <Fig /> : null}
+            </div>
+          );
+        }
         case "figure": {
           const Fig = FIGURES[b.id];
           return Fig ? <Fig key={i} /> : null;

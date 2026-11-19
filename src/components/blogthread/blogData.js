@@ -10,9 +10,126 @@ const STEEL_ROOFING = "/product-services/wall-roofing-solutions/steel-metal-roof
 export const KINDS = {
   guide: { key: "guide", label: "Guide", plural: "Guides" },
   briefing: { key: "briefing", label: "Industry briefing", plural: "Briefings" },
+  story: { key: "story", label: "Project story", plural: "Project stories" },
 };
 
 const posts = [
+  /* ------------------------------------------------------------------ 19 Nov: Navsari to Vapi project story ------------ */
+  {
+    id: "navsari-to-vapi",
+    slug: "from-navsari-to-vapi-clearer-path-to-your-next-factory-or-warehouse",
+    kind: "story",
+    title: "From Navsari to Vapi: Building a Clearer Path to Your Next Factory or Warehouse",
+    seoTitle: "From Navsari to Vapi: Planning Your Next PEB Factory or Warehouse",
+    seoDescription:
+      "How DIYPREFAB's Navsari PEB project and a Vapi conversation with Sarang ArchiBuild shape planning for factory sheds, warehouses and plant expansions.",
+    dek: "DIYPREFAB’s Navsari PEB project and a morning-tea conversation in Vapi point to the same lesson: a factory shed is delivered on time by planning the sequence, not just by supplying the steel.",
+    publishedAt: "2026-11-19T09:00:00+05:30",
+    sourceLine: "DIYPREFAB project record (Navsari, 2025 to 2026); Vapi meeting, 19 November 2026",
+    tags: ["Navsari", "Vapi", "PEB", "Erection sequencing", "Project planning"],
+    cover: "/images/assure/cover-aerial.webp",
+    ogImage: "/images/assure/cover-aerial.webp",
+    coverAlt:
+      "Wide aerial view of the large steel-framed industrial building at Kalvach, Gandevi, Navsari, set in open green land under a clear blue sky.",
+    blocks: [
+      { t: "h2", id: "rooted-in-navsari", text: "Rooted in Navsari" },
+      {
+        t: "split",
+        figure: "navsari-site",
+        items: [
+          "Our South Gujarat experience comes from real project work. In Navsari, DIYPREFAB supplied and installed a pre-engineered building (PEB) at Kalvach, Gandevi for Assure Buildcon Private Limited: about 411 tonnes of structural steel.[1]",
+          "The scope covered PEB components, design and detailing, transportation with loading and unloading at site, erection and installation, and erection supervision with quality-related activities. The purchase order was dated 17 April 2025 and the project was completed on 30 March 2026.[1] That experience shapes how we think about timelines in Vapi.",
+        ],
+      },
+      { t: "h2", id: "over-tea-in-vapi", text: "Over tea in Vapi" },
+      {
+        t: "p",
+        text: "Ask anyone who has built a factory or warehouse what worries them most, and the answer is rarely the steel. It is the calendar: will the building be ready when the business needs it?",
+      },
+      {
+        t: "p",
+        text: "That question sat at the heart of a conversation on 19 November 2026, when our Founder, Garvit Agrawal, met Dhiraj Patil, Architect at Sarang ArchiBuild, over morning tea in Vapi. We went in with no agenda beyond listening, comparing notes and exploring how our two teams might work together in the future.",
+      },
+      { t: "figure", id: "vapi-meeting" },
+      {
+        t: "p",
+        text: "The discussion kept returning to the practical details that decide whether a project finishes on time.[2]",
+      },
+      { t: "h2", id: "speed-and-planning", text: "Speed is the promise, planning is the proof" },
+      {
+        t: "p",
+        text: "PEB is popular for a good reason: supply is fast and erection is fast. But anyone who has committed to a PEB timeline knows the nagging doubt behind it. The speed is only real if everything around the steel keeps pace.[2]",
+      },
+      {
+        t: "p",
+        text: "We talked about what happens when a schedule has to change. Once a timeline is frozen it should ideally stay that way, yet amendments do happen. The difference between a healthy amendment and a messy one is clarity. When each delay is attributed to its cause and recorded properly, everyone knows what moved the date and why, and the conversation stays constructive.[2]",
+      },
+      { t: "figure", id: "project-flow" },
+      { t: "h2", id: "erection-sequence", text: "Erection starts before the first column goes up" },
+      {
+        t: "p",
+        text: "One point was also the simplest: dispatch should follow the erection sequence, not the other way around. If steel reaches site in the wrong order, even a sound schedule stalls while crews wait for the right pieces.[2]",
+      },
+      {
+        t: "p",
+        text: "The same logic applies to how steel is released in lots. The civil work, anchor bolting and casting, and steel erection all have to meet on the same grid lines, so the starting grid should be agreed upfront with the client, the consultant and the civil contractor. A good rule of thumb is to make the first lot about three grids, distributed up to the first bracing bay, so erection begins on stable ground.[2]",
+      },
+      { t: "h2", id: "first-supply", text: "Why the first supply matters most" },
+      {
+        t: "p",
+        text: "It is often the very first dispatch that sets the tone for a project. When that first lot does not match how the building will be erected, small mismatches appear early and have a way of growing. Get it right, and the rest of the project tends to follow.[2]",
+      },
+      {
+        t: "p",
+        text: "Section selection also came up. Keeping the range of section types tight, and considering galvanised options where they suit the design, can help balance strength against weight.[2]",
+      },
+      { t: "h2", id: "bringing-to-vapi", text: "What we are bringing to Vapi" },
+      {
+        t: "p",
+        text: "DIYPREFAB is now bringing industrial prefab and PEB services to Vapi, with a single starting point for factory sheds, warehouses and plant expansions. As agreed for each project, that means:",
+      },
+      {
+        t: "ul",
+        items: [
+          "Project scoping and budgetary estimates",
+          "PEB and prefab engineering coordination",
+          "Procurement and fabrication planning",
+          "Coordination through dispatch, erection and handover",
+        ],
+      },
+      {
+        t: "p",
+        text: "We always begin with the intended use, the site conditions and the drawings you already have. From there, we define the engineering and procurement scope before building a delivery plan.",
+      },
+      { t: "h2", id: "building-next", text: "What we are building next" },
+      {
+        t: "p",
+        text: "With DIY-VA, we are developing a Primavera P6-backed scheduling workflow that connects drawing approvals, supplier lead times, quality checks and site readiness to the erection plan. The goal is to spot delays early and compare recovery options before they affect handover. For now, that is the direction we are heading in rather than a proven result or a delivery promise.",
+      },
+      { t: "h2", id: "plan-your-project", text: "Planning a factory shed or warehouse in Vapi GIDC?" },
+      {
+        t: "p",
+        text: "Share your project location, approximate area, target date, and any available GA drawing or BOQ with DIYPREFAB for a scope review and budgetary estimate.",
+      },
+    ],
+    sources: [
+      {
+        n: 1,
+        title: "DIYPREFAB project record: PEB supply and installation, Kalvach, Gandevi, Navsari",
+        meta: "Company record. Purchase order dated 17 April 2025; completed 30 March 2026; approximately 411 tonnes. Client: Assure Buildcon Private Limited.",
+      },
+      {
+        n: 2,
+        title: "DIYPREFAB and Sarang ArchiBuild: Vapi discussion, 19 November 2026",
+        meta: "Short video transcript of the meeting. Points are paraphrased and are not statements attributed to any individual.",
+      },
+    ],
+    sourceNote:
+      "Navsari project facts come from DIYPREFAB’s own project record. The Primavera P6 workflow is an execution vision, not a proven result or a delivery guarantee. Nothing here implies an endorsement or partnership with Sarang ArchiBuild or Assure Buildcon Private Limited.",
+    cta: { label: "Discuss your project", to: "/contact-us" },
+    next: "peb-roof-drainage-coordination-checklist",
+  },
+
   /* ------------------------------------------------------------------ 28 Oct: PEB condensation operating cycle ------------ */
   {
     id: "peb-condensation-operating-cycle",

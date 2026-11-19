@@ -54,6 +54,7 @@ body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-ba
 .bt-kind { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; white-space: nowrap; }
 .bt-kind--guide { background: var(--tealbg); color: var(--teal-d); }
 .bt-kind--briefing { background: var(--amberbg); color: var(--amber-d); }
+.bt-kind--story { background: #e1e7f2; color: #2d3f66; }
 
 
 /* ---------- hero ---------- */
@@ -303,6 +304,19 @@ body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-ba
 .bt-404 { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; min-height: 60vh; padding-top: 190px; }
 .bt-404 h1 { margin: 0; font-family: var(--serif); font-size: clamp(32px, 4vw, 48px); color: var(--navy); }
 .bt-404 p { margin: 0; font-size: 18px; color: var(--body); }
+
+/* Navsari to Vapi: text beside a project figure */
+.bt-split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; align-items: center; margin: 0 0 20px; }
+.bt-split .bt-fig { margin: 0; }
+.bt-split-copy p:last-child { margin-bottom: 0; }
+.bt-fig--photo { padding: 10px; }
+.bt-fig--photo img, .bt-fig--photo .bt-illus { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+.bt-fig--photo figcaption { margin: 12px 6px 4px; }
+.bt-fig--wide img { aspect-ratio: 3 / 2; }
+.bt-cover img, .bt-art-cover img, .bt-more-card img { object-fit: cover; }
+@media (max-width: 760px) {
+  .bt-split { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
 
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) {

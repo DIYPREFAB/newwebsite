@@ -47,14 +47,14 @@ const ArticlePage = ({ post }) => {
       description: post.seoDescription,
       datePublished: post.publishedAt,
       dateModified: post.publishedAt,
-      image: absoluteUrl(`/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`),
+      image: absoluteUrl(post.ogImage || `/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`),
       author: { "@type": "Organization", name: "DIYPREFAB Editorial" },
       publisher: { "@type": "Organization", name: "DIY PreFab", url: absoluteUrl("/") },
       mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
     }),
     [post]
   );
-  const og = absoluteUrl(`/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`);
+  const og = absoluteUrl(post.ogImage || `/images/blog/og/${post.cover.split("/").pop().replace(".svg", ".png")}`);
 
   return (
     <div className="bt-root bt-page bt-article-page">

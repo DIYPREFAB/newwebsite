@@ -58,7 +58,7 @@ const pageItems = (cur, total) => {
 const FeedPage = () => {
   useBlogBody();
   const [params, setParams] = useSearchParams();
-  const kind = params.get("type") === "guide" || params.get("type") === "briefing" ? params.get("type") : "all";
+  const kind = ["guide", "briefing", "story"].includes(params.get("type")) ? params.get("type") : "all";
   const [query, setQuery] = useState(params.get("q") || "");
   const feedRef = useRef(null);
   const prevQuery = useRef(params.get("q") || "");
@@ -110,8 +110,8 @@ const FeedPage = () => {
   const { scrollYProgress } = useScroll({ target: feedRef, offset: ["start 62%", "end 62%"] });
   const fill = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.001 });
 
-  const counts = { all: all.length, guide: all.filter((p) => p.kind === "guide").length, briefing: all.filter((p) => p.kind === "briefing").length };
-  const tabs = [["all", "All posts"], ["guide", KINDS.guide.plural], ["briefing", KINDS.briefing.plural]];
+  const counts = { all: all.length, guide: all.filter((p) => p.kind === "guide").length, briefing: all.filter((p) => p.kind === "briefing").length, story: all.filter((p) => p.kind === "story").length };
+  const tabs = [["all", "All posts"], ["guide", KINDS.guide.plural], ["briefing", KINDS.briefing.plural], ["story", KINDS.story.plural]];
 
   // Latest 3 posts overall (not affected by the tab filter or search)
   const topThreads = useMemo(
