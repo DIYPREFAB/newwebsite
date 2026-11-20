@@ -313,6 +313,7 @@ body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-ba
 .bt-fig--photo img, .bt-fig--photo .bt-illus { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
 .bt-fig--photo figcaption { margin: 12px 6px 4px; }
 .bt-fig--wide img { aspect-ratio: 3 / 2; }
+.bt-fig--doc img { aspect-ratio: auto; object-fit: contain; background: #fff; }
 .bt-cover img, .bt-art-cover img, .bt-more-card img { object-fit: cover; }
 @media (max-width: 760px) {
   .bt-split { grid-template-columns: minmax(0, 1fr); gap: 20px; }

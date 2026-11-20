@@ -254,6 +254,34 @@ export const VapiMeeting = () => (
   </figure>
 );
 
+/* Olive Realspace signing day (19 November 2026). Cropped to a wide 3:2 rectangle. */
+export const OliveSigning = () => (
+  <figure className="bt-fig bt-fig--photo bt-fig--wide">
+    <img
+      src="/images/blog/olive-realspace-signing-vapi.webp"
+      alt="Three men seated around a white table in a wood-panelled office, with phones, a laptop bag and a model car on the table, looking at the camera."
+      width={1000}
+      height={667}
+      loading="lazy"
+    />
+    <figcaption>Signing day in Vapi with Olive Realspace, 19 November 2026.</figcaption>
+  </figure>
+);
+
+/* Signature block of LOI No. 1. Confirm both parties are comfortable with signatures being published. */
+export const SignedLoi = () => (
+  <figure className="bt-fig bt-fig--photo bt-fig--doc">
+    <img
+      src="/images/blog/olive-realspace-loi-signed.webp"
+      alt="Signature block of the Letter of Intent, signed for Olive Realspace by Mr. Jimit Doshi, Partner, and by Mr. Garvit Agrawal, with the date 19 November 2026 and the time 5:30 PM handwritten beside each signature."
+      width={938}
+      height={268}
+      loading="lazy"
+    />
+    <figcaption>The signed Letter of Intent, 19 November 2026.</figcaption>
+  </figure>
+);
+
 export const FIGURES = {
   "evidence-flow": EvidenceFlow,
   "drainage-map": DrainageMap,
@@ -264,4 +292,6 @@ export const FIGURES = {
   "navsari-site": NavsariSite,
   "project-flow": ProjectFlow,
   "vapi-meeting": VapiMeeting,
+  "olive-signing": OliveSigning,
+  "signed-loi": SignedLoi,
 };
