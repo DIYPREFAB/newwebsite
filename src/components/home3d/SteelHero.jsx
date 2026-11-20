@@ -12,7 +12,7 @@ const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const seg = (p, a, b) => { const t = clamp((p - a) / (b - a)); return t * t * (3 - 2 * t); };
 
 const CHAPTERS = [
-  { id: "engineer", n: "01", label: "Engineer", range: [-1, 0.34], kicker: "Digital engineering",
+  { id: "engineer", n: "01", label: "Engineer", range: [0.12, 0.34], kicker: "Digital engineering",
     title: "Every member is modelled before it exists.",
     body: "Our 3D Smart Building Planner lets you visualise, customise and refine the structure in real time — layouts, spans and material use settled on screen, not on site." },
   { id: "fabricate", n: "02", label: "Fabricate", range: [0.36, 0.57], kicker: "Fabrication",
@@ -46,6 +46,8 @@ export default function SteelHero({ progress, onCta }) {
   const bar = useRef(null);
   const badge = useRef(null);
   const hint = useRef(null);
+  const sign = useRef(null);
+  const hud = useRef(null);
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -69,8 +71,15 @@ export default function SteelHero({ progress, onCta }) {
       rail.current.forEach((el, i) => el && el.classList.toggle("is-active", i === active));
       if (phase.current) phase.current.textContent = CHAPTERS[active].kicker;
       if (bar.current) bar.current.style.transform = `scaleY(${p.toFixed(4)})`;
-      if (badge.current) badge.current.style.opacity = (1 - seg(p, 0.01, 0.06)).toFixed(3);
-      if (hint.current) hint.current.style.opacity = (1 - seg(p, 0, 0.03)).toFixed(3);
+      if (badge.current) badge.current.style.opacity = (1 - seg(p, 0.07, 0.12)).toFixed(3);
+      if (hint.current) hint.current.style.opacity = (1 - seg(p, 0.06, 0.11)).toFixed(3);
+      if (hud.current) hud.current.style.opacity = seg(p, 0.1, 0.15).toFixed(3);
+      if (sign.current) {
+        const k = seg(p, 0.07, 0.12);
+        sign.current.style.opacity = (1 - k).toFixed(3);
+        sign.current.style.transform = `translate3d(0,${(k * -18).toFixed(1)}px,0)`;
+        sign.current.style.visibility = k > 0.99 ? "hidden" : "visible";
+      }
     };
     tick();
     return () => cancelAnimationFrame(raf);
@@ -79,7 +88,7 @@ export default function SteelHero({ progress, onCta }) {
   const jumpTo = (i) => {
     const st = ScrollTrigger.getAll().find((s) => s.trigger === sec.current);
     if (!st) return;
-    const target = i === 0 ? 0 : CHAPTERS[i].range[0] + 0.045;
+    const target = CHAPTERS[i].range[0] + 0.045;
     window.scrollTo({ top: st.start + (st.end - st.start) * target, behavior: "smooth" });
   };
 
@@ -106,7 +115,18 @@ export default function SteelHero({ progress, onCta }) {
         ))}
       </div>
 
-      <div className="sx-hud" aria-hidden="true">
+      <aside className="sx-sign" ref={sign} aria-label="Signature question">
+        <span className="sx-sign-bar" aria-hidden="true" />
+        <p className="sx-sign-q">
+          <span className="sx-sign-ln">Agar aap aaj factory</span>{" "}
+          <span className="sx-sign-ln">bana rahe hain, toh aapka</span>{" "}
+          <span className="sx-sign-ln"><em>pehla decision</em> kya hoga?</span>
+        </p>
+        <span className="sx-sign-rule" aria-hidden="true" />
+        <p className="sx-sign-a"><strong>DIYPREFAB</strong></p>
+      </aside>
+
+      <div className="sx-hud" ref={hud} aria-hidden="true">
         <span className="sx-hud-label">Phase</span>
         <span className="sx-hud-value" ref={phase}>Digital engineering</span>
         {stats && <span className="sx-hud-meta">{stats.members} members · {stats.bays} bays · {stats.span} m span</span>}
