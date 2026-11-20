@@ -10,6 +10,7 @@ import "./homenav-menu.css";
 
 const KEY_BENEFITS = "/key-benefits-of-prefab-construction";
 const LINKEDIN = "https://www.linkedin.com/company/diyprefab";
+const LIVE_URL = "https://www.diyprefab.com/blog/from-navsari-to-vapi-clearer-path-to-your-next-factory-or-warehouse";
 
 // One compact nav, fixed on every page (never hides). Hamburger only appears on small screens.
 export default function HomeNav({ onCta }) {
@@ -177,6 +178,7 @@ export default function HomeNav({ onCta }) {
           </ul>
         </nav>
         <aside className="hnm-aside" style={{ "--i": items.length }}>
+          <a className="hnm-live" href={LIVE_URL} target="_blank" rel="noopener noreferrer" onClick={close} tabIndex={tab}><i aria-hidden="true" />Live</a>
           <a className="hnm-cta" href={contactLink} onClick={talk} tabIndex={tab}>Let&apos;s talk<i><FaArrowRight /></i></a>
           <div className="hnm-foot">
             <div className="hnm-contact">
@@ -229,6 +231,7 @@ export default function HomeNav({ onCta }) {
           })}
         </nav>
         <div className="hn-right">
+          <a className="hn-live" href={LIVE_URL} target="_blank" rel="noopener noreferrer"><i aria-hidden="true" />Live</a>
           <a className="hn-talk" href={contactLink} onClick={talk}>Let&apos;s talk</a>
           <button ref={burgerRef} className="hn-burger" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"}>
             <i /><i />

@@ -31,8 +31,6 @@ const posts = [
     ogImage: "/images/assure/cover-aerial.webp",
     coverAlt:
       "Wide aerial view of the large steel-framed industrial building at Kalvach, Gandevi, Navsari, set in open green land under a clear blue sky.",
-    signatureQuestion:
-      "If you had to build a factory yourself today, what would you decide first, and what would you base that decision on?",
     blocks: [
       { t: "h2", id: "rooted-in-navsari", text: "Rooted in Navsari" },
       {
@@ -86,7 +84,6 @@ const posts = [
         t: "p",
         text: "The estimated building weight is 360 metric tonnes, based on the drawings provided. A tolerance of ±5% (342 MT to 378 MT) applies until the General Arrangement drawings are finalised, and any variation beyond that range requires mutual written agreement before we proceed.[3]",
       },
-      { t: "figure", id: "signed-loi" },
       {
         t: "p",
         text: "A token amount was received from Olive Realspace upon signing the LOI. We thank Mr. Jimit Doshi and the Olive Realspace team for their trust. The next steps are to finalise the scope, the commercial terms and the detailed purchase order.",

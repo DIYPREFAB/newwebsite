@@ -87,7 +87,7 @@ export default function Cursor() {
       small = t?.dataset?.cursorSize === "sm"; // data-cursor-size="sm" -> smaller labelled disc
       lab.current.classList.toggle("sm", small);
       if (l !== label) { label = l; lab.current.textContent = l; lab.current.classList.toggle("on", !!l); }
-      const m = e.target.closest?.("[data-mag],.sh-btn,.hn-talk,.sh-pill") || null;
+      const m = e.target.closest?.("[data-mag],.sh-btn,.hn-talk,.hn-live,.sh-pill") || null;
       if (m !== mag) {
         if (mag) mag.style.transform = "";
         mag = m;
