@@ -790,7 +790,12 @@
   .sx-sign { left: max(var(--pad), 112px); }
 }
 @media (max-width: 767px) {
-  .sx-sign { left: 20px; width: calc(100% - 64px); }
+  /* phones: sit the question + buttons at the bottom so the empty lower half is filled */
+  .sx-sign {
+    left: 20px; width: calc(100% - 64px);
+    justify-content: flex-end;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
   .sx-sign-bar { width: 44px; }
   .sx-sign-q { font-size: clamp(1.2rem, 5.6vw, 1.65rem); }
   .sx-sign-cta { flex-direction: column; align-items: stretch; width: min(320px, 100%); }

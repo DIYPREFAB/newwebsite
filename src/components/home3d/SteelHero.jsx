@@ -142,7 +142,7 @@ export default function SteelHero({ progress, onCta }) {
           </button>
         </div>
       </aside>
-      {story && <SignatureStory origin={story} onClose={() => setStory(null)} onTalk={talk} />}
+      {story && <SignatureStory origin={story} onClose={() => setStory(null)} onTalk={talk} onExplore={() => navigate(ROUTE_PATHS.PROJECT_CASE_STUDIES)} />}
 
       <div className="sx-hud" ref={hud} aria-hidden="true">
         <span className="sx-hud-label">Phase</span>

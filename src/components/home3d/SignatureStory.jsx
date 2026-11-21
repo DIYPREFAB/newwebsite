@@ -192,13 +192,38 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
     outTimer.current = setTimeout(() => setPrev(null), 1000);
   }, [burst]);
 
+  // Browser Back closes the popup instead of leaving the site: opening pushes one history entry, Back pops it.
+  const ownsEntry = useRef(false);
+  const onPop = useRef(null);
+
   const close = useCallback((after) => {
     if (closingRef.current) return;
     closingRef.current = true;
     setClosing(true);
-    // with a follow-up (Let's talk / Explore) the follow-up navigates away and closes the popup with the page; otherwise just close
-    setTimeout(() => { if (after) after(); else onClose(); }, 720);
+    setTimeout(() => {
+      const finish = () => { if (after) after(); else onClose(); };
+      if (!ownsEntry.current) { finish(); return; }
+      // closed with a button: drop our history entry first, then carry on (so the follow-up navigation isn't stacked on it)
+      ownsEntry.current = false;
+      window.removeEventListener("popstate", onPop.current);
+      let done = false;
+      const go = () => { if (done) return; done = true; window.removeEventListener("popstate", go); finish(); };
+      window.addEventListener("popstate", go);
+      window.history.back();
+      setTimeout(go, 400);
+    }, 720);
   }, [onClose]);
+
+  useEffect(() => {
+    window.history.pushState({ ...(window.history.state || {}), signatureStory: true }, "");
+    ownsEntry.current = true;
+    onPop.current = () => { ownsEntry.current = false; close(); }; // Back already popped the entry
+    window.addEventListener("popstate", onPop.current);
+    return () => {
+      window.removeEventListener("popstate", onPop.current);
+      if (ownsEntry.current) { ownsEntry.current = false; window.history.back(); }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const answer = useCallback((e) => {
     const r = e.currentTarget.getBoundingClientRect();
