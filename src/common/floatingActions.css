@@ -15,7 +15,7 @@
 .fab-btn:focus-visible, .fab-chat:focus-visible, .fab-toggle:focus-visible { outline: 2px solid #86cfc3; outline-offset: 3px; }
 
 /* chat launcher */
-.fab-chat { position: fixed; right: 20px; bottom: 20px; z-index: 9998; width: 42px; height: 42px; color: #86cfc3; background: rgba(0, 21, 36, .9); border: 1px solid rgba(134, 207, 195, .35); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 10px 28px rgba(0, 12, 22, .32); animation: fabIn .5s .1s cubic-bezier(.2, .7, .2, 1) both; }
+.fab-chat { position: fixed; right: 20px; bottom: 20px; z-index: 9998; width: 48px; height: 48px; color: #86cfc3; background: rgba(0, 21, 36, .9); border: 1px solid rgba(134, 207, 195, .35); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 10px 28px rgba(0, 12, 22, .32); animation: fabIn .5s .1s cubic-bezier(.2, .7, .2, 1) both; }
 .fab-chat:hover { color: #001524; background: #86cfc3; }
 .fab-chat.is-hidden { opacity: 0; pointer-events: none; transform: scale(.6); }
 .fab-dot { position: absolute; top: 1px; right: 1px; width: 9px; height: 9px; border-radius: 50%; background: #2fd4c0; box-shadow: 0 0 0 2px #001524; }
@@ -27,6 +27,10 @@
 .fab-btn:hover .fab-tip, .fab-btn:focus-visible .fab-tip, .fab-chat:hover .fab-tip, .fab-chat:focus-visible .fab-tip { opacity: 1; transform: translate(0, -50%); }
 @media (hover: none) { .fab-tip { display: none; } }
 
+/* arrival hint: the booking label shows by itself for 30 s, then fades (the .has-hint class is removed from the dock) */
+.fab-tip--hint { display: none !important; }
+.fab-dock.has-hint .fab-btn--book .fab-tip { display: block; opacity: 1; transform: translate(0, -50%); }
+
 @keyframes fabIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .fab-dock, .fab-chat { animation: none; } .fab-btn, .fab-chat, .fab-tip { transition: none; } }
 
@@ -34,9 +38,12 @@
 .fab-toggle { display: none; }
 @media (max-width: 768px) {
   .fab-dock { left: 12px; bottom: 14px; flex-direction: column-reverse; gap: 8px; }
+  /* on phones the hint hangs off the + toggle; the (hidden) actions list shows no tooltip of its own */
+  .fab-dock.has-hint .fab-btn--book .fab-tip { display: none; }
+  .fab-dock.has-hint .fab-tip--hint { display: block !important; left: calc(100% + 10px); opacity: 1; transform: translate(0, -50%); }
   .fab-toggle { display: grid; width: 38px; height: 38px; color: #86cfc3; background: rgba(0, 21, 36, .9); border: 1px solid rgba(134, 207, 195, .35); box-shadow: 0 6px 18px rgba(0, 12, 22, .35); }
   .fab-toggle i, .fab-toggle i::before { position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; border-radius: 2px; background: currentColor; transition: transform .3s; }
   .fab-toggle i::before { content: ""; left: 0; top: 0; margin: 0; transform: rotate(90deg); }
   .is-expanded .fab-toggle i { transform: rotate(45deg); }
-  .fab-chat { right: 12px; bottom: 62px; width: 38px; height: 38px; }
+  .fab-chat { right: 12px; bottom: 14px; width: 38px; height: 38px; }
 }

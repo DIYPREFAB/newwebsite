@@ -86,6 +86,12 @@ const WhatsAppButton = () => {
   const [compact, setCompact] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const chat = useChatBubble();
+  // On arrival, name the booking button for 30 s without needing a hover (the hover label is hidden on touch screens)
+  const [hint, setHint] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setHint(false), 30000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
@@ -106,6 +112,7 @@ const WhatsAppButton = () => {
   // if Cal is unavailable or blocked it falls back to the Contact Us page
   const handleMeetingClick = (e) => {
     setExpanded(false);
+    setHint(false);
     bookCall(() => navigate('/contact-us'), e);
   };
 
@@ -116,7 +123,7 @@ const WhatsAppButton = () => {
 
   return (
     <>
-      <div className={`fab-dock${compact ? ' is-compact' : ''}${expanded ? ' is-expanded' : ''}`}>
+      <div className={`fab-dock${hint && !expanded ? ' has-hint' : ''}${compact ? ' is-compact' : ''}${expanded ? ' is-expanded' : ''}`}>
         {compact && (
           <button
             type="button"
@@ -124,15 +131,16 @@ const WhatsAppButton = () => {
             aria-expanded={expanded}
             aria-controls="fab-actions"
             aria-label={expanded ? 'Close contact options' : 'Open contact options'}
-            onClick={() => setExpanded((v) => !v)}
+            onClick={() => { setHint(false); setExpanded((v) => !v); }}
           >
             <i aria-hidden="true" />
+            <span className="fab-tip fab-tip--hint" aria-hidden="true">Book a 45 min call</span>
           </button>
         )}
         <div className="fab-actions" id="fab-actions" hidden={compact && !expanded}>
           <button type="button" className="fab-btn fab-btn--book" aria-label={`Book a ${BOOKING_LABEL} with the DIY PreFab team`} onClick={handleMeetingClick}>
             {ICON_CALENDAR}
-            <span className="fab-tip" aria-hidden="true">Book a {BOOKING_LABEL}</span>
+            <span className="fab-tip" aria-hidden="true">Book a 45 min call</span>
           </button>
           <button type="button" className="fab-btn fab-btn--wa" aria-label="Chat with us on WhatsApp" onClick={handleWhatsAppClick}>
             {ICON_WHATSAPP}
