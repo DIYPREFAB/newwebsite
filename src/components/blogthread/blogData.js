@@ -14,6 +14,112 @@ export const KINDS = {
 };
 
 const posts = [
+  /* ------------------------------------------------------------------ 20 Nov: Olive Realspace and Silvassa expansion story ------------ */
+  {
+    id: "olive-realspace-silvassa",
+    slug: "from-vapi-to-silvassa-olive-realspace-6000-sqm-warehouse-expansion",
+    kind: "story",
+    title: "From Vapi to Silvassa: Planning a 6,000 m² warehouse expansion with Olive Realspace",
+    seoTitle: "From Vapi to Silvassa: 6,000 m² Warehouse Expansion with Olive Realspace",
+    seoDescription:
+      "DIYPREFAB signs a letter of intent with Olive Realspace for an approx. 6,000 m² warehouse expansion in Naroli, Silvassa, and checks the existing building first.",
+    dek: "A letter of intent signed over lunch in Vapi and a site visit in Naroli show why an expansion starts with the existing building: its drawings, inspection records and on-site checks.",
+    publishedAt: "2026-11-20T10:00:00+05:30",
+    sourceLine: "DIYPREFAB booking record, LOI No. 1 (19 November 2026) and site visit, Naroli, Silvassa",
+    tags: ["Silvassa", "Naroli", "Olive Realspace", "Letter of Intent", "Warehouse expansion", "PEB"],
+    cover: "/images/blog/from-vapi-to-silvassa.svg",
+    coverAlt:
+      "Illustration of a plan view showing an existing warehouse as a solid block beside a larger dashed outline marking the new expansion area. Not a photograph.",
+    blocks: [
+      { t: "h2", id: "booking-in-naroli", text: "A booking in Naroli, Silvassa" },
+      {
+        t: "p",
+        text: "Within six days of our Vapi rollout, DIYPREFAB confirmed the booking for an industrial warehouse expansion of approximately 6,000 m² in Naroli, Silvassa, for Olive Realspace. The letter of intent (LOI) and token payment are complete.[1]",
+      },
+      {
+        t: "p",
+        text: "One clarification on the number: the 6,000 m² refers to the new expansion, not the existing building.[1]",
+      },
+      { t: "h2", id: "over-lunch-in-vapi", text: "Over lunch in Vapi" },
+      {
+        t: "p",
+        text: "The agreement came together in Vapi. Over lunch, DIYPREFAB signed Letter of Intent No. 1 with Olive Realspace, represented by Mr. Jimit Doshi, for the design, supply and erection of a pre-engineered building.[2]",
+      },
+      { t: "figure", id: "olive-signing" },
+      {
+        t: "p",
+        text: "In the LOI, Olive Realspace expresses its intent to appoint DIYPREFAB for the design, engineering, fabrication, supply, transportation and erection of the building, subject to finalisation of the scope, commercial terms and a detailed purchase order.[2]",
+      },
+      {
+        t: "p",
+        text: "The scope, to the extent included in the mutually accepted quotation and technical specifications, comprises:",
+      },
+      {
+        t: "ul",
+        items: [
+          "Design and engineering, including structural calculations and approval drawings",
+          "Fabrication and supply of primary and secondary structural steel",
+          "Roofing and wall cladding, along with accessories",
+          "Transportation, erection and completion",
+        ],
+      },
+      {
+        t: "p",
+        text: "The estimated building weight is 360 metric tonnes, based on the drawings provided. A tolerance of ±5% (342 MT to 378 MT) applies until the General Arrangement drawings are finalised, and any variation beyond that range requires mutual written agreement before we proceed.[2]",
+      },
+      {
+        t: "p",
+        text: "A token amount was received from Olive Realspace upon signing the LOI. We thank Mr. Jimit Doshi and the Olive Realspace team for their trust. The next steps are to finalise the scope, the commercial terms and the detailed purchase order.",
+      },
+      { t: "h2", id: "existing-building-first", text: "The existing building comes first" },
+      {
+        t: "p",
+        text: "When an owner expands an existing facility, getting the right drawings, inspection records and technical support can be as important as planning the new floor area.",
+      },
+      {
+        t: "p",
+        text: "Our engineering and safety team visited the existing building, which was originally built by a Baroda-based prefab manufacturer. They reviewed:[3]",
+      },
+      {
+        t: "ul",
+        items: [
+          "Steel connections",
+          "Bolt tightening",
+          "How the erected structure compared with the drawings",
+        ],
+      },
+      {
+        t: "p",
+        text: "The visit helped identify the records and on-site checks needed before planning how the new structure would connect to the existing building.[3]",
+      },
+      {
+        t: "p",
+        text: "If you are planning an expansion, share the existing drawings, the proposed footprint and your operating constraints with us, so we can identify what needs to be verified on site.",
+      },
+    ],
+    sources: [
+      {
+        n: 1,
+        title: "DIYPREFAB booking record: warehouse expansion, Naroli, Silvassa",
+        meta: "Company record. Letter of intent and token payment complete. Area is approximate and refers to the new expansion only.",
+      },
+      {
+        n: 2,
+        title: "Letter of Intent for PEB Works, LOI No. 1: Olive Realspace to The Sunil & Company (DIY Prefab)",
+        meta: "Company record, dated 19 November 2026. Terms are subject to finalisation of the scope, commercial terms and a detailed purchase order.",
+      },
+      {
+        n: 3,
+        title: "DIYPREFAB engineering and safety team site visit: existing building, Naroli, Silvassa",
+        meta: "Company record of the visit. Items reviewed: steel connections, bolt tightening and conformity of the erected structure with the drawings.",
+      },
+    ],
+    sourceNote:
+      "Figures are approximate and come from DIYPREFAB’s own records. The 6,000 m² is the new expansion only. The Olive Realspace Letter of Intent is subject to finalisation of the scope, commercial terms and a detailed purchase order. The site-visit notes describe what our team reviewed and are not an assessment of any other manufacturer’s work.",
+    cta: { label: "Discuss your project", to: "/contact-us" },
+    next: "from-navsari-to-vapi-clearer-path-to-your-next-factory-or-warehouse",
+  },
+
   /* ------------------------------------------------------------------ 19 Nov: Navsari to Vapi project story ------------ */
   {
     id: "navsari-to-vapi",
@@ -22,11 +128,11 @@ const posts = [
     title: "From Navsari to Vapi: Building a Clearer Path to Your Next Factory or Warehouse",
     seoTitle: "From Navsari to Vapi: Planning Your Next PEB Factory or Warehouse",
     seoDescription:
-      "DIYPREFAB's Navsari PEB project, a Vapi conversation with Sarang ArchiBuild and a new Olive Realspace LOI: lessons for planning factory sheds and warehouses.",
-    dek: "From a completed PEB project in Navsari to a morning-tea conversation and a signed Letter of Intent in Vapi, one lesson holds: a factory shed is delivered on time by planning the sequence, not just by supplying the steel.",
+      "How DIYPREFAB's Navsari PEB project and a Vapi conversation with Sarang ArchiBuild shape planning for factory sheds, warehouses and plant expansions.",
+    dek: "DIYPREFAB’s Navsari PEB project and a morning-tea conversation in Vapi point to the same lesson: a factory shed is delivered on time by planning the sequence, not just by supplying the steel.",
     publishedAt: "2026-11-19T09:00:00+05:30",
-    sourceLine: "DIYPREFAB project records (Navsari, 2025 to 2026; Naroli, Silvassa); Vapi meetings and LOI No. 1, 19 November 2026",
-    tags: ["Navsari", "Vapi", "Silvassa", "PEB", "Olive Realspace", "Letter of Intent", "Erection sequencing"],
+    sourceLine: "DIYPREFAB project record (Navsari, 2025 to 2026); Vapi meeting, 19 November 2026",
+    tags: ["Navsari", "Vapi", "PEB", "Erection sequencing", "Project planning"],
     cover: "/images/assure/cover-aerial.webp",
     ogImage: "/images/assure/cover-aerial.webp",
     coverAlt:
@@ -44,83 +150,44 @@ const posts = [
       { t: "h2", id: "over-tea-in-vapi", text: "Over tea in Vapi" },
       {
         t: "p",
-        text: "On 19 November 2026, our Founder, Garvit Agrawal, met Dhiraj Patil, Architect at Sarang ArchiBuild, over morning tea. It was a listening-first conversation about how two teams who care about well-run industrial projects might work together, and it kept returning to what decides whether a project finishes on time.[2]",
+        text: "Ask anyone who has built a factory or warehouse what worries them most, and the answer is rarely the steel. It is the calendar: will the building be ready when the business needs it?",
+      },
+      {
+        t: "p",
+        text: "That question sat at the heart of a conversation on 19 November 2026, when our Founder, Garvit Agrawal, met Dhiraj Patil, Architect at Sarang ArchiBuild, over morning tea in Vapi. We went in with no agenda beyond listening, comparing notes and exploring how our two teams might work together in the future.",
       },
       { t: "figure", id: "vapi-meeting" },
-      { t: "p", text: "Three points stayed with us:" },
       {
-        t: "ul",
-        items: [
-          "PEB speed needs a plan behind it. Supply and erection are fast, but when a frozen timeline does have to change, each delay should be attributed to its cause and clearly recorded.[2]",
-          "Sequence comes first. Dispatch should follow the erection sequence, and the first lot, about three grids up to the first bracing bay, should be agreed with the client, the consultant and the civil contractor so erection begins on stable ground.[2]",
-          "The first supply sets the tone. A first dispatch that matches the erection plan stops small mismatches from growing, and a tighter range of section types, with galvanised options where suitable, balances strength against weight.[2]",
-        ],
+        t: "p",
+        text: "The discussion kept returning to the practical details that decide whether a project finishes on time.[2]",
+      },
+      { t: "h2", id: "speed-and-planning", text: "Speed is the promise, planning is the proof" },
+      {
+        t: "p",
+        text: "PEB is popular for a good reason: supply is fast and erection is fast. But anyone who has committed to a PEB timeline knows the nagging doubt behind it. The speed is only real if everything around the steel keeps pace.[2]",
+      },
+      {
+        t: "p",
+        text: "We talked about what happens when a schedule has to change. Once a timeline is frozen it should ideally stay that way, yet amendments do happen. The difference between a healthy amendment and a messy one is clarity. When each delay is attributed to its cause and recorded properly, everyone knows what moved the date and why, and the conversation stays constructive.[2]",
       },
       { t: "figure", id: "project-flow" },
-      { t: "h2", id: "over-lunch-in-vapi", text: "Over lunch in Vapi" },
+      { t: "h2", id: "erection-sequence", text: "Erection starts before the first column goes up" },
       {
         t: "p",
-        text: "The same day brought a milestone. Over lunch in Vapi, DIYPREFAB signed Letter of Intent No. 1 with Olive Realspace, represented by Mr. Jimit Doshi, for the design, supply and erection of a pre-engineered building.[3]",
-      },
-      { t: "figure", id: "olive-signing" },
-      {
-        t: "p",
-        text: "In the LOI, Olive Realspace expresses its intent to appoint DIYPREFAB for the design, engineering, fabrication, supply, transportation and erection of the building, subject to finalisation of the scope, commercial terms and a detailed purchase order.[3]",
+        text: "One point was also the simplest: dispatch should follow the erection sequence, not the other way around. If steel reaches site in the wrong order, even a sound schedule stalls while crews wait for the right pieces.[2]",
       },
       {
         t: "p",
-        text: "The scope, to the extent included in the mutually accepted quotation and technical specifications, comprises:",
+        text: "The same logic applies to how steel is released in lots. The civil work, anchor bolting and casting, and steel erection all have to meet on the same grid lines, so the starting grid should be agreed upfront with the client, the consultant and the civil contractor. A good rule of thumb is to make the first lot about three grids, distributed up to the first bracing bay, so erection begins on stable ground.[2]",
       },
+      { t: "h2", id: "first-supply", text: "Why the first supply matters most" },
       {
-        t: "ul",
-        items: [
-          "Design and engineering, including structural calculations and approval drawings",
-          "Fabrication and supply of primary and secondary structural steel",
-          "Roofing and wall cladding, along with accessories",
-          "Transportation, erection and completion",
-        ],
+        t: "p",
+        text: "It is often the very first dispatch that sets the tone for a project. When that first lot does not match how the building will be erected, small mismatches appear early and have a way of growing. Get it right, and the rest of the project tends to follow.[2]",
       },
       {
         t: "p",
-        text: "The estimated building weight is 360 metric tonnes, based on the drawings provided. A tolerance of ±5% (342 MT to 378 MT) applies until the General Arrangement drawings are finalised, and any variation beyond that range requires mutual written agreement before we proceed.[3]",
-      },
-      {
-        t: "p",
-        text: "A token amount was received from Olive Realspace upon signing the LOI. We thank Mr. Jimit Doshi and the Olive Realspace team for their trust. The next steps are to finalise the scope, the commercial terms and the detailed purchase order.",
-      },
-      { t: "h2", id: "vapi-to-silvassa", text: "From Vapi to Silvassa" },
-      {
-        t: "p",
-        text: "Within six days of our Vapi rollout, DIYPREFAB confirmed the booking for an industrial warehouse expansion of approximately 6,000 m² in Naroli, Silvassa. The letter of intent (LOI) and token payment are complete.[4]",
-      },
-      {
-        t: "p",
-        text: "One clarification on the number: the 6,000 m² refers to the new expansion, not the existing building.[4]",
-      },
-      { t: "h2", id: "existing-building-first", text: "The existing building comes first" },
-      {
-        t: "p",
-        text: "When an owner expands an existing facility, getting the right drawings, inspection records and technical support can be as important as planning the new floor area.",
-      },
-      {
-        t: "p",
-        text: "Our engineering and safety team visited the existing building, which was originally built by a Baroda-based prefab manufacturer. They reviewed:[5]",
-      },
-      {
-        t: "ul",
-        items: [
-          "Steel connections",
-          "Bolt tightening",
-          "How the erected structure compared with the drawings",
-        ],
-      },
-      {
-        t: "p",
-        text: "The visit helped identify the records and on-site checks needed before planning how the new structure would connect to the existing building.[5]",
-      },
-      {
-        t: "p",
-        text: "If you are planning an expansion, share the existing drawings, the proposed footprint and your operating constraints with us, so we can identify what needs to be verified on site.",
+        text: "Section selection also came up. Keeping the range of section types tight, and considering galvanised options where they suit the design, can help balance strength against weight.[2]",
       },
       { t: "h2", id: "bringing-to-vapi", text: "What we are bringing to Vapi" },
       {
@@ -162,24 +229,9 @@ const posts = [
         title: "DIYPREFAB and Sarang ArchiBuild: Vapi discussion, 19 November 2026",
         meta: "Short video transcript of the meeting. Points are paraphrased and are not statements attributed to any individual.",
       },
-      {
-        n: 3,
-        title: "Letter of Intent for PEB Works, LOI No. 1: Olive Realspace to The Sunil & Company (DIY Prefab)",
-        meta: "Company record, dated 19 November 2026. Terms are subject to finalisation of the scope, commercial terms and a detailed purchase order.",
-      },
-      {
-        n: 4,
-        title: "DIYPREFAB booking record: warehouse expansion, Naroli, Silvassa",
-        meta: "Company record. Letter of intent and token payment complete. Area is approximate and refers to the new expansion only.",
-      },
-      {
-        n: 5,
-        title: "DIYPREFAB engineering and safety team site visit: existing building, Naroli, Silvassa",
-        meta: "Company record of the visit. Items reviewed: steel connections, bolt tightening and conformity of the erected structure with the drawings.",
-      },
     ],
     sourceNote:
-      "Project facts come from DIYPREFAB’s own records. The Olive Realspace Letter of Intent is subject to finalisation of the scope, commercial terms and a detailed purchase order. The 6,000 m² Silvassa figure is approximate and refers to the new expansion only, and the site-visit notes describe what our team reviewed, not an assessment of any other manufacturer’s work. The Primavera P6 workflow is an execution vision, not a proven result or a delivery guarantee. Nothing here implies an endorsement or partnership with Sarang ArchiBuild or Assure Buildcon Private Limited.",
+      "Navsari project facts come from DIYPREFAB’s own project record. The Primavera P6 workflow is an execution vision, not a proven result or a delivery guarantee. Nothing here implies an endorsement or partnership with Sarang ArchiBuild or Assure Buildcon Private Limited.",
     cta: { label: "Discuss your project", to: "/contact-us" },
     next: "peb-roof-drainage-coordination-checklist",
   },

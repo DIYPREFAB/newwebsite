@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -8,6 +9,7 @@ import SteelBits from "../home3d/SteelBits";
 import Cursor from "../home3d/Cursor";
 import { bookCall, BOOKING_LABEL } from "../home3d/booking";
 import ContactForm from "./ContactForm";
+import { CONTACT_FORM_ID } from "../../utils/contactForm";
 import { mailAttrs } from "../../utils/mailLink";
 import { TITLE, HERO_HL, HERO_TEXT, CHANNELS, STEPS, RESPECT_REDUCED_MOTION } from "./contactData";
 import "../home3d/home3d.css";
@@ -43,6 +45,30 @@ export default function ContactSections() {
   };
   // Cal.com popup if available, otherwise take the visitor to the form on this page
   const book = (e) => bookCall(toForm, e);
+
+  // Arriving from a "Let's talk" button (/contact-us#contact-form): open the page at the form, not at the hero.
+  // Jump instantly, then once more after layout settles (ScrollTrigger refresh shifts positions), then focus the name field.
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash !== `#${CONTACT_FORM_ID}`) return undefined;
+    const jump = () => {
+      const el = root.current?.querySelector(".ct-form-sec");
+      if (!el) return;
+      if (lenisRef.current) lenisRef.current.scrollTo(el, { offset: 0, immediate: true, force: true });
+      else {
+        const root_ = document.documentElement;
+        const prev = root_.style.scrollBehavior;
+        root_.style.scrollBehavior = "auto";
+        el.scrollIntoView();
+        root_.style.scrollBehavior = prev;
+      }
+    };
+    let r2;
+    const r1 = requestAnimationFrame(() => { jump(); r2 = requestAnimationFrame(jump); });
+    const t1 = setTimeout(jump, 700);
+    const t2 = setTimeout(() => { jump(); document.getElementById("ct-name")?.focus({ preventScroll: true }); }, 1100);
+    return () => { cancelAnimationFrame(r1); if (r2) cancelAnimationFrame(r2); clearTimeout(t1); clearTimeout(t2); };
+  }, [hash]);
 
   useEffect(() => {
     const reduce = RESPECT_REDUCED_MOTION && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -292,7 +318,7 @@ export default function ContactSections() {
       </section>
 
       {/* ============ 3. Form (light) ============ */}
-      <section className="ct-sec ct-form-sec" aria-label="Send us a message">
+      <section className="ct-sec ct-form-sec" id={CONTACT_FORM_ID} aria-label="Send us a message">
         <div className="ct-hex" aria-hidden="true" />
         <div className="ct-rings" aria-hidden="true">
           <i className="sh-ring" style={{ width: "46vmax", height: "46vmax", left: "-16vmax", top: "-12vmax" }} />

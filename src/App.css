@@ -2748,6 +2748,18 @@ thead tr th {
   color: #fff !important;
 }
 
+/* FAQ: heavier questions and answers (Lato has no Medium file, so answers get a hairline stroke for body weight) */
+.accordion-button {
+  font-weight: 700;
+}
+.accordion-body,
+.accordion-body p,
+.faq-answer {
+  font-weight: 500;
+  color: #1b263b;
+  -webkit-text-stroke: 0.25px currentColor;
+}
+
 .blog-card {
   background: #fff;
   margin-bottom: 20px;

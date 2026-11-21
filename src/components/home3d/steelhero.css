@@ -650,9 +650,10 @@
 @media (max-width: 767px) { .sx-hud { top: 78px !important; } }
 
 
-/* ---------- Signature question + answer (intro screen, left-middle) ---------- */
+/* ---------- Signature question + the two options (intro screen, left-middle) ---------- */
 .sx-sign {
   position: absolute;
+  z-index: 5;
   left: var(--pad);
   top: 0;
   bottom: 0;
@@ -677,55 +678,111 @@
 }
 .sx-sign-q {
   margin: 0 !important;
-  font-size: clamp(1.5rem, min(3.2vw, 5.8vh), 3.5rem);
-  font-weight: 500;
-  line-height: 1.22;
+  font-size: clamp(1.5rem, min(3.1vw, 5.6vh), 3.4rem);
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 2px 30px rgba(0, 21, 36, 0.75);
   animation: sxSignIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.5s both;
 }
 .sx-sign-ln { display: block; }
-.sx-sign-q em {
-  font-style: normal;
-  font-weight: 700;
+/* mixed type: grotesk for the first two lines, an italic serif for the one that matters */
+.sx-sign-serif {
+  margin-top: 0.06em;
+  font-family: "Instrument Serif", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.34em;
+  line-height: 1.06;
+  letter-spacing: -0.012em;
+  color: #fff;
+  /* Instrument Serif only exists in one (thin) weight, so thicken it with a hairline stroke */
+  -webkit-text-stroke: 0.022em currentColor;
+}
+.sx-sign-serif em { font-style: italic; color: var(--teal-l); }
+
+.sx-sign-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(12px, 1.4vw, 18px);
+  margin-top: clamp(26px, 4.6vh, 46px);
+  pointer-events: auto;
+  animation: sxSignIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.05s both;
+}
+.sx-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 0 30px;
+  border-radius: 999px;
+  font: 600 clamp(0.92rem, 1.05vw, 1rem) / 1 "Space Grotesk", Lato, system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s, background 0.35s, border-color 0.35s, color 0.35s;
+}
+.sx-cta span, .sx-cta i { position: relative; z-index: 2; }
+.sx-cta:hover { transform: translateY(-3px) scale(1.02); }
+.sx-cta:active { transform: scale(0.97); }
+.sx-cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.sx-cta-main {
+  color: #00202b;
+  border: 0;
+  background: linear-gradient(135deg, #a6f3e8, #2fd4c0);
+  box-shadow: 0 0 0 1px rgba(111, 227, 212, 0.7), 0 18px 42px -12px rgba(47, 212, 192, 0.6);
+}
+.sx-cta-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(100deg, transparent 32%, rgba(255, 255, 255, 0.6) 50%, transparent 68%);
+  transform: translateX(-130%);
+  animation: sxCtaShine 3.6s ease-in-out 2.4s infinite;
+}
+.sx-cta-main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(47, 212, 192, 0.55);
+  animation: sxCtaHalo 2.6s ease-out 2.4s infinite;
+}
+.sx-cta-main:hover { box-shadow: 0 0 0 1px #fff, 0 24px 56px -12px rgba(47, 212, 192, 0.85); }
+.sx-cta-main i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #00202b;
   color: var(--teal-l);
-  background: linear-gradient(transparent 80%, rgba(111, 227, 212, 0.22) 80%);
-  padding: 0 0.06em;
-  margin: 0 -0.06em;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.sx-sign-rule {
-  display: block;
-  width: 100%;
-  height: 1px;
-  margin: clamp(18px, 3.2vh, 34px) 0 clamp(12px, 2vh, 22px);
-  background: linear-gradient(90deg, rgba(111, 227, 212, 0.75), rgba(111, 227, 212, 0));
-  transform-origin: left center;
-  animation: sxSignRule 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.95s both;
+.sx-cta-main:hover i { transform: translateX(5px); }
+.sx-cta-main i svg { width: 14px; height: 14px; }
+.sx-cta-ghost {
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
-.sx-sign-a { margin: 0 !important; }
-.sx-sign-a strong {
-  display: inline-block;
-  font-size: clamp(2.3rem, min(5.2vw, 9.4vh), 5.2rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.05;
-  background: linear-gradient(90deg, #fff 0%, var(--teal-l) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 24px rgba(47, 212, 192, 0.32));
-  animation: sxSignIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.15s both;
-}
+.sx-cta-ghost:hover { background: rgba(255, 255, 255, 0.16); border-color: var(--teal-l); }
+@keyframes sxCtaShine { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+@keyframes sxCtaHalo { 0% { box-shadow: 0 0 0 0 rgba(47, 212, 192, 0.5); } 70%, 100% { box-shadow: 0 0 0 16px rgba(47, 212, 192, 0); } }
+
 @keyframes sxSignIn {
   from { opacity: 0; transform: translate3d(0, 14px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @keyframes sxSignBar {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-@keyframes sxSignRule {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
@@ -736,8 +793,10 @@
   .sx-sign { left: 20px; width: calc(100% - 64px); }
   .sx-sign-bar { width: 44px; }
   .sx-sign-q { font-size: clamp(1.2rem, 5.6vw, 1.65rem); }
-  .sx-sign-a strong { font-size: clamp(1.9rem, 9vw, 2.6rem); }
+  .sx-sign-cta { flex-direction: column; align-items: stretch; width: min(320px, 100%); }
+  .sx-cta { width: 100%; }
+  .sx-cta-main { justify-content: space-between; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sx-sign-bar, .sx-sign-q, .sx-sign-rule, .sx-sign-a strong { animation: none; }
+  .sx-sign-bar, .sx-sign-q, .sx-sign-cta, .sx-cta-main::before, .sx-cta-main::after { animation: none; }
 }

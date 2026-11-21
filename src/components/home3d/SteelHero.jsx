@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SteelScene from "./SteelScene";
+import SignatureStory from "./SignatureStory";
 import ROUTE_PATHS from "../../routes/RoutePath";
+import { goToContactForm } from "../../utils/contactForm";
 import "./steelhero.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,6 +51,15 @@ export default function SteelHero({ progress, onCta }) {
   const sign = useRef(null);
   const hud = useRef(null);
   const [stats, setStats] = useState(null);
+  const [story, setStory] = useState(null); // {x, y}: where the popup opens from
+  const navigate = useNavigate();
+  // every "Let's talk" here (hero button and the popup) lands on the contact form of the Contact Us page
+  const talk = () => goToContactForm(navigate);
+
+  const openStory = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setStory({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+  };
 
   useEffect(() => {
     let raf, last = -1;
@@ -120,11 +131,18 @@ export default function SteelHero({ progress, onCta }) {
         <p className="sx-sign-q">
           <span className="sx-sign-ln">Agar aap aaj factory</span>{" "}
           <span className="sx-sign-ln">bana rahe hain, toh aapka</span>{" "}
-          <span className="sx-sign-ln"><em>pehla decision</em> kya hoga?</span>
+          <span className="sx-sign-ln sx-sign-serif"><em>pehla decision</em> kya hoga?</span>
         </p>
-        <span className="sx-sign-rule" aria-hidden="true" />
-        <p className="sx-sign-a"><strong>DIYPREFAB</strong></p>
+        <div className="sx-sign-cta">
+          <button type="button" className="sx-cta sx-cta-main" onClick={openStory}>
+            <span>Our answer</span><i><Arrow /></i>
+          </button>
+          <button type="button" className="sx-cta sx-cta-ghost" onClick={talk}>
+            <span>Let&rsquo;s talk</span>
+          </button>
+        </div>
       </aside>
+      {story && <SignatureStory origin={story} onClose={() => setStory(null)} onTalk={talk} />}
 
       <div className="sx-hud" ref={hud} aria-hidden="true">
         <span className="sx-hud-label">Phase</span>
