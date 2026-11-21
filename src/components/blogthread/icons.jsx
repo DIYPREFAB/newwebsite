@@ -19,3 +19,4 @@ export const IconTrash = mk(<><path d="M4 7h16M10 11v6M14 11v6" /><path d="M6 7l
 export const IconChevron = mk(<path d="m6 9 6 6 6-6" />, { width: 16, height: 16 });
 export const IconThread = mk(<><circle cx="6" cy="5" r="2" /><circle cx="6" cy="19" r="2" /><circle cx="18" cy="12" r="2" /><path d="M6 7v10M8 12h8" /></>);
 export const IconQuery = mk(<><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.8" /><path d="M12 17h.01" /></>);
+export const IconPin = mk(<><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.4" /></>, { width: 16, height: 16 });

@@ -392,3 +392,10 @@ body.bt-3d .hn:not(.open) .hn-bar { background: rgba(0, 21, 36, .92); -webkit-ba
   .bt-q-head { padding: 18px 48px 14px 18px; }
   .bt-q-form { padding: 16px 18px 16px; }
 }
+
+/* ---- territory: pill on each post + filter row */
+.bt-badges { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.bt-terr-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px 5px 9px; border-radius: 999px; font-size: 13px; font-weight: 800; white-space: nowrap; color: var(--teal-d); background: #fff; border: 1px solid rgba(0, 21, 36, .14); }
+.bt-terr-pill svg { flex: none; }
+.bt-terr-row { position: relative; z-index: 20; margin-top: 16px; }
+@media (max-width: 640px) { .bt-post-head { flex-wrap: wrap; } .bt-badges { justify-content: flex-start; } }

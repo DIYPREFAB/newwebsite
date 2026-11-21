@@ -3,12 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from "framer-motion";
 import NavBar from "../common/NavBar";
+import TerritoryDropdown from "../common/TerritoryDropdown";
 import Footer from "../common/Footer";
 import ScrollToTop from "../common/ScrollToTop";
 import { ThreadProvider } from "../components/blogthread/ThreadContext";
 import PostCard from "../components/blogthread/PostCard";
 import { FontLinks, useBlogBody } from "../components/blogthread/PageShell";
-import { getPosts, KINDS, absoluteUrl } from "../components/blogthread/blogData";
+import { getPosts, KINDS, TERRITORY_GENERAL, absoluteUrl } from "../components/blogthread/blogData";
 import { IconArrow, IconSearch, IconClose } from "../components/blogthread/icons";
 import { formatDay } from "../components/blogthread/utils";
 import "../components/blogthread/blogthread.css";
@@ -65,10 +66,21 @@ const FeedPage = () => {
   const keepPage = useRef(false);
   const all = useMemo(() => getPosts(), []);
 
+  // Territory filter (state / region the post is about; posts of general relevance sit under "Pan-India"). Lives in the URL: ?territory=gujarat
+  const territories = useMemo(() => {
+    const m = new Map();
+    all.forEach((p) => m.set(p.territory, (m.get(p.territory) || 0) + 1));
+    return [...m.entries()]
+      .sort((a, b) => (a[0] === TERRITORY_GENERAL) - (b[0] === TERRITORY_GENERAL) || b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([name, n]) => ({ name, n, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-") }));
+  }, [all]);
+  const terrSlug = params.get("territory");
+  const terr = territories.find((t) => t.slug === terrSlug)?.name || "all";
+
   const posts = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return all.filter((p) => (kind === "all" || p.kind === kind) && (!q || [p.title, p.dek, p.tags.join(" "), p.sourceLine].join(" ").toLowerCase().includes(q)));
-  }, [all, kind, query]);
+    return all.filter((p) => (kind === "all" || p.kind === kind) && (terr === "all" || p.territory === terr) && (!q || [p.title, p.dek, p.tags.join(" "), p.sourceLine].join(" ").toLowerCase().includes(q)));
+  }, [all, kind, terr, query]);
 
   // Pagination: PAGE_SIZE posts per page, current page lives in the URL (?page=2) so back/forward and shared links work
   const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
@@ -90,6 +102,15 @@ const FeedPage = () => {
     const next = new URLSearchParams(params);
     if (k === "all") next.delete("type");
     else next.set("type", k);
+    next.delete("page");
+    setParams(next, { replace: true });
+  };
+
+  const setTerr = (name) => {
+    const next = new URLSearchParams(params);
+    const slug = territories.find((t) => t.name === name)?.slug;
+    if (!slug) next.delete("territory");
+    else next.set("territory", slug);
     next.delete("page");
     setParams(next, { replace: true });
   };
@@ -137,6 +158,7 @@ const FeedPage = () => {
     setQuery("");
     const next = new URLSearchParams(params);
     next.delete("type");
+    next.delete("territory");
     next.delete("q");
     if (target > 1) next.set("page", String(target));
     else next.delete("page");
@@ -197,6 +219,14 @@ const FeedPage = () => {
           </LayoutGroup>
           {renderSearch("bt-search--top")}
         </div>
+        <div className="bt-wrap bt-terr-row">
+          <TerritoryDropdown
+            variant="light"
+            value={terr}
+            onChange={setTerr}
+            options={[{ value: "all", label: "All territories", n: all.length }, ...territories.map((t) => ({ value: t.name, label: t.name, n: t.n }))]}
+          />
+        </div>
       </div>
 
       <main className="bt-wrap bt-layout">
@@ -207,9 +237,9 @@ const FeedPage = () => {
           </AnimatePresence>
           {posts.length === 0 && (
             <motion.div className="bt-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <strong>No posts match{query ? ` “${query}”` : ""}.</strong>
+              <strong>No posts match{query ? ` “${query}”` : ""}{terr !== "all" ? ` in ${terr}` : ""}.</strong>
               <span>Try a different word, or show everything.</span>
-              <button type="button" className="bt-btn bt-btn--solid" onClick={() => { setQuery(""); setKind("all"); }}>Show all posts</button>
+              <button type="button" className="bt-btn bt-btn--solid" onClick={() => { setQuery(""); const n = new URLSearchParams(params); n.delete("type"); n.delete("territory"); n.delete("page"); n.delete("q"); setParams(n, { replace: true }); }}>Show all posts</button>
             </motion.div>
           )}
           {totalPages > 1 && (

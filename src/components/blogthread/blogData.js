@@ -17,6 +17,7 @@ const posts = [
   /* ------------------------------------------------------------------ 20 Nov: Olive Realspace and Silvassa expansion story ------------ */
   {
     id: "olive-realspace-silvassa",
+    territory: "Gujarat",
     slug: "from-vapi-to-silvassa-olive-realspace-6000-sqm-warehouse-expansion",
     kind: "story",
     title: "From Vapi to Silvassa: Planning a 6,000 m² warehouse expansion with Olive Realspace",
@@ -123,6 +124,7 @@ const posts = [
   /* ------------------------------------------------------------------ 19 Nov: Navsari to Vapi project story ------------ */
   {
     id: "navsari-to-vapi",
+    territory: "Gujarat",
     slug: "from-navsari-to-vapi-clearer-path-to-your-next-factory-or-warehouse",
     kind: "story",
     title: "From Navsari to Vapi: Building a Clearer Path to Your Next Factory or Warehouse",
@@ -703,6 +705,7 @@ const posts = [
   /* ------------------------------------------------------------------ 26 Oct: IMC Gaya --------------- */
   {
     id: "imc-gaya-update",
+    territory: "Bihar",
     slug: "imc-gaya-october-2026-consultant-checks",
     kind: "briefing",
     title: "IMC Gaya’s October 24 Update: What Consultants Should Verify Next",
@@ -911,7 +914,8 @@ const wordCount = (post) =>
     return n + txt.split(/\s+/).length;
   }, post.dek.split(/\s+/).length);
 
-export const getPosts = () => sorted.map((p) => ({ ...p, readMin: Math.max(2, Math.round(wordCount(p) / 200)) }));
+export const TERRITORY_GENERAL = "Pan-India"; // posts that are not about one state
+export const getPosts = () => sorted.map((p) => ({ ...p, territory: p.territory || TERRITORY_GENERAL, readMin: Math.max(2, Math.round(wordCount(p) / 200)) }));
 export const getPost = (slug) => getPosts().find((p) => p.slug === slug) || null;
 export const getPostBySlugOrNull = getPost;
 export const absoluteUrl = (path) => `${SITE}${path}`;

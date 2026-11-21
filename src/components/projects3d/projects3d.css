@@ -679,6 +679,7 @@ body.pj-reduce .pj-bg-grid { animation: none; }
 /* Fixed-width tracks that wrap: 2 projects or 20 look the same size, and the grid stays centred. */
 .pj-cards { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 264px), 320px)); justify-content: center; gap: clamp(14px, 1.5vw, 22px); max-width: 1380px; margin: clamp(26px, 4vh, 40px) auto 0; }
 .pj-card { position: relative; display: flex; }
+.pj-card[hidden] { display: none; }
 .pj-card-drift, .pj-card-tilt { display: flex; width: 100%; }
 .pj-card-tilt { transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
 .pj-card-in { --mx: 50%; --my: 50%; position: relative; display: flex; flex-direction: column; width: 100%; overflow: hidden; cursor: pointer; border-radius: 16px; background: linear-gradient(165deg, #06283f, #031a2c); border: 1px solid rgba(134, 207, 195, .2); box-shadow: 0 18px 36px -26px rgba(0, 0, 0, .9); transition: border-color .45s, box-shadow .55s cubic-bezier(.2, .7, .2, 1); }
@@ -752,3 +753,7 @@ body.pj-reduce .pj-card:hover .pj-card-tilt { transform: none; }
   .pj-hero-foot { grid-column: 1; grid-row: 2; align-self: start; padding-bottom: 36px; }
   .pj-hero-art { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; justify-self: stretch; height: auto; min-height: 460px; max-width: none; margin: 0 0 36px; }
 }
+
+/* ---- territory filter (Featured projects): dropdown, styles in common/territoryDropdown.css */
+.pj-sec > .pj-terr, .pj-terr { position: relative; z-index: 8; display: flex; justify-content: flex-start; max-width: 1320px; margin: clamp(22px, 3.4vh, 34px) auto 0; }
+.pj-sec > .pj-terr { z-index: 8; } /* beats ".pj-sec > *:not(.sh-dots) { z-index: 2 }" so the open menu sits above the cards */

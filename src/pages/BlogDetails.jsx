@@ -10,7 +10,7 @@ import ArticleBody, { Inline } from "../components/blogthread/ArticleBody";
 import { sharePost } from "../components/blogthread/PostCard";
 import { FontLinks, useBlogBody } from "../components/blogthread/PageShell";
 import { getPost, getPosts, KINDS, absoluteUrl } from "../components/blogthread/blogData";
-import { IconArrow, IconBack, IconClock, IconQuery, IconShare } from "../components/blogthread/icons";
+import { IconArrow, IconBack, IconClock, IconPin, IconQuery, IconShare } from "../components/blogthread/icons";
 import { formatDate, formatDay } from "../components/blogthread/utils";
 import "../components/blogthread/blogthread.css";
 
@@ -77,7 +77,10 @@ const ArticlePage = ({ post }) => {
         <div className="bt-wrap bt-art-head-in">
           <motion.nav className="bt-crumb" aria-label="Breadcrumb" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }}>
             <Link to="/blog-news"><IconBack width={16} height={16} /> Blog and news</Link>
-            <span className={`bt-kind bt-kind--${post.kind}`}>{kind.label}</span>
+            <span className="bt-badges">
+              <Link to={`/blog-news?territory=${post.territory.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`} className="bt-terr-pill" title={`More posts from ${post.territory}`}><IconPin width={14} height={14} />{post.territory}</Link>
+              <span className={`bt-kind bt-kind--${post.kind}`}>{kind.label}</span>
+            </span>
           </motion.nav>
           <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.06, ease }}>{post.title}</motion.h1>
           <motion.p className="bt-art-dek" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.14, ease }}>{post.dek}</motion.p>

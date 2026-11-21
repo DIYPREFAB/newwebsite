@@ -68,6 +68,7 @@ export const PROJECTS = [
     client: "Wonder Cement Limited",
     title: "Prefabricated Steel Parking Shed",
     location: "R.K. Nagar, Nimbahera, Chittorgarh, Rajasthan",
+    territory: "Rajasthan",
     badge: "Completed 29 March 2026",
     area: "2,196 Sq. Mtr.",
     overview:
@@ -107,6 +108,7 @@ export const PROJECTS = [
     client: "Banswara Syntex Limited",
     title: "Multi-Facility Pre-Engineered Building Project",
     location: "Banswara, Rajasthan",
+    territory: "Rajasthan",
     badge: "5,565 Sq. Mtr. in total",
     area: "5,565 Sq. Mtr.",
     overview:
@@ -153,6 +155,7 @@ export const PROJECTS = [
     client: "Assure Buildcon Private Limited",
     title: "Pre-Engineered Building Supply & Installation",
     location: "Kalvach, Gandevi, Navsari, Gujarat",
+    territory: "Gujarat",
     badge: "Completed 30 March 2026",
     area: "",
     overview:
@@ -188,6 +191,7 @@ export const PROJECTS = [
     client: "Tyre Technocrats (India) Pvt. Ltd.",
     title: "PEB Supply & Erection, Zambia",
     location: "Zambia, Africa",
+    territory: "Zambia",
     badge: "Contract dated 4 December 2025",
     area: "5,600 Sq. Mtr.",
     overview:
@@ -236,6 +240,7 @@ export const PROJECTS = [
     client: "RSWM Limited (Lodha)",
     title: "Roof Replacement, Civil & Structural Works",
     location: "Banswara, Rajasthan",
+    territory: "Rajasthan",
     badge: "Completed 31 March 2025",
     area: "22,750 Sq. Mtr.",
     overview:

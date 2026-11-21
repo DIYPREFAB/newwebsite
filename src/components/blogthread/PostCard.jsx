@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useThread } from "./ThreadContext";
 import { KINDS } from "./blogData";
-import { IconArrow, IconClock, IconQuery, IconShare } from "./icons";
+import { IconArrow, IconClock, IconPin, IconQuery, IconShare } from "./icons";
 import { formatDay } from "./utils";
 
 export const sharePost = async (post, toast) => {
@@ -57,7 +57,10 @@ const PostCard = ({ post, index }) => {
               </span>
             </div>
           </div>
-          <span className={`bt-kind bt-kind--${post.kind}`}>{kind.label}</span>
+          <span className="bt-badges">
+            <span className="bt-terr-pill"><IconPin width={14} height={14} />{post.territory}</span>
+            <span className={`bt-kind bt-kind--${post.kind}`}>{kind.label}</span>
+          </span>
         </header>
 
         <Link to={href} className="bt-cover" tabIndex={-1} aria-hidden="true">

@@ -1,4 +1,4 @@
-import { createElement, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createElement, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useNavigationType } from "react-router-dom";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import gsap from "gsap";
@@ -9,6 +9,7 @@ import { FaArrowDown, FaArrowRight, FaCheck, FaChevronLeft, FaChevronRight, FaCl
 import { navItems } from "../../Constants";
 import SteelBits from "../home3d/SteelBits";
 import BimHero from "./BimHero";
+import TerritoryDropdown from "../../common/TerritoryDropdown";
 import HeroBackdrop from "./HeroBackdrop";
 import Cursor from "../home3d/Cursor";
 import { bookCall } from "../home3d/booking";
@@ -141,10 +142,10 @@ function CardLogo({ p }) {
   );
 }
 
-function ProjectCard({ p, i, onOpen }) {
+function ProjectCard({ p, i, onOpen, hidden }) {
   const po = p.meta.find(([l]) => /purchase/i.test(l))?.[1];
   return (
-    <article className="pj-card" id={`pj-card-${p.id}`}>
+    <article className="pj-card" id={`pj-card-${p.id}`} hidden={hidden}>
       <div className="pj-card-drift">
         <div className="pj-card-tilt">
           <div className="pj-card-in" onClick={() => onOpen(i)} data-cursor="Open">
@@ -831,6 +832,20 @@ export default function ProjectsSections() {
     window.addEventListener("pj:present-reveal", reveal);
     return () => window.removeEventListener("pj:present-reveal", reveal);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Territory filter for Featured projects (state / country): cards stay mounted and are only hidden, so their scroll animations keep working
+  const [terr, setTerr] = useState("all");
+  const territories = useMemo(() => {
+    const m = new Map();
+    PROJECTS.forEach((p) => p.territory && m.set(p.territory, (m.get(p.territory) || 0) + 1));
+    return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, []);
+  const firstFilter = useRef(true);
+  useEffect(() => {
+    if (firstFilter.current) { firstFilter.current = false; return undefined; }
+    // heights below the grid changed: let every ScrollTrigger re-measure (cards that become visible then play their reveal)
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(id);
+  }, [terr]);
   const [ti, setTi] = useState(0); // testimonial in front (small screens; on large screens scrolling drives it)
   const tmST = useRef(null); // the pinned testimonial ScrollTrigger, when active
   const tmCur = useRef(0);
@@ -1278,8 +1293,18 @@ export default function ProjectsSections() {
           <Split text={PROJECTS_HEAD.title} hl={PROJECTS_HEAD.hl} className="pj-h2" tag="h2" />
           <p className="pj-lead">{PROJECTS_HEAD.text}</p>
         </div>
+        {territories.length > 1 && (
+          <div className="pj-terr">
+            <TerritoryDropdown
+              variant="dark"
+              value={terr}
+              onChange={setTerr}
+              options={[{ value: "all", label: "All territories", n: PROJECTS.length }, ...territories.map(([t, n]) => ({ value: t, label: t, n }))]}
+            />
+          </div>
+        )}
         <div className="pj-cards">
-          {PROJECTS.map((p, i) => <ProjectCard key={p.id} p={p} i={i} onOpen={openProject} />)}
+          {PROJECTS.map((p, i) => <ProjectCard key={p.id} p={p} i={i} onOpen={openProject} hidden={terr !== "all" && p.territory !== terr} />)}
         </div>
       </section>
 
