@@ -20,6 +20,7 @@ import MessageBlock from "../components/home3d/MessageBlock";
 import useSeoHelmet from "../hooks/ReactHelmet";
 import SeoHelmet from "../common/SeoHelmet";
 import ScrollHome from "../components/home3d/ScrollHome";
+import useOverlayHistory from "../hooks/useOverlayHistory";
 import HomeNav from "../components/home3d/HomeNav";
 
 const TrustSlider = lazy(() =>
@@ -405,7 +406,10 @@ const LazySection = React.memo(
 
 // Main Dashboard Component with enhanced performance optimizations
 const Dashboard = () => {
-  const { openLead, toggleLead, closeLead } = useModalManager();
+  const { openVideo, openLead, toggleLead, closeVideo, closeLead } = useModalManager();
+  // Back button / swipe-back closes these popups instead of leaving the site
+  useOverlayHistory("video", openVideo, closeVideo);
+  useOverlayHistory("lead", openLead, closeLead);
 
   useAdvancedPreloading();
 

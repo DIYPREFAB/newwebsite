@@ -4,6 +4,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaChevronDown, FaLinkedinIn } from "react-icons/fa";
 import { navItems } from "../../Constants";
 import ImagePath from "../../assets/ImagePath";
+import useOverlayHistory from "../../hooks/useOverlayHistory";
 import { bookCall } from "./booking";
 import "./home3d.css";
 import "./homenav-menu.css";
@@ -40,6 +41,9 @@ export default function HomeNav({ onCta }) {
   const closeRef = useRef(null);
   const menuRef = useRef(null);
   const navRef = useRef(null);
+  // Back button / swipe-back closes the full-screen menu instead of leaving the site
+  useOverlayHistory("hnm", open, () => setOpen(false));
+  const inMenu = !!location.state?.hnm; // links inside the menu replace its history entry
   const [drop, setDrop] = useState(null); // title of the desktop submenu that is open (keyboard / tap)
 
   // desktop submenus. A dropdown is shown by exactly one thing: the `open` class from React state (click / Enter / Space on
@@ -158,7 +162,7 @@ export default function HomeNav({ onCta }) {
       <i className="hnm-grid" aria-hidden="true" />
       <i className="hnm-glow" aria-hidden="true" />
       <div className="hnm-top">
-        <NavLink to="/" className="hnm-logo" onClick={logoClick} tabIndex={tab} aria-label="DIY Prefab home">
+        <NavLink to="/" replace={inMenu} className="hnm-logo" onClick={logoClick} tabIndex={tab} aria-label="DIY Prefab home">
           <img src={ImagePath.Logo} alt="" />
         </NavLink>
         <button ref={closeRef} className="hnm-close" onClick={close} tabIndex={tab} aria-label="Close menu"><i /><i /></button>
@@ -168,7 +172,7 @@ export default function HomeNav({ onCta }) {
           <ul>
             {items.map((n, i) => (
               <li key={n.title} style={{ "--i": i }}>
-                <NavLink to={n.link} end={n.link === "/"} onClick={close} tabIndex={tab}>
+                <NavLink to={n.link} replace={inMenu} end={n.link === "/"} onClick={close} tabIndex={tab}>
                   <em>{pad(i + 1)}</em>
                   <span>{n.title}</span>
                   <b aria-hidden="true"><FaArrowRight /></b>

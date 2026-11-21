@@ -4,7 +4,7 @@ import "./signaturestory.css";
 
 /**
  * The signature-question story. Opens from the hero's "Our answer" button as a full-screen light popup:
- *   DIY PREFAB  ->  Kyun? (Our answer | Let's talk)  ->  the stanza  ->  Kese? (Our answer | Let's talk)  ->  Nazrana
+ *   DIY PREFAB  ->  Kyun? (Our answer | Let's talk)  ->  the stanza  ->  Kaise? (Our answer | Let's talk)  ->  Nazrana
  * "tap" steps advance on a click/tap/Enter anywhere, "ask" steps advance with "Our answer", "Let's talk" hands over to onTalk.
  */
 
@@ -12,7 +12,7 @@ const STEPS = [
   { id: "name", kind: "tap" },
   { id: "kyun", kind: "ask", word: "Kyun", q: "02" },
   { id: "stanza", kind: "tap" },
-  { id: "kese", kind: "ask", word: "Kese", q: "03" },
+  { id: "kaise", kind: "ask", word: "Kaise", q: "03" },
   { id: "nazrana", kind: "end" },
 ];
 const LAST = STEPS.length - 1;
@@ -26,7 +26,7 @@ const SPOKEN = {
   name: "DIY PREFAB. Click anywhere to continue.",
   kyun: "Kyun? Choose Our answer or Let's talk.",
   stanza: "Saath design karte hain, saath badhte hain, karke dikhate hain. Click anywhere to continue.",
-  kese: "Kese? Choose Our answer or Let's talk.",
+  kaise: "Kaise? Choose Our answer or Let's talk.",
   nazrana: "Nazrana.",
 };
 
@@ -99,7 +99,7 @@ function Actions({ delay, main, ghost }) {
   );
 }
 
-export default function SignatureStory({ origin, onClose, onTalk }) {
+export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
   const rootRef = useRef(null);
   const [cur, setCur] = useState(0);
   const [prev, setPrev] = useState(null);
@@ -196,7 +196,8 @@ export default function SignatureStory({ origin, onClose, onTalk }) {
     if (closingRef.current) return;
     closingRef.current = true;
     setClosing(true);
-    setTimeout(() => { onClose(); if (after) after(); }, 720);
+    // with a follow-up (Let's talk / Explore) the follow-up navigates away and closes the popup with the page; otherwise just close
+    setTimeout(() => { if (after) after(); else onClose(); }, 720);
   }, [onClose]);
 
   const answer = useCallback((e) => {
@@ -289,7 +290,7 @@ export default function SignatureStory({ origin, onClose, onTalk }) {
           <Word text="Nazrana" base={base} step={0.075} />
         </h2>
         <Ornament base={base + 1.0} />
-        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Explore the site", onClick: () => close() }} />
+        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Explore the site with projects", onClick: () => close(onExplore) }} />
       </section>
     );
   };
