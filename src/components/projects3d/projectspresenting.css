@@ -1,0 +1,40 @@
+/* "PRESENTING DIYPREFAB PROJECT" section-transition screen (pp-): a dark panel rises over the page with the logo and a big title, then lifts away */
+.pp-root { --paper: #f6f2ea; --paper2: #ebe5d6; --ink: #0a1f2e; --ink2: rgba(10, 31, 46, .6); --teal: #12a393; position: fixed; inset: 0; z-index: 100010; overflow: hidden; outline: 0; cursor: pointer; font-family: "Space Grotesk", Lato, "Segoe UI", system-ui, sans-serif; color: var(--ink); pointer-events: auto; }
+.pp-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; background: linear-gradient(180deg, var(--paper) 0%, #f1ece0 60%, var(--paper2) 100%); box-shadow: 0 -20px 60px rgba(10, 31, 46, .18); border-radius: 0; transform: translateY(100%); animation: ppRiseIn .95s cubic-bezier(.77, 0, .18, 1) forwards; }
+.pp-root.is-leaving .pp-panel { animation: ppLiftOut .95s cubic-bezier(.77, 0, .18, 1) forwards; }
+@keyframes ppRiseIn { from { transform: translateY(100%); border-radius: 50% 50% 0 0 / 14vh 14vh 0 0; } to { transform: translateY(0); border-radius: 0; } }
+@keyframes ppLiftOut { from { transform: translateY(0); border-radius: 0; } to { transform: translateY(-100%); border-radius: 0 0 50% 50% / 0 0 14vh 14vh; } }
+
+.pp-bg { position: absolute; inset: 0; }
+.pp-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(10, 31, 46, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(10, 31, 46, .06) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse at center, #000 15%, transparent 72%); mask-image: radial-gradient(ellipse at center, #000 15%, transparent 72%); }
+.pp-glow { position: absolute; left: 50%; top: 50%; width: 80vmin; height: 80vmin; margin: -40vmin 0 0 -40vmin; border-radius: 50%; background: radial-gradient(circle, rgba(47, 212, 192, .22), transparent 65%); animation: ppGlow 1.6s ease-out .6s both; }
+@keyframes ppGlow { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
+
+.pp-center { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 0 5vw; text-align: center; }
+.pp-logo { display: grid; place-items: center; width: clamp(64px, 9vw, 92px); aspect-ratio: 1; margin-bottom: clamp(16px, 3vh, 28px); border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px rgba(10, 31, 46, .12), 0 18px 44px rgba(10, 31, 46, .2); overflow: hidden; opacity: 0; transform: scale(.4) translateY(20px); animation: ppPop .8s cubic-bezier(.16, 1, .3, 1) .75s forwards; }
+.pp-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+@keyframes ppPop { to { opacity: 1; transform: scale(1) translateY(0); } }
+
+.pp-eyebrow { display: inline-flex; align-items: center; gap: 14px; margin: 0 0 clamp(8px, 1.6vh, 16px); font-size: clamp(11px, 1.3vw, 14px); font-weight: 800; letter-spacing: .5em; text-indent: .5em; text-transform: uppercase; color: var(--teal); opacity: 0; animation: ppFade .7s ease .95s forwards; }
+.pp-eyebrow i { display: block; width: clamp(24px, 6vw, 64px); height: 1px; background: currentColor; }
+@keyframes ppFade { to { opacity: 1; } }
+
+.pp-title { margin: 0; font-weight: 900; line-height: .98; letter-spacing: -.035em; text-transform: uppercase; }
+.pp-row { display: block; overflow: hidden; padding: .04em .06em .12em; font-size: clamp(2.5rem, 11.5vw, 8.5rem); }
+.pp-row { color: var(--ink); }
+.pp-row-hl { color: var(--teal); }
+.pp-word { display: inline-block; }
+.pp-ch { display: inline-block; transform: translateY(115%) rotate(6deg); opacity: 0; animation: ppLetter .85s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) both; }
+@keyframes ppLetter { to { transform: translateY(0) rotate(0); opacity: 1; } }
+
+.pp-rule { position: relative; display: block; width: min(320px, 56vw); height: 2px; margin-top: clamp(16px, 3vh, 28px); border-radius: 2px; background: rgba(10, 31, 46, .12); overflow: hidden; }
+.pp-rule b { position: absolute; inset: 0; background: var(--teal); transform-origin: left; transform: scaleX(0); animation: ppLoad 1.5s cubic-bezier(.5, 0, .2, 1) 1.7s forwards; }
+@keyframes ppLoad { to { transform: scaleX(1); } }
+
+.pp-skip { position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); margin: 0; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--ink2); opacity: 0; animation: ppFade .6s ease 1.6s forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-panel { animation: none; transform: none; }
+  .pp-root.is-leaving .pp-panel { animation: ppLiftOut .01s forwards; }
+  .pp-ch, .pp-logo, .pp-eyebrow, .pp-rule b, .pp-skip, .pp-glow { animation: none; opacity: 1; transform: none; }
+}

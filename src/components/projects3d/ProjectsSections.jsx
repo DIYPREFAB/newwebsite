@@ -825,6 +825,12 @@ export default function ProjectsSections() {
   const lenisRef = useRef(null);
   const navigate = useNavigate();
   const navType = useNavigationType();
+  // the global "Presenting DIYPREFAB project" screen (ProjectsPresenting, mounted in App.jsx) asks us to glide to the projects once it lifts
+  useEffect(() => {
+    const reveal = () => jump("#projects");
+    window.addEventListener("pj:present-reveal", reveal);
+    return () => window.removeEventListener("pj:present-reveal", reveal);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [ti, setTi] = useState(0); // testimonial in front (small screens; on large screens scrolling drives it)
   const tmST = useRef(null); // the pinned testimonial ScrollTrigger, when active
   const tmCur = useRef(0);

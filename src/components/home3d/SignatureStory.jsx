@@ -214,6 +214,17 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
     }, 720);
   }, [onClose]);
 
+  // Explore: leave the popup open (the presenting screen covers it) and hand its history entry to the navigation
+  const explore = useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    if (ownsEntry.current) {
+      ownsEntry.current = false;
+      window.removeEventListener("popstate", onPop.current);
+    }
+    onExplore?.();
+  }, [onExplore]);
+
   useEffect(() => {
     window.history.pushState({ ...(window.history.state || {}), signatureStory: true }, "");
     ownsEntry.current = true;
@@ -315,7 +326,7 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
           <Word text="Nazrana" base={base} step={0.075} />
         </h2>
         <Ornament base={base + 1.0} />
-        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Explore the site with projects", onClick: () => close(onExplore) }} />
+        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Explore the site with projects", onClick: explore }} />
       </section>
     );
   };

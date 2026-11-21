@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import useScrollToTop from "./hooks/useScrollToTop";
 import WhatsAppButton from "./common/WhatsAppButton";
 import RouteMetaTags from "./seo/RouteMetaTags";
+import ProjectsPresenting from "./components/projects3d/ProjectsPresenting";
 
 const App = () => {
   // Hook to scroll to top on route change
@@ -29,6 +30,9 @@ const App = () => {
       
       {/* Global WhatsApp Button - Available on all pages */}
       <WhatsAppButton />
+
+      {/* "Presenting DIYPREFAB project" screen: opened from the home popup, survives the route change */}
+      <ProjectsPresenting />
     </>
   );
 }

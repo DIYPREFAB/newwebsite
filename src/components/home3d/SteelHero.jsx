@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SteelScene from "./SteelScene";
 import SignatureStory from "./SignatureStory";
+import { startPresenting } from "../projects3d/ProjectsPresenting";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import { goToContactForm } from "../../utils/contactForm";
 import "./steelhero.css";
@@ -55,6 +56,9 @@ export default function SteelHero({ progress, onCta }) {
   const navigate = useNavigate();
   // every "Let's talk" here (hero button and the popup) lands on the contact form of the Contact Us page
   const talk = () => goToContactForm(navigate);
+  // "Explore the site with projects": the "Presenting DIYPREFAB project" screen rises over the popup, and while it covers the
+  // screen we replace the popup's history entry with the Projects & Case Studies page (so Back returns to this home page)
+  const explore = () => startPresenting(() => navigate(ROUTE_PATHS.PROJECT_CASE_STUDIES, { replace: true }));
 
   const openStory = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -142,7 +146,7 @@ export default function SteelHero({ progress, onCta }) {
           </button>
         </div>
       </aside>
-      {story && <SignatureStory origin={story} onClose={() => setStory(null)} onTalk={talk} onExplore={() => navigate(ROUTE_PATHS.PROJECT_CASE_STUDIES)} />}
+      {story && <SignatureStory origin={story} onClose={() => setStory(null)} onTalk={talk} onExplore={explore} />}
 
       <div className="sx-hud" ref={hud} aria-hidden="true">
         <span className="sx-hud-label">Phase</span>
