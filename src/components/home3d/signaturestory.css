@@ -24,10 +24,7 @@
 }
 .ss-root.is-closing { animation: ssClose 0.7s cubic-bezier(0.7, 0, 0.2, 1) forwards; pointer-events: none; }
 .ss-root[data-step="name"], .ss-root[data-step="stanza"] { cursor: pointer; }
-/* the site hides the system cursor on the home page; inside the popup it is shown again */
-body.sh-cursor .ss-root, body.sh-cursor .ss-root * { cursor: auto !important; }
-body.sh-cursor .ss-root[data-step="name"], body.sh-cursor .ss-root[data-step="stanza"] { cursor: pointer !important; }
-body.sh-cursor .ss-root button, body.sh-cursor .ss-root button * { cursor: pointer !important; }
+/* the popup uses the site's designed cursor too (home3d.css hides the system cursor everywhere, Cursor.jsx sits above the popup) */
 
 @keyframes ssOpen {
   from { clip-path: circle(0px at var(--ox) var(--oy)); }

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 // Reticle + welding-spark cursor. Sparks trail the pointer, burst on click/tap, buttons pull toward the pointer,
 // and elements with data-cursor="Label" turn the cursor into a labelled disc.
@@ -160,7 +161,8 @@ export default function Cursor() {
     };
   }, []);
 
-  return (
+  // portalled to <body> so no page wrapper can trap it below the "Our story" popup (the popup has its own high z-index)
+  return createPortal(
     <>
       <canvas ref={cvs} className="sh-cspark" aria-hidden="true" />
       <div className="sh-ret" ref={ret} aria-hidden="true">
@@ -172,6 +174,7 @@ export default function Cursor() {
       </div>
       <div className="sh-clab" ref={lab} aria-hidden="true" />
       <div className="sh-cdot" ref={dot} aria-hidden="true" />
-    </>
+    </>,
+    document.body
   );
 }
