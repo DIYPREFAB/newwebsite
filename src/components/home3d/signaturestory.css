@@ -243,7 +243,7 @@
 .ss-lines em { position: relative; display: inline-block; font-style: italic; color: var(--teal); }
 .ss-lines em::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0.02em; height: 0.045em; border-radius: 2px; background: linear-gradient(90deg, var(--teal-b), transparent); transform: scaleX(0); transform-origin: left; animation: ssLine 1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d, 0.5s) + 0.95s) both; }
 
-/* 5. Nazrana */
+/* 5. Nazara */
 .ss-nz { margin: 0; font: 700 clamp(4rem, min(19vw, 30vh), 17rem) / 0.95 var(--serif); letter-spacing: -0.02em; }
 .ss-burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
 .ss-burst i { position: absolute; left: -3px; top: -3px; width: var(--s); height: var(--s); background: var(--teal-b); transform: rotate(var(--a)) translateX(0) scale(0); opacity: 0; animation: ssBurst 1.9s cubic-bezier(0.16, 1, 0.3, 1) var(--bd, 0.8s) both; }

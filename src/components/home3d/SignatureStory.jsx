@@ -4,7 +4,7 @@ import "./signaturestory.css";
 
 /**
  * The signature-question story. Opens from the hero's "Our answer" button as a full-screen light popup:
- *   DIY PREFAB  ->  Kyun? (Our answer | Let's talk)  ->  the stanza  ->  Kaise? (Our answer | Let's talk)  ->  Nazrana
+ *   DIY PREFAB  ->  Kyun? (Our answer | Let's talk)  ->  the stanza  ->  Kaise? (Our answer | Let's talk)  ->  Nazara
  * "tap" steps advance on a click/tap/Enter anywhere, "ask" steps advance with "Our answer", "Let's talk" hands over to onTalk.
  */
 
@@ -13,7 +13,7 @@ const STEPS = [
   { id: "kyun", kind: "ask", word: "Kyun", q: "02" },
   { id: "stanza", kind: "tap" },
   { id: "kaise", kind: "ask", word: "Kaise", q: "03" },
-  { id: "nazrana", kind: "end" },
+  { id: "nazara", kind: "end" },
 ];
 const LAST = STEPS.length - 1;
 const LINES = [
@@ -27,7 +27,7 @@ const SPOKEN = {
   kyun: "Kyun? Choose Our answer or Let's talk.",
   stanza: "Saath design karte hain, saath badhte hain, karke dikhate hain. Click anywhere to continue.",
   kaise: "Kaise? Choose Our answer or Let's talk.",
-  nazrana: "Nazrana.",
+  nazara: "Nazara.",
 };
 
 const Arrow = () => (
@@ -313,7 +313,7 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
         </section>
       );
     }
-    // nazrana
+    // nazara
     return (
       <section key={`v${idx}`} {...common}>
         <div className="ss-burst" aria-hidden="true">
@@ -322,11 +322,11 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
           ))}
         </div>
         <Eyebrow base={base - 0.2}>Our answer</Eyebrow>
-        <h2 className="ss-nz" aria-label="Nazrana">
-          <Word text="Nazrana" base={base} step={0.075} />
+        <h2 className="ss-nz" aria-label="Nazara">
+          <Word text="Nazara" base={base} step={0.075} />
         </h2>
         <Ornament base={base + 1.0} />
-        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Explore the site with projects", onClick: explore }} />
+        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Peshkash", onClick: explore }} />
       </section>
     );
   };
