@@ -805,3 +805,9 @@
 @media (prefers-reduced-motion: reduce) {
   .sx-sign-bar, .sx-sign-q, .sx-sign-cta, .sx-cta-main::before, .sx-cta-main::after { animation: none; }
 }
+
+/* "Scroll to build" badge: bottom, just right of the scroll hint (desktop). On tablets/phones, where the hint is hidden and the bottom
+   holds the question + buttons, it sits top-left instead. */
+.sx-badge { top: auto; right: auto; bottom: 34px; left: calc(50% + 100px); width: 100px; height: 100px; }
+@media (max-width: 991px) { .sx-badge { top: 112px; bottom: auto; left: 24px; width: 90px; height: 90px; } }
+@media (max-width: 767px) { .sx-badge { display: block; top: 84px; left: 20px; width: 78px; height: 78px; } }

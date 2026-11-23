@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SteelScene from "./SteelScene";
 import SignatureStory from "./SignatureStory";
+import LoadReadout from "./LoadReadout";
 import { startPresenting } from "../projects3d/ProjectsPresenting";
 import ROUTE_PATHS from "../../routes/RoutePath";
 import { goToContactForm } from "../../utils/contactForm";
@@ -51,6 +52,9 @@ export default function SteelHero({ progress, onCta }) {
   const hint = useRef(null);
   const sign = useRef(null);
   const hud = useRef(null);
+  const load = useRef(null);
+  const loadStage = useRef(0);
+  const [stage, setStage] = useState(0); // 0 line load, 1 moment, 2 force (stays)
   const [stats, setStats] = useState(null);
   const [story, setStory] = useState(null); // {x, y}: where the popup opens from
   const navigate = useNavigate();
@@ -89,6 +93,10 @@ export default function SteelHero({ progress, onCta }) {
       if (badge.current) badge.current.style.opacity = (1 - seg(p, 0.07, 0.12)).toFixed(3);
       if (hint.current) hint.current.style.opacity = (1 - seg(p, 0.06, 0.11)).toFixed(3);
       if (hud.current) hud.current.style.opacity = seg(p, 0.1, 0.15).toFixed(3);
+      if (load.current) {
+        const st = p >= CHAPTERS[2].range[0] - 0.01 ? 2 : p >= CHAPTERS[1].range[0] - 0.01 ? 1 : 0;
+        if (st !== loadStage.current) { loadStage.current = st; setStage(st); }
+      }
       if (sign.current) {
         const k = seg(p, 0.07, 0.12);
         sign.current.style.opacity = (1 - k).toFixed(3);
@@ -153,6 +161,8 @@ export default function SteelHero({ progress, onCta }) {
         <span className="sx-hud-value" ref={phase}>Digital engineering</span>
         {stats && <span className="sx-hud-meta">{stats.members} members · {stats.bays} bays · {stats.span} m span</span>}
       </div>
+
+      <LoadReadout ref={load} stage={stage} span={stats?.span || 20} />
 
       <nav className="sx-rail" aria-label="Build chapters">
         <div className="sx-rail-line"><div className="sx-rail-fill" ref={bar} /></div>
