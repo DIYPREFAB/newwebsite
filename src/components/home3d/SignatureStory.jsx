@@ -326,7 +326,7 @@ export default function SignatureStory({ origin, onClose, onTalk, onExplore }) {
           <Word text="Nazara" base={base} step={0.075} />
         </h2>
         <Ornament base={base + 1.0} />
-        <Actions delay={base + 1.3} main={{ label: "Let’s talk", onClick: talk }} ghost={{ label: "Peshkash", onClick: explore }} />
+        <Actions delay={base + 1.3} main={{ label: "Peshkash", onClick: explore }} ghost={{ label: "Let’s talk", onClick: talk }} />
       </section>
     );
   };
