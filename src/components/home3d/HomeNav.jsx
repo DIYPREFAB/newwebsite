@@ -17,7 +17,7 @@ const LIVE_URL = "https://www.diyprefab.com/blog/from-navsari-to-vapi-clearer-pa
 export default function HomeNav({ onCta }) {
   // "Home" opens the Key Benefits page with no dropdown; the logo goes to the 3D home ("/").
   // The "Inquiry Form" dropdown is removed: any submenu entry with that title is dropped, so Contact Us (and Careers) open their pages directly.
-  const items = navItems.filter((n) => n.link !== "/plan-in-vapi").map((n) => {
+  const items = navItems.map((n) => {
     if (n.title === "Home") return { title: "Home", link: KEY_BENEFITS };
     // Careers opens its page directly (Work Culture and Job Openings are reached from inside it, no dropdown)
     if (n.title === "Careers") return { title: n.title, link: n.link, submenu: [] };

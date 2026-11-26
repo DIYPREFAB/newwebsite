@@ -45,7 +45,6 @@ const P = {
   HealthcareFacilities: page(() => import("../../pages/HealthcareFacilities")),
 
   ProjectCaseandStudies: page(() => import("../../pages/ProjectCaseandStudies")),
-  PlanInVapi: page(() => import("../../pages/PlanInVapi")),
   ProjectDetail: page(() => import("../../pages/ProjectDetail")),
 
   BlogandNews: page(() => import("../../pages/BlogandNews")),
@@ -129,7 +128,6 @@ const ROUTES = [
   [ROUTE_PATHS.HEALTHCARE_FACILITIES, P.HealthcareFacilities],
 
   [ROUTE_PATHS.PROJECT_CASE_STUDIES, P.ProjectCaseandStudies, "blank"],
-  [ROUTE_PATHS.PLAN_IN_VAPI, P.PlanInVapi, "blank"],
   [`${ROUTE_PATHS.PROJECT_CASE_STUDIES}/:projectId`, P.ProjectDetail, "blank"],
 
   [ROUTE_PATHS.BLOG_NEWS, P.BlogandNews],

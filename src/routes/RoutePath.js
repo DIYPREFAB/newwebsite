@@ -43,7 +43,6 @@ const ROUTE_PATHS = {
   HEALTHCARE_FACILITIES: "/applications/healthcare-facilities",
 
   PROJECT_CASE_STUDIES: "/project-case-studies",
-  PLAN_IN_VAPI: "/plan-in-vapi",
 
   BLOG_NEWS: "/blog-news",
   BLOG_DETAILS: "/blog/:slug",
