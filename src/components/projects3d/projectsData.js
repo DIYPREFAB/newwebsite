@@ -246,11 +246,11 @@ export const PROJECTS = [
     overview:
       "Roof replacement, associated civil works, GI weldmesh supply and installation, and structural consultancy at RSWM Limited’s manufacturing facility in Banswara, Rajasthan, delivered across five purchase orders between June and October 2024.",
     scope: [
-      "Mill No. 1 & 2 (PO 32404346, 24 Oct 2024): replacement of existing AC roofing sheets, removal of old sheets and associated civil works over 2,750 Sq. Mtr.",
-      "Mill No. 4 & 5 (PO 32403608, 16 Sep 2024): turnkey roof sheet replacement over 20,000 Sq. Mtr., with bubble insulation over 15,000 Sq. Mtr., GI weldmesh fixing and associated civil works.",
-      "GI weldmesh supply (PO 32404356, 24 Oct 2024): 11,000 Sq. Mtr., about 4.785 MT, hot-dip galvanised, 75 × 75 mm mesh and 1.6 mm wire.",
-      "GI weldmesh installation (PO 32406276): installation of the weldmesh. Quantity and weight are not specified in the available PO documentation.",
-      "Structural audit and solar panel consultancy (PO 32401762, 25 Jun 2024): site survey, steel and concrete testing, stability analysis, additional load assessment for solar panels and engineering recommendations across about 15,000 Sq. Mtr.",
+      "Mill No. 1 & 2 (PO 324043XX, 24 Oct 2024): replacement of existing AC roofing sheets, removal of old sheets and associated civil works over 2,750 Sq. Mtr.",
+      "Mill No. 4 & 5 (PO 324036XX, 16 Sep 2024): turnkey roof sheet replacement over 20,000 Sq. Mtr., with bubble insulation over 15,000 Sq. Mtr., GI weldmesh fixing and associated civil works.",
+      "GI weldmesh supply (PO 324043XX, 24 Oct 2024): 11,000 Sq. Mtr., about 4.785 MT, hot-dip galvanised, 75 × 75 mm mesh and 1.6 mm wire.",
+      "GI weldmesh installation (PO 324062XX): installation of the weldmesh. Quantity and weight are not specified in the available PO documentation.",
+      "Structural audit and solar panel consultancy (PO 324017XX, 25 Jun 2024): site survey, steel and concrete testing, stability analysis, additional load assessment for solar panels and engineering recommendations across about 15,000 Sq. Mtr.",
       "Associated civil and waterproofing works.",
     ],
     outcome:

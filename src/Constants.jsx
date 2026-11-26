@@ -178,6 +178,11 @@ export const navItems = [
     submenu: [],
   },
   {
+    title: "Plan in Vapi?",
+    link: "/plan-in-vapi",
+    submenu: [],
+  },
+  {
     title: "Blog & News",
     link: "/blog-news",
     submenu: [

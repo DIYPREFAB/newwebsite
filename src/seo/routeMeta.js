@@ -42,6 +42,10 @@ const EXPLICIT = {
     title: "Projects & Case Studies | DIY PreFab",
     description: "Featured pre-engineered building and steel projects delivered by DIY PreFab: Wonder Cement, Banswara Syntex, Assure Buildcon, Tyre Technocrats and RSWM, with case studies, a project gallery and client confirmations.",
   },
+  [ROUTE_PATHS.PLAN_IN_VAPI]: {
+    title: "Plan a PEB in Vapi GIDC | Factory Sheds & Warehouses | DIY PreFab",
+    description: "Planning a pre-engineered building in Vapi GIDC? Start with site readiness, erection sequence and first dispatch for your factory shed or warehouse.",
+  },
   [ROUTE_PATHS.BLOG_NEWS]: {
     title: "Blog & News | Prefab and Steel Construction Insights | DIY PreFab",
     description:
