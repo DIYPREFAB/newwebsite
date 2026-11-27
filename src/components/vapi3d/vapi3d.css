@@ -44,7 +44,7 @@ html:has(body.vp-3d), body.vp-3d { background: #eef4f6; }
 .vp-cta:focus-visible, .vp-submit:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
 
 .vp-pins { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
-.vp-pin { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 30px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 28px rgba(11, 34, 54, .16); font-size: 14px; font-weight: 800; color: var(--ink); white-space: nowrap; opacity: 0; will-change: transform, opacity; transition: background .35s, color .35s; }
+.vp-pin { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 30px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 28px rgba(11, 34, 54, .16); font-size: 14px; font-weight: 800; color: var(--ink); white-space: nowrap; opacity: 0; will-change: transform, opacity; transition: background .35s, color .35s, opacity .3s; }
 .vp-pin b { display: grid; place-items: center; min-width: 26px; height: 26px; border-radius: 50%; background: rgba(14, 159, 142, .14); color: var(--teal-t); font-size: 12px; letter-spacing: .04em; transition: background .35s, color .35s; }
 .vp-pin::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 10px; height: 10px; margin-left: -5px; background: inherit; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: rotate(45deg); }
 .vp-pin.is-clamped::after { display: none; }

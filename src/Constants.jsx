@@ -154,6 +154,11 @@ export const navItems = [
     ],
   },
   {
+    title: "Plan in Vapi?",
+    link: "/plan-in-vapi",
+    submenu: [],
+  },
+  {
     title: "Applications",
     link: "/applications",
     submenu: [
@@ -175,11 +180,6 @@ export const navItems = [
   {
     title: "Project & Case Studies",
     link: "/project-case-studies",
-    submenu: [],
-  },
-  {
-    title: "Plan in Vapi?",
-    link: "/plan-in-vapi",
     submenu: [],
   },
   {

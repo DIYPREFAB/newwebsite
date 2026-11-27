@@ -117,15 +117,16 @@ export default function VapiSections() {
         if (st.stage !== hudStage) { hudStage = st.stage; stepEls.forEach((el, i) => { el.classList.toggle("is-on", i === st.stage); el.classList.toggle("is-done", i < st.stage); }); }
         st.pins.forEach((pn, i) => {
           const el = pinEls[i]; if (!el) return;
-          /* keep each label fully on screen and clear of the fixed nav (translate(-50%,-100%) anchors its bottom-centre) */
-          const sz = pinSize[i] || { w: 160, h: 42 }, edge = 16;
+          const sz = pinSize[i] || { w: 160, h: 42 }, W = heroEl.clientWidth, edge = 8;
           const navH = (parseFloat(getComputedStyle(heroEl).getPropertyValue("--nav")) || 96) + 18;
-          const x = Math.min(Math.max(pn.x, sz.w / 2 + edge), heroEl.clientWidth - sz.w / 2 - edge);
-          const y = Math.max(pn.y, navH + sz.h + 10);
-          el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%)`;
-          el.style.opacity = pn.a.toFixed(2);
+          /* only the current and upcoming stops get a label: stops already passed, or whose beacon is off-screen / behind the nav, fade out */
+          const passed = i < st.stage;
+          const onScreen = pn.x - sz.w / 2 >= edge && pn.x + sz.w / 2 <= W - edge && pn.y >= navH;
+          const y = Math.max(pn.y, navH + sz.h + 10); // keep the label itself clear of the nav
+          el.style.transform = `translate3d(${pn.x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%)`;
+          el.style.opacity = (passed || !onScreen ? 0 : pn.a).toFixed(2);
           el.classList.toggle("is-on", pn.on);
-          el.classList.toggle("is-clamped", x !== pn.x || y !== pn.y);
+          el.classList.toggle("is-clamped", y !== pn.y);
         });
         if (st.frames !== hudFrames && framesEl) { hudFrames = st.frames; framesEl.textContent = st.frames; }
         if (barEl) barEl.style.transform = `scaleX(${sceneState.cur.toFixed(4)})`;
