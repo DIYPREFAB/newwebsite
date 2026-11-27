@@ -340,3 +340,12 @@ a.hnm-cta { display: flex; }
 @keyframes hn-live-pulse { 70% { box-shadow: 0 0 0 8px rgba(255, 77, 77, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); } }
 @media (prefers-reduced-motion: reduce) { .hn-live i, .hnm-live i { animation: none; } }
 @media (max-width: 560px) { .hn-live { display: inline-flex !important; padding: 8px 12px; font-size: 13px; gap: 6px; } }
+
+/* "Plan in Vapi?" nav item: accent so the new page stands out */
+.hn-item > a[href="/plan-in-vapi"] { color:#2fd4c0; }
+.hn-item > a[href="/plan-in-vapi"]::after { content:""; display:inline-block; width:6px; height:6px; margin-left:7px; border-radius:50%; background:#2fd4c0; vertical-align:middle; box-shadow:0 0 0 3px rgba(47,212,192,.25); }
+
+/* Nav sits flush at the very top of the window on every page (no gap above it): full-width bar, rounded only at the bottom */
+.hn { top: 0 !important; padding: 0 !important; }
+.hn-bar { border-radius: 0 0 28px 28px; border-top-width: 0; padding-left: max(14px, 3vw); padding-right: max(10px, 3vw); }
+.hn.open .hn-bar { border-radius: 0; }
